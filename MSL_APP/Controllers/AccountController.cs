@@ -8,7 +8,7 @@ using MSL_APP.Data;
 using MSL_APP.Models;
 
 namespace MSL_APP.Controllers
-{
+{   
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
