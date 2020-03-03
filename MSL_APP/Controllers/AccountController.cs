@@ -11,7 +11,7 @@ namespace MSL_APP.Controllers
 {   
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager; 
         private readonly RoleManager<IdentityRole> _roleManager; 
 
         public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager)
