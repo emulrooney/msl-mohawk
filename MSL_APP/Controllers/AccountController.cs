@@ -43,7 +43,7 @@ namespace MSL_APP.Controllers
             CustomersList.Add(new ApplicationUser
             {
                 Email = "student1@email.com",
-                UserName = "student1@email.com"
+                UserName = "student1@email.com" 
             });
 
             foreach (ApplicationUser cust in CustomersList)
