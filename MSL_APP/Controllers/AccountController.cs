@@ -65,15 +65,15 @@ namespace MSL_APP.Controllers
             //Sample bank admins
             AdminsList.Add(new ApplicationUser
             {
-                Email = "AdminTest1@email.com",
-                UserName = "AdminTest1@email.com"
+                Email = "Admin@email.com",
+                UserName = "Admin@email.com"
             });
 
 
             foreach (ApplicationUser adm in AdminsList)
             {
                 //Create the new user
-                result = await _userManager.CreateAsync(adm, "AdminP@ss");
+                result = await _userManager.CreateAsync(adm, "Mohawk1!");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to add new admin user" });
                 //Assign the new user to the customer role
