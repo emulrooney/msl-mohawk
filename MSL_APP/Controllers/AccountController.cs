@@ -42,8 +42,8 @@ namespace MSL_APP.Controllers
             //Sample bank clients
             CustomersList.Add(new ApplicationUser
             {
-                Email = "studentTest1@email.com",
-                UserName = "studentTest1@email.com"
+                Email = "student1@email.com",
+                UserName = "student1@email.com"
             });
 
             foreach (ApplicationUser cust in CustomersList)
