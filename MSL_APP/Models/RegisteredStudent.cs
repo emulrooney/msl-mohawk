@@ -19,10 +19,16 @@ namespace MSL_APP.Models
 
         // Link registered account to eligible student table for registration restrictions
         [ForeignKey("EligibleStudent")]
-        public int EligibleId { get; set; }
+        public int? EligibleId { get; set; }
 
         [Required]
         public int StudentId { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
 
         [Required, EmailAddress]
         public string StudentEmail { get; set; }

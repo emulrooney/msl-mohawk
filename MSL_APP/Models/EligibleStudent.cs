@@ -15,6 +15,12 @@ namespace MSL_APP.Models
         [Required]
         public int StudentID { get; set; }
 
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
         // Student Email, ex. student.one@moahwkcollege.ca
         [Required, EmailAddress]
         public string StudentEmail { get; set; }
