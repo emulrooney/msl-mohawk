@@ -1,0 +1,4 @@
+Windows Server 2019 Standard (updated Sept 2019)
+Project Professional 2019 (Windows Only)
+Sharepoint Server 2019 Enterprise
+Windows 10 Version 1809 (Updated Sept 2018)
