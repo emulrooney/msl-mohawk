@@ -15,13 +15,16 @@ namespace MSL_APP.Models
         [Required]
         public string Name { get; set; }
 
-        // Set the quantity limitation for students to get the product key
+        // Set the quantity limitation for students to get the product key, 0 by default
+        [Display(Name = "Quantity Limit")]
         public int QuantityLimit { get; set; }
 
-        // Count how many keys left for each product
+        // Count how many keys left for each product, 0 by default, should be updated when uploading the new keys
+        [Display(Name = "Key Count")]
         public int KeyCount { get; set; }
 
         // Actived or disabled product. Using integer 0 as actived, 1 as disabled. 0 by default
+        [Display(Name = "Active Status")]
         public int ActiveStatus { get; set; }
     }
 }

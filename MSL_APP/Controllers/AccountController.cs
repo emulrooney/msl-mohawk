@@ -8,12 +8,12 @@ using MSL_APP.Data;
 using MSL_APP.Models;
 
 namespace MSL_APP.Controllers
-{   
+{
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager; 
-        private readonly RoleManager<IdentityRole> _roleManager; 
-         
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
         public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager)
         {
             _userManager = userManager;
@@ -43,7 +43,7 @@ namespace MSL_APP.Controllers
             CustomersList.Add(new ApplicationUser
             {
                 Email = "student1@email.com",
-                UserName = "student1@email.com" 
+                UserName = "student1@email.com"
             });
 
             foreach (ApplicationUser cust in CustomersList)

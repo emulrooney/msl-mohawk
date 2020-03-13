@@ -49,7 +49,7 @@ namespace MSL_APP.Controllers
         // GET: RegisteredStudent/Create
         public IActionResult Create()
         {
-            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "FirstName");
+            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "StudentEmail");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -67,7 +67,7 @@ namespace MSL_APP.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "FirstName", registeredStudent.EligibleId);
+            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "StudentEmail", registeredStudent.EligibleId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", registeredStudent.UserId);
             return View(registeredStudent);
         }
@@ -85,7 +85,7 @@ namespace MSL_APP.Controllers
             {
                 return NotFound();
             }
-            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "FirstName", registeredStudent.EligibleId);
+            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "StudentEmail", registeredStudent.EligibleId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", registeredStudent.UserId);
             return View(registeredStudent);
         }
@@ -122,7 +122,7 @@ namespace MSL_APP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "FirstName", registeredStudent.EligibleId);
+            ViewData["EligibleId"] = new SelectList(_context.EligibleStudent, "Id", "StudentEmail", registeredStudent.EligibleId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", registeredStudent.UserId);
             return View(registeredStudent);
         }

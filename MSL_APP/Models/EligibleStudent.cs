@@ -12,17 +12,17 @@ namespace MSL_APP.Models
         public int Id { get; set; }
 
         // Student ID, ex. 000101010
-        [Required]
+        [Required, Display(Name = "Student ID")]
         public int StudentID { get; set; }
 
-        [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         // Student Email, ex. student.one@moahwkcollege.ca
-        [Required, EmailAddress]
+        [Required, EmailAddress, Display(Name = "Email")]
         public string StudentEmail { get; set; }
     }
 }

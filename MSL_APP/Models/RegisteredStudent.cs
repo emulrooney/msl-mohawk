@@ -21,16 +21,16 @@ namespace MSL_APP.Models
         [ForeignKey("EligibleStudent")]
         public int? EligibleId { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Student ID")]
         public int StudentId { get; set; }
 
-        [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required, EmailAddress]
+        [Required, EmailAddress, Display(Name = "Email")]
         public string StudentEmail { get; set; }
 
         public virtual EligibleStudent EligibleStudent { get; set; }

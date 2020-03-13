@@ -15,7 +15,7 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="NameId" class="control-label"></label>
-                <input asp-for="NameId" class="form-control" />
+                <select asp-for="NameId" class="form-control" asp-items="ViewBag.NameId"></select>
                 <span asp-validation-for="NameId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,9 +24,9 @@
                 <span asp-validation-for="Key" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ActiveStatus" class="control-label"></label>
-                <input asp-for="ActiveStatus" class="form-control" />
-                <span asp-validation-for="ActiveStatus" class="text-danger"></span>
+                <label asp-for="UsedKey" class="control-label"></label>
+                <input asp-for="UsedKey" class="form-control" />
+                <span asp-validation-for="UsedKey" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="OwnerId" class="control-label"></label>

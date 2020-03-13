@@ -78,11 +78,9 @@ namespace MSL_APP.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FirstName")
-                        .IsRequired();
+                    b.Property<string>("FirstName");
 
-                    b.Property<string>("LastName")
-                        .IsRequired();
+                    b.Property<string>("LastName");
 
                     b.Property<string>("StudentEmail")
                         .IsRequired();
@@ -100,15 +98,17 @@ namespace MSL_APP.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActiveStatus");
-
                     b.Property<string>("Key");
 
                     b.Property<int>("NameId");
 
-                    b.Property<int>("OwnerId");
+                    b.Property<int?>("OwnerId");
+
+                    b.Property<int>("UsedKey");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NameId");
 
                     b.ToTable("ProductKey");
                 });
@@ -134,6 +134,8 @@ namespace MSL_APP.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductKeyLog");
                 });
@@ -166,11 +168,9 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int?>("EligibleId");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired();
+                    b.Property<string>("FirstName");
 
-                    b.Property<string>("LastName")
-                        .IsRequired();
+                    b.Property<string>("LastName");
 
                     b.Property<string>("StudentEmail")
                         .IsRequired();
@@ -296,6 +296,21 @@ namespace MSL_APP.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("MSL_APP.Models.ProductKey", b =>
+                {
+                    b.HasOne("MSL_APP.Models.ProductName", "ProductName")
+                        .WithMany()
+                        .HasForeignKey("NameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MSL_APP.Models.ProductKeyLog", b =>
+                {
+                    b.HasOne("MSL_APP.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MSL_APP.Models.RegisteredStudent", b =>

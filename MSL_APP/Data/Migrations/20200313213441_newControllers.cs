@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSL_APP.Data.Migrations
 {
-    public partial class controllers : Migration
+    public partial class newControllers : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,29 +15,13 @@ namespace MSL_APP.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     StudentID = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
                     StudentEmail = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EligibleStudent", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductKey",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    NameId = table.Column<int>(nullable: false),
-                    Key = table.Column<string>(nullable: true),
-                    ActiveStatus = table.Column<int>(nullable: false),
-                    OwnerId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductKey", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,6 +41,12 @@ namespace MSL_APP.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductKeyLog", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductKeyLog_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,8 +74,8 @@ namespace MSL_APP.Data.Migrations
                     UserId = table.Column<string>(nullable: true),
                     EligibleId = table.Column<int>(nullable: true),
                     StudentId = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
                     StudentEmail = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -104,6 +94,38 @@ namespace MSL_APP.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ProductKey",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NameId = table.Column<int>(nullable: false),
+                    Key = table.Column<string>(nullable: true),
+                    UsedKey = table.Column<int>(nullable: false),
+                    OwnerId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductKey", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductKey_ProductName_NameId",
+                        column: x => x.NameId,
+                        principalTable: "ProductName",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductKey_NameId",
+                table: "ProductKey",
+                column: "NameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductKeyLog_UserId",
+                table: "ProductKeyLog",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RegisteredStudent_EligibleId",
@@ -125,10 +147,10 @@ namespace MSL_APP.Data.Migrations
                 name: "ProductKeyLog");
 
             migrationBuilder.DropTable(
-                name: "ProductName");
+                name: "RegisteredStudent");
 
             migrationBuilder.DropTable(
-                name: "RegisteredStudent");
+                name: "ProductName");
 
             migrationBuilder.DropTable(
                 name: "EligibleStudent");

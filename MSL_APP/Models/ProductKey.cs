@@ -18,11 +18,13 @@ namespace MSL_APP.Models
         public string Key { get; set; }
 
         // New or Used key. Using integer 0 as new, 1 as used. 0 by default
-        public int ActiveStatus { get; set; }
+        [Required, Display(Name = "Used")]
+        public int UsedKey { get; set; }
 
-        // The owner's id **could be student ID or student email**
-        public int OwnerId { get; set; }
-        // public string Owner { get; set; }
+        // The owner's id will be the student ID, this parameter is nullable
+        [Display(Name = "Owner Id")]
+        public int? OwnerId { get; set; }
 
+        public virtual ProductName ProductName { get; set; }
     }
 }

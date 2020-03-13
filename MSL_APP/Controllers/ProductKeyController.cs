@@ -22,7 +22,8 @@ namespace MSL_APP.Controllers
         // GET: ProductKey
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductKey.ToListAsync());
+            var applicationDbContext = _context.ProductKey.Include(p => p.ProductName);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: ProductKey/Details/5
@@ -34,6 +35,7 @@ namespace MSL_APP.Controllers
             }
 
             var productKey = await _context.ProductKey
+                .Include(p => p.ProductName)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productKey == null)
             {
@@ -46,6 +48,7 @@ namespace MSL_APP.Controllers
         // GET: ProductKey/Create
         public IActionResult Create()
         {
+            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NameId,Key,ActiveStatus,OwnerId")] ProductKey productKey)
+        public async Task<IActionResult> Create([Bind("Id,NameId,Key,UsedKey,OwnerId")] ProductKey productKey)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace MSL_APP.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -78,6 +82,7 @@ namespace MSL_APP.Controllers
             {
                 return NotFound();
             }
+            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -86,7 +91,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NameId,Key,ActiveStatus,OwnerId")] ProductKey productKey)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NameId,Key,UsedKey,OwnerId")] ProductKey productKey)
         {
             if (id != productKey.Id)
             {
@@ -113,6 +118,7 @@ namespace MSL_APP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -125,6 +131,7 @@ namespace MSL_APP.Controllers
             }
 
             var productKey = await _context.ProductKey
+                .Include(p => p.ProductName)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productKey == null)
             {
