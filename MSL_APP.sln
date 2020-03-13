@@ -5,11 +5,6 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSL_APP", "MSL_APP\MSL_APP.csproj", "{92F4B8B0-D912-4211-A8F4-1BB68FCB17A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSV_Parser", "CSV_Parser\CSV_Parser.csproj", "{D6C9401D-94D4-46D0-8C11-BFCBE19D779D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{92F4B8B0-D912-4211-A8F4-1BB68FCB17A1} = {92F4B8B0-D912-4211-A8F4-1BB68FCB17A1}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,10 +15,6 @@ Global
 		{92F4B8B0-D912-4211-A8F4-1BB68FCB17A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92F4B8B0-D912-4211-A8F4-1BB68FCB17A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92F4B8B0-D912-4211-A8F4-1BB68FCB17A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6C9401D-94D4-46D0-8C11-BFCBE19D779D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6C9401D-94D4-46D0-8C11-BFCBE19D779D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6C9401D-94D4-46D0-8C11-BFCBE19D779D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6C9401D-94D4-46D0-8C11-BFCBE19D779D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

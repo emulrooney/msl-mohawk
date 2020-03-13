@@ -17,7 +17,7 @@ namespace MSL_APP.Models
         [ForeignKey("User")] 
         public string UserId { get; set; }
 
-        // Link registered account to eligible student table for registration restrictions
+        // Link registered account to eligible student table for registration restrictions, set to be nullable
         [ForeignKey("EligibleStudent")]
         public int? EligibleId { get; set; }
 
@@ -33,7 +33,7 @@ namespace MSL_APP.Models
         [Required, EmailAddress]
         public string StudentEmail { get; set; }
 
-        public EligibleStudent EligibleStudent { get; set; }
+        public virtual EligibleStudent EligibleStudent { get; set; }
 
         public virtual ApplicationUser User { get; set; }
     }
