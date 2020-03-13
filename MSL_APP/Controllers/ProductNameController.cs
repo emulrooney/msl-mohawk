@@ -54,7 +54,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus")] ProductName productName)
+        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus")] ProductName productName)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
             if (id != productName.Id)
             {

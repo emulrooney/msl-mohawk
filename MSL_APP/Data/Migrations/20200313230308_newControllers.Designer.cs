@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200313213441_newControllers")]
+    [Migration("20200313230308_newControllers")]
     partial class newControllers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -149,6 +149,8 @@ namespace MSL_APP.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ActiveStatus");
+
+                    b.Property<string>("DownloadLink");
 
                     b.Property<int>("KeyCount");
 

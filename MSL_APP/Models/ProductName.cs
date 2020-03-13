@@ -26,5 +26,9 @@ namespace MSL_APP.Models
         // Actived or disabled product. Using integer 0 as actived, 1 as disabled. 0 by default
         [Display(Name = "Active Status")]
         public int ActiveStatus { get; set; }
+
+        // Optional download link for the product
+        [Display(Name = "Download Link")]
+        public string DownloadLink { get; set; }
     }
 }

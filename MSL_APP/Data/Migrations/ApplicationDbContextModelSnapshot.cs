@@ -148,6 +148,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int>("ActiveStatus");
 
+                    b.Property<string>("DownloadLink");
+
                     b.Property<int>("KeyCount");
 
                     b.Property<string>("Name")

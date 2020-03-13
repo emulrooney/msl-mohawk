@@ -9,6 +9,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200313213358_newControllers.cs" />
     <Compile Remove="Data\Migrations\20200313213358_newControllers.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200313230217_newControllers.cs" />
+    <Compile Remove="Data\Migrations\20200313230217_newControllers.Designer.cs" />
   </ItemGroup>
 
 
