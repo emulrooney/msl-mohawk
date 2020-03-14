@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using MSL_APP.Models;
 
 namespace MSL_APP.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductNameController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +24,7 @@ namespace MSL_APP.Controllers
         }
 
         // GET: ProductName Student View
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> StudentView()
         {
             return View(await _context.ProductName.ToListAsync());
