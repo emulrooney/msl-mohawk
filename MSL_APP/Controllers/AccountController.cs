@@ -20,13 +20,13 @@ namespace MSL_APP.Controllers
             _roleManager = RoleManager;
         }
 
-        //Seed the database with users, roles and assign users to roles
+        //Seed the database with users, roles and assign users to roles. To call this method, use https://localhost:44350/Account/SeedUserData
         public async Task<IActionResult> SeedUserData()
         {
             //Variable to hold the status of our identity operations
             IdentityResult result;
 
-            //Create 2 new roles (Customer, Admin)
+            //Create 2 new roles (Student, Admin)
             result = await _roleManager.CreateAsync(new IdentityRole("Student"));
             if (!result.Succeeded)
                 return View("Error", new ErrorViewModel { RequestId = "Failed to add Student role" });
@@ -36,26 +36,26 @@ namespace MSL_APP.Controllers
                 return View("Error", new ErrorViewModel { RequestId = "Failed to add Admin role" });
 
 
-            //Create a list of customers
-            List<ApplicationUser> CustomersList = new List<ApplicationUser>();
+            //Create a list of students
+            List<ApplicationUser> StudentList = new List<ApplicationUser>();
 
             //Sample bank clients
-            CustomersList.Add(new ApplicationUser
+            StudentList.Add(new ApplicationUser
             {
                 Email = "student1@email.com",
                 UserName = "student1@email.com"
             });
 
-            foreach (ApplicationUser cust in CustomersList)
+            foreach (ApplicationUser student in StudentList)
             {
-                //Create the new user
-                result = await _userManager.CreateAsync(cust, "Mohawk1!");
+                //Create the new user with password "Mohawk1!"
+                result = await _userManager.CreateAsync(student, "Mohawk1!");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to add new user" });
                 //Assign the new user to the student role
-                result = await _userManager.AddToRoleAsync(cust, "Student");
+                result = await _userManager.AddToRoleAsync(student, "Student");
                 if (!result.Succeeded)
-                    return View("Error", new ErrorViewModel { RequestId = "Failed to assign customer role" });
+                    return View("Error", new ErrorViewModel { RequestId = "Failed to assign student role" });
 
             }
 
@@ -70,14 +70,14 @@ namespace MSL_APP.Controllers
             });
 
 
-            foreach (ApplicationUser adm in AdminsList)
+            foreach (ApplicationUser admin in AdminsList)
             {
-                //Create the new user
-                result = await _userManager.CreateAsync(adm, "Mohawk1!");
+                //Create the new user with password "Mohawk1!"
+                result = await _userManager.CreateAsync(admin, "Mohawk1!");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to add new admin user" });
-                //Assign the new user to the customer role
-                result = await _userManager.AddToRoleAsync(adm, "Admin");
+                //Assign the new user to the admin role
+                result = await _userManager.AddToRoleAsync(admin, "Admin");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to assign admin role" });
 

@@ -44,9 +44,14 @@ namespace MSL_APP.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             public string Email { get; set; }
 
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Display(Name = "Student ID")]
+            public int StudentId { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -59,14 +64,18 @@ namespace MSL_APP.Areas.Identity.Pages.Account.Manage
 
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
+            var studentId = user.StudentId;
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                FirstName = firstName,
+                LastName = lastName,
+                StudentId = studentId
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -98,14 +107,27 @@ namespace MSL_APP.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            var firstName = user.FirstName;
+            if (Input.FirstName != firstName)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                user.FirstName = Input.FirstName;
+                var setFirstName = await _userManager.UpdateAsync(user);
+                if (!setFirstName.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    throw new InvalidOperationException($"Unexpected error occurred setting first name for user with ID '{userId}'.");
+                }
+            }
+
+            var lastName = user.LastName;
+            if (Input.LastName != lastName)
+            {
+                user.LastName = Input.LastName;
+                var setLastName = await _userManager.UpdateAsync(user);
+                if (!setLastName.Succeeded)
+                {
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    throw new InvalidOperationException($"Unexpected error occurred setting last name for user with ID '{userId}'.");
                 }
             }
 

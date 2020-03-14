@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200313230308_newControllers")]
-    partial class newControllers
+    [Migration("20200314140011_controllers")]
+    partial class controllers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,10 +31,16 @@ namespace MSL_APP.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int?>("EligibleId");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -54,7 +60,7 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<int>("StudentID");
+                    b.Property<int>("StudentId");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -62,6 +68,8 @@ namespace MSL_APP.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EligibleId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -133,11 +141,7 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<DateTime>("TimeStamp");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("ProductKeyLog");
                 });
@@ -162,34 +166,6 @@ namespace MSL_APP.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductName");
-                });
-
-            modelBuilder.Entity("MSL_APP.Models.RegisteredStudent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EligibleId");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
-
-                    b.Property<string>("StudentEmail")
-                        .IsRequired();
-
-                    b.Property<int>("StudentId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EligibleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RegisteredStudent");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -302,30 +278,19 @@ namespace MSL_APP.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("MSL_APP.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("MSL_APP.Models.EligibleStudent", "EligibleStudent")
+                        .WithMany()
+                        .HasForeignKey("EligibleId");
+                });
+
             modelBuilder.Entity("MSL_APP.Models.ProductKey", b =>
                 {
                     b.HasOne("MSL_APP.Models.ProductName", "ProductName")
                         .WithMany()
                         .HasForeignKey("NameId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MSL_APP.Models.ProductKeyLog", b =>
-                {
-                    b.HasOne("MSL_APP.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("MSL_APP.Models.RegisteredStudent", b =>
-                {
-                    b.HasOne("MSL_APP.Models.EligibleStudent", "EligibleStudent")
-                        .WithMany()
-                        .HasForeignKey("EligibleId");
-
-                    b.HasOne("MSL_APP.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
