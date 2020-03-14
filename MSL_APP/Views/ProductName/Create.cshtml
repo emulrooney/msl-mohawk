@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+
 }
 
 <h1>Create</h1>
@@ -34,7 +35,7 @@
             </div>*@
             <div class="form-group">
                 <label asp-for="ActiveStatus" class="control-label"></label>
-                <input asp-for="ActiveStatus" class="form-control" />
+                @Html.DropDownList("myList", new List<SelectListItem> { new SelectListItem { Text = "Active", Value = "Actived" }, new SelectListItem { Text = "Disable",  Value = "Disabled" },}, new {@class="form-control"})
                 <span asp-validation-for="ActiveStatus" class="text-danger"></span>
             </div>
             <div class="form-group">

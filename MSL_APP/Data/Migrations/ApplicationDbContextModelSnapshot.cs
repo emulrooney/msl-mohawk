@@ -150,7 +150,7 @@ namespace MSL_APP.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActiveStatus");
+                    b.Property<string>("ActiveStatus");
 
                     b.Property<string>("DownloadLink");
 

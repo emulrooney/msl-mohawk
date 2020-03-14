@@ -72,7 +72,7 @@ namespace MSL_APP.Data.Migrations
                     QuantityLimit = table.Column<int>(nullable: false),
                     KeyCount = table.Column<int>(nullable: false),
                     UsedKeyCount = table.Column<int>(nullable: false),
-                    ActiveStatus = table.Column<int>(nullable: false),
+                    ActiveStatus = table.Column<string>(nullable: true),
                     DownloadLink = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

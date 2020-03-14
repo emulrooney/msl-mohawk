@@ -13,6 +13,8 @@
     <Compile Remove="Data\Migrations\20200313230217_newControllers.Designer.cs" />
     <Compile Remove="Data\Migrations\20200314230022_controller.cs" />
     <Compile Remove="Data\Migrations\20200314230022_controller.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200314232102_controller.cs" />
+    <Compile Remove="Data\Migrations\20200314232102_controller.Designer.cs" />
   </ItemGroup>
 
 
