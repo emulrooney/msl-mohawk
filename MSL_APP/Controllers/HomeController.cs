@@ -29,19 +29,6 @@ namespace MSL_APP.Controllers
             return View(await _context.ProductName.ToListAsync());
         }
 
-        // GET: Home Student View
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> StudentView()
-        {
-            return View(await _context.ProductName.ToListAsync());
-        }
-
-        // GET: ProductName Admin View
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AdminView()
-        {
-            return View(await _context.ProductName.ToListAsync());
-        }
 
         public IActionResult Privacy()
         {

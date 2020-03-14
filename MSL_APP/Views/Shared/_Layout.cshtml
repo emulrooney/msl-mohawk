@@ -13,15 +13,48 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+    <script type='text/javascript'>
+        window.addEventListener("load", function () {
+            if (window.innerWidth > 1200) {
+                document.getElementById("navTitle").innerHTML = "Microsoft Student Licensing";
+            }
+            else if (window.innerWidth > 992) {
+                document.getElementById("navTitle").innerHTML = "MS Student Licensing";
+            } else if (window.innerWidth > 767) {
+                document.getElementById("navTitle").innerHTML = "MSL";
+            } else if (window.innerWidth > 575) {
+                document.getElementById("navTitle").innerHTML = "M";
+            } else {
+                document.getElementById("navTitle").innerHTML = "Microsoft Student Licensing";
+            }
+        });
+        window.addEventListener("resize", function () {
+            if (window.innerWidth > 1200) {
+                document.getElementById("navTitle").innerHTML = "Microsoft Student Licensing";
+            }
+            else if (window.innerWidth > 992) {
+                document.getElementById("navTitle").innerHTML = "MS Student Licensing";
+            } else if (window.innerWidth > 767) {
+                document.getElementById("navTitle").innerHTML = "MSL";
+            } else if (window.innerWidth > 575) {
+                document.getElementById("navTitle").innerHTML = "M";
+            } else {
+                document.getElementById("navTitle").innerHTML = "Microsoft Student Licensing";
+            }
+        });
+    </script>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Microsoft Student Licensing</a>
+                <a id="navTitle" class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    Microsoft Student Licensing
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -45,7 +78,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ProductName" asp-action="Index">Product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductKey" asp-action="Index">Keys</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductKey" asp-action="Index">Key</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ProductKeyLog" asp-action="Index">Log</a>
