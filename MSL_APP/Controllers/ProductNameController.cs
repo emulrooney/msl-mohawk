@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +58,12 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
+            //Check if given name is a duplicate
+            if (_context.ProductName.Any(p => p.Name == productName.Name))
+            {
+                throw new Exception($"Product '{productName.Name}' already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(productName);
@@ -149,5 +157,45 @@ namespace MSL_APP.Controllers
         {
             return _context.ProductName.Any(e => e.Id == id);
         }
+
+        /// <summary>
+        /// Upload file for Product Names. Creates a parser and uses it to parse the 
+        /// user's file. Duplicate items shouldn't be uploaded.
+        /// </summary>
+        /// <param name="file">File data from file upload widget.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+
+
+            if (file == null || file.Length == 0)
+                return Content("file not selected");
+
+            var parser = new CsvParser(file, ';');
+            var results = parser.ParseProducts();
+
+            foreach (string p in results.ValidList)
+            {
+                try
+                {
+                    await Create(new ProductName
+                    {
+                        Name = p,
+                        QuantityLimit = 1
+                    });
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
