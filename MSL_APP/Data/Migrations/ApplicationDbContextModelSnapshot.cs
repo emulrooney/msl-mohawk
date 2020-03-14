@@ -161,6 +161,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int>("QuantityLimit");
 
+                    b.Property<int>("UsedKeyCount");
+
                     b.HasKey("Id");
 
                     b.ToTable("ProductName");

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200314140011_controllers")]
-    partial class controllers
+    [Migration("20200314232102_controller")]
+    partial class controller
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -162,6 +162,8 @@ namespace MSL_APP.Data.Migrations
                         .IsRequired();
 
                     b.Property<int>("QuantityLimit");
+
+                    b.Property<int>("UsedKeyCount");
 
                     b.HasKey("Id");
 

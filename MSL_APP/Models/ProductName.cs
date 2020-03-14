@@ -19,11 +19,19 @@ namespace MSL_APP.Models
         [Display(Name = "Quantity Limit")]
         public int QuantityLimit { get; set; }
 
-        // Count how many keys left for each product, 0 by default, should be updated when uploading the new keys
+        // Count total key numbers for each product, 0 by default, should be updated when uploading the new keys
         [Display(Name = "Key Count")]
         public int KeyCount { get; set; }
 
-        // Actived or disabled product. Using integer 0 as actived, 1 as disabled. 0 by default
+        // Count how many keys have been aquired by students, 0 by default, should be updated when student aquired a key
+        [Display(Name = "Used Key")]
+        public int UsedKeyCount { get; set; }
+
+        // Count how many available keys left, 0 by default, should be updated when uploading the new keys and when student aquired a key
+        [Display(Name = "Remaining Key")]
+        public int RemainingKeyCount => KeyCount - UsedKeyCount;
+
+        // Actived or disabled product. Using integer 1 as actived, 0 as disabled. 0 by default
         [Display(Name = "Active Status")]
         public int ActiveStatus { get; set; }
 

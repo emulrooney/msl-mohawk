@@ -11,10 +11,13 @@
     <Compile Remove="Data\Migrations\20200313213358_newControllers.Designer.cs" />
     <Compile Remove="Data\Migrations\20200313230217_newControllers.cs" />
     <Compile Remove="Data\Migrations\20200313230217_newControllers.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200314230022_controller.cs" />
+    <Compile Remove="Data\Migrations\20200314230022_controller.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Admin.Directory.directory_v1" Version="1.44.1.1736" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />

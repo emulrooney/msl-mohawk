@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSL_APP.Data.Migrations
 {
-    public partial class controllers : Migration
+    public partial class controller : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,6 +71,7 @@ namespace MSL_APP.Data.Migrations
                     Name = table.Column<string>(nullable: false),
                     QuantityLimit = table.Column<int>(nullable: false),
                     KeyCount = table.Column<int>(nullable: false),
+                    UsedKeyCount = table.Column<int>(nullable: false),
                     ActiveStatus = table.Column<int>(nullable: false),
                     DownloadLink = table.Column<string>(nullable: true)
                 },

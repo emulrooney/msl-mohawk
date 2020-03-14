@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -23,14 +22,15 @@ namespace MSL_APP.Controllers
             _context = context;
         }
 
-        // GET: ProductName Student View
+
+        // GET: ProductName
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> IndexStudent()
         {
             return View(await _context.ProductName.ToListAsync());
         }
 
-        // GET: ProductName Admin View
+        // GET: ProductName
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
@@ -68,14 +68,9 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus,DownloadLink")] ProductName productName)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
-            //Check if given name is a duplicate
-            if (_context.ProductName.Any(p => p.Name == productName.Name))
-            {
-                throw new Exception($"Product '{productName.Name}' already exists.");
-            }
-
             if (ModelState.IsValid)
             {
                 _context.Add(productName);
@@ -107,7 +102,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,ActiveStatus,DownloadLink")] ProductName productName)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
             if (id != productName.Id)
             {
@@ -179,6 +174,7 @@ namespace MSL_APP.Controllers
         /// <param name="file">File data from file upload widget.</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -207,7 +203,5 @@ namespace MSL_APP.Controllers
 
             return RedirectToAction("Index");
         }
-
-
     }
 }

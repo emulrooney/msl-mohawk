@@ -4,19 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-    <h1>Product</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-
-<form asp-controller="ProductName" asp-action="UploadFile" method="post"
-      enctype="multipart/form-data">
-    <h3>Upload Product Name CSV</h3>
-    <input type="file" name="file" />
-    <button type="submit">Upload File</button>
-</form>
-
 <table class="table">
     <thead>
         <tr>
@@ -25,9 +17,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.QuantityLimit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KeyCount)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ActiveStatus)
@@ -46,9 +35,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.QuantityLimit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KeyCount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ActiveStatus)
