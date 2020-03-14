@@ -76,20 +76,26 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var eligibleUser = false;
-               
+                bool eligibleUser = false;
+                string firstName = "";
+                string lastName = "";
+                int studentId = 0;
+
                 // Check user's email is in the eligible list or not
                 var eligibleStudent = await _dbcontext.EligibleStudent.ToListAsync();
                 foreach (EligibleStudent student in eligibleStudent) {
                     if (student.StudentEmail == Input.Email) {
                         eligibleUser = true;
+                        firstName = student.FirstName;
+                        lastName = student.LastName;
+                        studentId = student.StudentID;
                         break;
                     }
                 }
 
                 if (eligibleUser)
                 {
-                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId };
 
                     var result = await _userManager.CreateAsync(user, Input.Password);
                     //Assign the new user to the student role
