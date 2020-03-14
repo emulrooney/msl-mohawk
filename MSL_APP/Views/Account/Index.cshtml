@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MSL_APP.Data
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Registered Accounts";
+}
+
+<h1>Registered Student</h1>
+
+<a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.StudentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    <button class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id">Ban</button>
+
+                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
 
@@ -20,6 +21,44 @@ namespace MSL_APP.Controllers
             _roleManager = RoleManager;
         }
 
+        // GET: Account
+        public async Task<IActionResult> Index()
+        {
+            return View(await _userManager.Users.ToListAsync());
+        }
+
+
+        // GET: Account/Delete/5
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var account = await _userManager.FindByIdAsync(id);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var result = await _userManager.DeleteAsync(account);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View("Index");
+            }
+        }
+
+
         //Seed the database with users, roles and assign users to roles. To call this method, use https://localhost:44350/Account/SeedUserData
         public async Task<IActionResult> SeedUserData()
         {
@@ -27,14 +66,21 @@ namespace MSL_APP.Controllers
             IdentityResult result;
 
             //Create 2 new roles (Student, Admin)
-            result = await _roleManager.CreateAsync(new IdentityRole("Student"));
-            if (!result.Succeeded)
-                return View("Error", new ErrorViewModel { RequestId = "Failed to add Student role" });
 
-            result = await _roleManager.CreateAsync(new IdentityRole("Admin"));
-            if (!result.Succeeded)
-                return View("Error", new ErrorViewModel { RequestId = "Failed to add Admin role" });
 
+            if (await _roleManager.RoleExistsAsync("Student") == false)
+            {
+                result = await _roleManager.CreateAsync(new IdentityRole("Student"));
+                if (!result.Succeeded)
+                    return View("Error", new ErrorViewModel { RequestId = "Failed to add Student role" });
+            }
+
+            if (await _roleManager.RoleExistsAsync("Admin") == false)
+            {
+                result = await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                if (!result.Succeeded)
+                    return View("Error", new ErrorViewModel { RequestId = "Failed to add Admin role" });
+            }
 
             //Create a list of students
             List<ApplicationUser> StudentList = new List<ApplicationUser>();
@@ -51,7 +97,7 @@ namespace MSL_APP.Controllers
                 //Create the new user with password "Mohawk1!"
                 result = await _userManager.CreateAsync(student, "Mohawk1!");
                 if (!result.Succeeded)
-                    return View("Error", new ErrorViewModel { RequestId = "Failed to add new user" });
+                    return View("Error", new ErrorViewModel { RequestId = "Failed to add new student user" });
                 //Assign the new user to the student role
                 result = await _userManager.AddToRoleAsync(student, "Student");
                 if (!result.Succeeded)
@@ -86,12 +132,15 @@ namespace MSL_APP.Controllers
 
 
             //If we are here, everything executed according to plan, so we will show a success message
-            return Content("Users setup completed");
+            return Content("Users setup completed.\n\n" +
+                "Admin Account:\n" +
+                "Username = Admin@email.com\n" +
+                "Password = Mohawk1!\n\n" +
+                "Student Account:\n" +
+                "Username = student1@email.com\n" +
+                "Password = Mohawk1!\n");
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
     }
 }
