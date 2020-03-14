@@ -33,6 +33,7 @@ namespace MSL_APP.Models
         [Required, EmailAddress, Display(Name = "Email")]
         public string StudentEmail { get; set; }
 
+        [Display(Name = "Eligible")]
         public virtual EligibleStudent EligibleStudent { get; set; }
 
         public virtual ApplicationUser User { get; set; }

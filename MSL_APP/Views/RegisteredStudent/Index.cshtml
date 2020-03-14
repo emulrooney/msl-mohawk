@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Registered Student</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -27,9 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.EligibleStudent)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,10 +46,14 @@
                 @Html.DisplayFor(modelItem => item.StudentEmail)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EligibleStudent.StudentEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @if (Model != null && !String.IsNullOrEmpty(item.EligibleStudent.StudentEmail))
+                {
+                    @Html.DisplayFor(modelItem => "YES")
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => "NO")
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -52,7 +52,7 @@ namespace MSL_APP.Controllers
                 result = await _userManager.CreateAsync(cust, "Mohawk1!");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to add new user" });
-                //Assign the new user to the customer role
+                //Assign the new user to the student role
                 result = await _userManager.AddToRoleAsync(cust, "Student");
                 if (!result.Succeeded)
                     return View("Error", new ErrorViewModel { RequestId = "Failed to assign customer role" });
