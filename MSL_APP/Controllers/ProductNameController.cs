@@ -21,7 +21,13 @@ namespace MSL_APP.Controllers
             _context = context;
         }
 
-        // GET: ProductName
+        // GET: ProductName Student View
+        public async Task<IActionResult> StudentView()
+        {
+            return View(await _context.ProductName.ToListAsync());
+        }
+
+        // GET: ProductName Admin View
         public async Task<IActionResult> Index()
         {
             return View(await _context.ProductName.ToListAsync());
