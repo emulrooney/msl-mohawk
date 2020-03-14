@@ -1,47 +1,27 @@
-﻿using CSV_Parser;
+﻿using Microsoft.AspNetCore.Http;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace CSVParser
+namespace MSL_APP
 {
     class CsvParser
     {
         public char Delimiter { get; set; }
-        public string FilePath { get; set; }
+        public Stream FileData { get; set; }
 
         /// <summary>
-        /// Standard constructor. Devs should pass the path to the uploaded object and the delimiter character.
-        /// TODO: Might make more sense to pass the uploaded object directly... investigate later
+        /// Receives the intended file, then parses based on given delimiter
         /// </summary>
-        /// <param name="filePath">Path to .txt for parser to examine</param>
+        /// <param name="file">Uploaded file to parse</param>
         /// <param name="delimiter">Char to break up csv entries</param>
-        public CsvParser(string filePath, char delimiter)
+        public CsvParser(IFormFile file, char delimiter)
         {
-            FilePath = filePath;
             Delimiter = delimiter;
-        }
-
-        /// <summary>
-        /// debug, remove on completion
-        /// </summary>
-        /// <param name="args"></param>
-        static void Main(string[] args)
-        {
-            var debugPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestData\");
-
-            var studentParser = new CsvParser(debugPath + "students.txt", ';');
-            var keyParser = new CsvParser(debugPath + "keys.txt", ';');
-            var productParser = new CsvParser(debugPath + "products.txt", ';');
-
-            studentParser.ParseStudents();
-            keyParser.ParseKeys();
-            productParser.ParseProducts();
-
-            Console.WriteLine("Parsing complete.");
-            Console.ReadKey();
+            FileData = file.OpenReadStream();
         }
 
         /// <summary>
@@ -49,9 +29,9 @@ namespace CSVParser
         /// </summary>
         public void ParseStudents()
         {
-            using (var reader = new StreamReader(FilePath))
+            using (var reader = new StreamReader(FileData))
             {
-                //SETUP 
+                //SETUP     
                 List<InvalidCsvEntry> invalidEntries = new List<InvalidCsvEntry>(); 
                 List<string> students = new List<string>();
                 int currentLineNumber = 0;
@@ -97,7 +77,7 @@ namespace CSVParser
         /// </summary>
         public void ParseKeys()
         {
-            using (var reader = new StreamReader(FilePath))
+            using (var reader = new StreamReader(FileData))
             {
                 //SETUP 
                 List<ProductKey> keys = new List<ProductKey>();
@@ -107,15 +87,18 @@ namespace CSVParser
                     var line = reader.ReadLine();
                     var values = line.Split(Delimiter);
 
+                    foreach (String item in values)
+                    {
+                        var validKey = new ProductKey
+                        {
+                            Key = values[1]
+                        };
+
+                        keys.Add(validKey);
+                    }
+
                     //TODO: Add handling of multiple entries on single line
                     //TODO: Add check for how many values in line
-                     
-                    var validKey = new ProductKey
-                    {
-                        Key = values[1]
-                    };
-
-                    keys.Add(validKey);
                 }
 
                 //TODO Check DB for any keys already being 
@@ -127,11 +110,11 @@ namespace CSVParser
         /// <summary>
         /// Parse product names from file
         /// </summary>
-        public void ParseProducts()
+        public ParsedCsvData ParseProducts()
         {
-            using (var reader = new StreamReader(FilePath))
+            using (var reader = new StreamReader(FileData))
             {
-                List<string> products = new List<string>();
+                var data = new ParsedCsvData();
 
                 while (!reader.EndOfStream)
                 {
@@ -140,12 +123,11 @@ namespace CSVParser
 
                     foreach (String product in line.Split(Delimiter))
                     {
-                        products.Add(product);
+                        data.ValidList.Add(product);
                     }
                 }
 
-                //TODO Remove console readings here
-                Console.WriteLine($"Got {products.Count} valid product names");
+                return data;
             }
         }
 

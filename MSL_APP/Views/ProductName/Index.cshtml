@@ -9,6 +9,14 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-controller="ProductName" asp-action="UploadFile" method="post"
+      enctype="multipart/form-data">
+    <h3>Upload Product Name CSV</h3>
+    <input type="file" name="file" />
+    <button type="submit">Upload File</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
