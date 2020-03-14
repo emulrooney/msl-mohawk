@@ -14,7 +14,6 @@ namespace MSL_APP.Data
         {
         }
         public DbSet<MSL_APP.Models.EligibleStudent> EligibleStudent { get; set; }
-        public DbSet<MSL_APP.Models.RegisteredStudent> RegisteredStudent { get; set; }
         public DbSet<MSL_APP.Models.ProductKey> ProductKey { get; set; }
         public DbSet<MSL_APP.Models.ProductName> ProductName { get; set; }
         public DbSet<MSL_APP.Models.ProductKeyLog> ProductKeyLog { get; set; }
