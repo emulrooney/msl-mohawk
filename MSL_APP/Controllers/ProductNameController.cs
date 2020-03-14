@@ -167,8 +167,6 @@ namespace MSL_APP.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-
-
             if (file == null || file.Length == 0)
                 return Content("file not selected");
 
