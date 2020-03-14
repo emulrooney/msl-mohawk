@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,8 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MSL_APP.Data;
+using MSL_APP.Models;
 
 namespace MSL_APP.Areas.Identity.Pages.Account
 {
@@ -20,17 +24,22 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        // Use to read the eligible table in order to let student to register an account
+        private readonly ApplicationDbContext _dbcontext;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            // declare the class variable for the database context and set it in the constructor
+            ApplicationDbContext context) : base() 
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _dbcontext = context;
         }
 
         [BindProperty]
@@ -67,36 +76,50 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
-
+                var eligibleUser = false;
+               
                 // Check user's email is in the eligible list or not
-
-
-
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                //Assign the new user to the student role
-                var addRole = await _userManager.AddToRoleAsync(user, "Student");
-
-                if (result.Succeeded && addRole.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                var eligibleStudent = await _dbcontext.EligibleStudent.ToListAsync();
+                foreach (EligibleStudent student in eligibleStudent) {
+                    if (student.StudentEmail == Input.Email) {
+                        eligibleUser = true;
+                        break;
+                    }
                 }
-                foreach (var error in result.Errors)
+
+                if (eligibleUser)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+
+                    var result = await _userManager.CreateAsync(user, Input.Password);
+                    //Assign the new user to the student role
+                    var addRole = await _userManager.AddToRoleAsync(user, "Student");
+
+                    if (result.Succeeded && addRole.Succeeded)
+                    {
+                        _logger.LogInformation("User created a new account with password.");
+
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { userId = user.Id, code = code },
+                            protocol: Request.Scheme);
+
+                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+
+                    //foreach (var error in result.Errors)
+                    //{
+                    //    ModelState.AddModelError(string.Empty, error.Description);
+                    //}
+                }
+                else {
+                    ModelState.AddModelError(string.Empty, "Sorry, Your email address does not have permissions.");
                 }
             }
 
