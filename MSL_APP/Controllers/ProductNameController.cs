@@ -25,7 +25,7 @@ namespace MSL_APP.Controllers
 
         // GET: ProductName Student View
         [Authorize(Roles = "Student")]
-        public async Task<IActionResult> StudentView()
+        public async Task<IActionResult> IndexStudent()
         {
             return View(await _context.ProductName.ToListAsync());
         }

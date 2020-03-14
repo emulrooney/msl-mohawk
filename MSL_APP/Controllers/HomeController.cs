@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
 
@@ -14,15 +16,31 @@ namespace MSL_APP.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager)
+        public HomeController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _roleManager = RoleManager;
+            _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _context.ProductName.ToListAsync());
+        }
+
+        // GET: Home Student View
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> StudentView()
+        {
+            return View(await _context.ProductName.ToListAsync());
+        }
+
+        // GET: ProductName Admin View
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminView()
+        {
+            return View(await _context.ProductName.ToListAsync());
         }
 
         public IActionResult Privacy()

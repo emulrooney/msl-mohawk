@@ -1,10 +1,84 @@
-﻿@{
+﻿@model IEnumerable<MSL_APP.Models.ProductName>
+@* The page view for all guests *@
+@if (!User.Identity.IsAuthenticated)
+{
+
     ViewData["Title"] = "Home Page";
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h3 style="color:deepskyblue">Please use your Mohawk College email to register a new account!</h3>
+        <h3><a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a></h3>
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <h3 style="color:deepskyblue">Please use your Mohawk College email to register a new account!</h3>
-    <h3><a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a></h3>
+@* The page view for students *@
+@if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+{
+    ViewData["Title"] = "Student Home Page";
+    <h3>Student Panel</h3>
 
-</div>
+    <div class="text-center">
+        <h1 class="display-4">This is Student Home Page</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}
+
+@* The page view for admin *@
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+
+
+    ViewData["Title"] = "Admin Home Page";
+    <h3>Admin Panel</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    Total Keys
+                </th>
+                <th>
+                    Available Keys
+                </th>
+                <th>
+                    Used Keys
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.QuantityLimit)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KeyCount)
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuantityLimit)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+
+
+
+
