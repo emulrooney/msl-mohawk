@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200314235258_controller")]
-    partial class controller
+    [Migration("20200315194843_controllers")]
+    partial class controllers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,8 @@ namespace MSL_APP.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ActiveStatus");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -114,7 +116,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int?>("OwnerId");
 
-                    b.Property<int>("UsedKey");
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

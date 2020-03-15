@@ -8,7 +8,7 @@
 
 <h1>Registered Student</h1>
 
-<a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a>
+@*<a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a>*@
 
 <div asp-validation-summary="All" class="text-danger"></div>
 <table class="table">
@@ -25,6 +25,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActiveStatus)
             </th>
             <th></th>
         </tr>
@@ -44,6 +47,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.ActiveStatus)
                 </td>
                 <td>
                     <button class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id">Ban</button>

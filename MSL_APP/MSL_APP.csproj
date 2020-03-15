@@ -15,6 +15,10 @@
     <Compile Remove="Data\Migrations\20200314230022_controller.Designer.cs" />
     <Compile Remove="Data\Migrations\20200314232102_controller.cs" />
     <Compile Remove="Data\Migrations\20200314232102_controller.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200314235258_controller.cs" />
+    <Compile Remove="Data\Migrations\20200314235258_controller.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200315185916_controllers.cs" />
+    <Compile Remove="Data\Migrations\20200315185916_controllers.Designer.cs" />
   </ItemGroup>
 
 

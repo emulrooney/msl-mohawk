@@ -26,6 +26,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("ActiveStatus");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -112,7 +114,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<int?>("OwnerId");
 
-                    b.Property<int>("UsedKey");
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

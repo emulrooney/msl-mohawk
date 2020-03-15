@@ -80,6 +80,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 string firstName = "";
                 string lastName = "";
                 int studentId = 0;
+                //int eligibleId = 0;
 
                 // Check user's email is in the eligible list or not
                 var eligibleStudent = await _dbcontext.EligibleStudent.ToListAsync();
@@ -89,13 +90,14 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         firstName = student.FirstName;
                         lastName = student.LastName;
                         studentId = student.StudentID;
+                        //eligibleId = student.Id;
                         break;
                     }
                 }
 
                 if (eligibleUser)
                 {
-                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId };
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId, ActiveStatus="Actived" };
 
                     var result = await _userManager.CreateAsync(user, Input.Password);
                     //Assign the new user to the student role

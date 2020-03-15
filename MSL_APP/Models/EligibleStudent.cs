@@ -12,7 +12,7 @@ namespace MSL_APP.Models
         public int Id { get; set; }
 
         // Student ID, ex. 000101010
-        [Required, Display(Name = "Student ID")]
+        [Required, Display(Name = "Student ID"), DisplayFormat(DataFormatString = "{0:D9}", ApplyFormatInEditMode = true)]
         public int StudentID { get; set; }
 
         [Display(Name = "First Name")]

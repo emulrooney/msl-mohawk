@@ -17,12 +17,12 @@ namespace MSL_APP.Models
 
         public string Key { get; set; }
 
-        // New or Used key. Using integer 0 as new, 1 as used. 0 by default
-        [Required, Display(Name = "Used")]
-        public int UsedKey { get; set; }
+        // New or Used key. New by default
+        [Required, Display(Name = "Status")]
+        public string Status { get; set; }
 
         // The owner's id will be the student ID, this parameter is nullable
-        [Display(Name = "Owner Id")]
+        [Display(Name = "Owner Id"), DisplayFormat(DataFormatString = "{0:D9}", ApplyFormatInEditMode = true)]
         public int? OwnerId { get; set; }
 
         public virtual ProductName ProductName { get; set; }

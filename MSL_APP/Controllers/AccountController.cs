@@ -91,7 +91,10 @@ namespace MSL_APP.Controllers
             StudentList.Add(new ApplicationUser
             {
                 Email = "student1@email.com",
-                UserName = "student1@email.com"
+                UserName = "student1@email.com",
+                FirstName = "Student",
+                LastName = "One",
+                ActiveStatus = "Actived"
             });
 
             foreach (ApplicationUser student in StudentList)
@@ -114,7 +117,10 @@ namespace MSL_APP.Controllers
             AdminsList.Add(new ApplicationUser
             {
                 Email = "Admin@email.com",
-                UserName = "Admin@email.com"
+                UserName = "Admin@email.com",
+                FirstName = "Admin",
+                LastName = "One",
+                ActiveStatus = "Actived"
             });
 
 

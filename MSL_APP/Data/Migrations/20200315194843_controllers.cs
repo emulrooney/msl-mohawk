@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSL_APP.Data.Migrations
 {
-    public partial class controller : Migration
+    public partial class controllers : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,6 +12,11 @@ namespace MSL_APP.Data.Migrations
                 name: "StudentID",
                 table: "AspNetUsers",
                 newName: "StudentId");
+
+            migrationBuilder.AddColumn<string>(
+                name: "ActiveStatus",
+                table: "AspNetUsers",
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "EligibleId",
@@ -88,7 +93,7 @@ namespace MSL_APP.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     NameId = table.Column<int>(nullable: false),
                     Key = table.Column<string>(nullable: true),
-                    UsedKey = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: false),
                     OwnerId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -141,6 +146,10 @@ namespace MSL_APP.Data.Migrations
 
             migrationBuilder.DropIndex(
                 name: "IX_AspNetUsers_EligibleId",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "ActiveStatus",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(

@@ -12,7 +12,7 @@ namespace MSL_APP.Data
     public class ApplicationUser:IdentityUser
     {
 
-        [Required, Display(Name = "Student ID")]
+        [Required, Display(Name = "Student ID"), DisplayFormat(DataFormatString = "{0:D9}", ApplyFormatInEditMode = true)]
         public int StudentId { get; set; }
 
         [Display(Name = "First Name")]
@@ -20,6 +20,9 @@ namespace MSL_APP.Data
 
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Active Status")]
+        public string ActiveStatus { get; set; }
 
         [ForeignKey("EligibleStudent")]
         public int? EligibleId { get; set; }
