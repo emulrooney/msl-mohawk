@@ -60,6 +60,11 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            List<SelectListItem> activeStatus = new List<SelectListItem> {
+                new SelectListItem { Text = "Active", Value = "Actived" },
+                new SelectListItem { Text = "Disable",  Value = "Disabled" },
+            };
+            ViewBag.listofitems = activeStatus;
             return View();
         }
 
@@ -71,6 +76,7 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(productName);
@@ -84,6 +90,12 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
+            List<SelectListItem> activeStatus = new List<SelectListItem> {
+                new SelectListItem { Text = "Active", Value = "Actived" },
+                new SelectListItem { Text = "Disable",  Value = "Disabled" },
+            };
+            ViewBag.listofitems = activeStatus;
+
             if (id == null)
             {
                 return NotFound();

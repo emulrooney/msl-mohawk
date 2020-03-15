@@ -33,11 +33,11 @@
                 <input asp-for="UsedKeyCount" class="form-control" />
                 <span asp-validation-for="UsedKeyCount" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <label asp-for="ActiveStatus" class="control-label"></label>
-                @Html.DropDownList("myList", new List<SelectListItem> { new SelectListItem { Text = "Active", Value = "Actived" }, new SelectListItem { Text = "Disable",  Value = "Disabled" },}, new {@class="form-control"})
-                <span asp-validation-for="ActiveStatus" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="ActiveStatus" class="control-label"></label>
+            <select asp-for="ActiveStatus" class="form-control" asp-items="ViewBag.listofitems"></select>
+            <span asp-validation-for="ActiveStatus" class="text-danger"></span>
+        </div>
             <div class="form-group">
                 <label asp-for="DownloadLink" class="control-label"></label>
                 <input asp-for="DownloadLink" class="form-control" />
