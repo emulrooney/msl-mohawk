@@ -3,12 +3,27 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    .dropdown-menu {padding:2px;}
+</style>
 
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-controller="ProductName" asp-action="UploadFile" method="post"
+      enctype="multipart/form-data">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Upload Product Name CSV
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+            <button class="btn btn-success btm-sm" type="submit">Upload File</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>

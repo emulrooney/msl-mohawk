@@ -76,7 +76,12 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
         {
-            
+            //Check if given name is a duplicate
+            if (_context.ProductName.Any(p => p.Name == productName.Name))
+            {
+                throw new Exception($"Product '{productName.Name}' already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(productName);
@@ -190,7 +195,7 @@ namespace MSL_APP.Controllers
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return Content("file not selected");
+                return RedirectToAction("Index");
 
             var parser = new CsvParser(file, ';');
             var results = parser.ParseProducts();
@@ -202,7 +207,8 @@ namespace MSL_APP.Controllers
                     await Create(new ProductName
                     {
                         Name = p,
-                        QuantityLimit = 1
+                        QuantityLimit = 1,
+                        ActiveStatus = "Actived"
                     });
 
                 }

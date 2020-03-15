@@ -16,7 +16,7 @@
 @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
 {
     ViewData["Title"] = "Student Home Page";
-    <h3>Student Panel</h3>
+    <h1>Student Panel</h1>
 
     <div class="text-center">
         <h1 class="display-4">This is Student Home Page</h1>
@@ -30,7 +30,7 @@
 
 
     ViewData["Title"] = "Admin Home Page";
-    <h3>Admin Panel</h3>
+    <h1>Admin Panel</h1>
 
     <table class="table">
         <thead>
