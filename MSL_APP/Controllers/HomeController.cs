@@ -48,8 +48,6 @@ namespace MSL_APP.Controllers
             IdentityResult result;
 
             //Create 2 new roles (Student, Admin)
-
-
             if (await _roleManager.RoleExistsAsync("Student") == false)
             {
                 result = await _roleManager.CreateAsync(new IdentityRole("Student"));
@@ -67,11 +65,14 @@ namespace MSL_APP.Controllers
             //Create a list of students
             List<ApplicationUser> StudentList = new List<ApplicationUser>();
 
-            //Sample bank clients
+            //Sample student user
             StudentList.Add(new ApplicationUser
             {
                 Email = "student1@email.com",
-                UserName = "student1@email.com"
+                UserName = "student1@email.com",
+                FirstName = "Student",
+                LastName = "One",
+                ActiveStatus = "Actived"
             });
 
             foreach (ApplicationUser student in StudentList)
@@ -90,11 +91,14 @@ namespace MSL_APP.Controllers
             //Create a list of admins
             List<ApplicationUser> AdminsList = new List<ApplicationUser>();
 
-            //Sample bank admins
+            //Sample admin user
             AdminsList.Add(new ApplicationUser
             {
                 Email = "Admin@email.com",
-                UserName = "Admin@email.com"
+                UserName = "Admin@email.com",
+                FirstName = "Admin",
+                LastName = "One",
+                ActiveStatus = "Actived"
             });
 
 

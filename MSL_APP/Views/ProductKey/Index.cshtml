@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<MSL_APP.Models.ProductKey>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Product Key";
 }
 
-<h1>Index</h1>
+<h1>Product Key</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Key)
             </th>
@@ -21,15 +24,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.OwnerId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName.Name)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Key)
             </td>
@@ -39,9 +42,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OwnerId)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName.Name)
-            </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

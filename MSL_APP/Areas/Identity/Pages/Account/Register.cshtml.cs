@@ -100,12 +100,13 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId, ActiveStatus="Actived" };
 
                     var result = await _userManager.CreateAsync(user, Input.Password);
-                    //Assign the new user to the student role
-                    var addRole = await _userManager.AddToRoleAsync(user, "Student");
 
-                    if (result.Succeeded && addRole.Succeeded)
+                    if (result.Succeeded)
                     {
                         _logger.LogInformation("User created a new account with password.");
+
+                        //Assign the new user to the student role
+                        var addRole = await _userManager.AddToRoleAsync(user, "Student");
 
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Page(
@@ -121,10 +122,10 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
 
-                    //foreach (var error in result.Errors)
-                    //{
-                    //    ModelState.AddModelError(string.Empty, error.Description);
-                    //}
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
                 else {
                     ModelState.AddModelError(string.Empty, "Sorry, Your email address does not have permissions.");

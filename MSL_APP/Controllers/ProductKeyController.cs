@@ -15,7 +15,11 @@ namespace MSL_APP.Controllers
     public class ProductKeyController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        List<SelectListItem> status = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "New", Value = "New" },
+            new SelectListItem { Text = "Used",  Value = "Used" },
+        };
         public ProductKeyController(ApplicationDbContext context)
         {
             _context = context;
@@ -50,6 +54,7 @@ namespace MSL_APP.Controllers
         // GET: ProductKey/Create
         public IActionResult Create()
         {
+            ViewBag.keystatus = status;
             ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name");
             return View();
         }
@@ -63,6 +68,8 @@ namespace MSL_APP.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Increse current product key count by one
+
                 _context.Add(productKey);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -74,6 +81,8 @@ namespace MSL_APP.Controllers
         // GET: ProductKey/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.keystatus = status;
+
             if (id == null)
             {
                 return NotFound();

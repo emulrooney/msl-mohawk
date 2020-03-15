@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200315194843_controllers")]
+    [Migration("20200315211141_controllers")]
     partial class controllers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
