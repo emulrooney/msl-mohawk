@@ -52,8 +52,15 @@
                     @Html.DisplayFor(modelItem => user.ActiveStatus)
                 </td>
                 <td>
-                    <button class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id">Ban</button>
+                    @if (user.ActiveStatus == "Actived")
+                    {
+                        <a class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id">Ban</a>
+                    }
 
+                    @if (user.ActiveStatus == "Disabled")
+                    {
+                        <a class="btn btn-outline-success btn-sm" asp-action="Ban" asp-route-id="@user.Id">Unban</a>
+                    }
                     <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
 
                 </td>

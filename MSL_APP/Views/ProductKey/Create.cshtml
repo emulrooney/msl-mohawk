@@ -6,14 +6,14 @@
 
 <h1>Create</h1>
 
-<h4>Produc tKey</h4>
+<h4>Product Key</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NameId" class="control-label"></label>
+                <label asp-for="NameId" class="control-label">Product</label>
                 <select asp-for="NameId" class ="form-control" asp-items="ViewBag.NameId"></select>
             </div>
             <div class="form-group">

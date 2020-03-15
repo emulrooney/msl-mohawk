@@ -25,6 +25,7 @@ namespace MSL_APP.Models
         [Display(Name = "Owner Id"), DisplayFormat(DataFormatString = "{0:D9}", ApplyFormatInEditMode = true)]
         public int? OwnerId { get; set; }
 
+        [Display(Name = "Product Name")]
         public virtual ProductName ProductName { get; set; }
     }
 }

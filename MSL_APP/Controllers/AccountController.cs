@@ -16,11 +16,13 @@ namespace MSL_APP.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager)
+        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> RoleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _roleManager = RoleManager;
+            _context = context;
         }
 
         // GET: Account
@@ -29,6 +31,38 @@ namespace MSL_APP.Controllers
             return View(await _userManager.Users.ToListAsync());
         }
 
+        // GET: Account/Ban/5
+        public async Task<IActionResult> Ban(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var account = await _userManager.FindByIdAsync(id);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+            else if (account.ActiveStatus == "Actived")
+            {
+                // Change the active status of the account to disabled
+                account.ActiveStatus = "Disabled";
+                _context.Entry(account).Property("ActiveStatus").IsModified = true;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            else if (account.ActiveStatus == "Disabled")
+            {
+                // Change the active status of the account to disabled
+                account.ActiveStatus = "Actived";
+                _context.Entry(account).Property("ActiveStatus").IsModified = true;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Index");
+        }
 
         // GET: Account/Delete/5
         public async Task<IActionResult> Delete(string id)

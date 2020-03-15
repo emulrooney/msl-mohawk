@@ -25,7 +25,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         // Use to read the eligible table in order to let student to register an account
-        private readonly ApplicationDbContext _dbcontext;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -39,7 +39,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _dbcontext = context;
+            _context = context;
         }
 
         [BindProperty]
@@ -83,7 +83,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 //int eligibleId = 0;
 
                 // Check user's email is in the eligible list or not
-                var eligibleStudent = await _dbcontext.EligibleStudent.ToListAsync();
+                var eligibleStudent = await _context.EligibleStudent.ToListAsync();
                 foreach (EligibleStudent student in eligibleStudent) {
                     if (student.StudentEmail == Input.Email) {
                         eligibleUser = true;
@@ -128,7 +128,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     }
                 }
                 else {
-                    ModelState.AddModelError(string.Empty, "Sorry, Your email address does not have permissions.");
+                    ModelState.AddModelError(string.Empty, "Sorry, your e-mail address is not eligible to create an account. Please contact the administrator for permission.");
                 }
             }
 

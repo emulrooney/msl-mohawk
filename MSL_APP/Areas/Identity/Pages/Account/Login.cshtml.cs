@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MSL_APP.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSL_APP.Areas.Identity.Pages.Account
 {
@@ -17,11 +18,13 @@ namespace MSL_APP.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -69,6 +72,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
+            bool banned = false;
 
             if (ModelState.IsValid)
             {
@@ -77,6 +81,25 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    // Check the user is banned or not
+                    var registeredStudent = await _userManager.Users.ToListAsync();
+                    foreach (var student in registeredStudent)
+                    {
+                        if (student.ActiveStatus == "Disabled")
+                        {
+                            banned = true;
+                            break;
+                        } else if (student.ActiveStatus == "Actived") {
+                            break;
+                        }
+
+                    }
+
+                    if (banned) 
+                    { 
+                        ModelState.AddModelError(string.Empty, "Sorry, your account has been locked. Please contact the administrator for permission.");
+                        return Page();
+                    } 
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
