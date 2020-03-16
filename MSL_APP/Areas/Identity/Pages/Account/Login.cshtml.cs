@@ -81,26 +81,25 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    // Check the user is banned or not
-                    //var registeredstudent = await _usermanager.users.tolistasync();
-                    //foreach (var student in registeredstudent)
-                    //{
-                    //    if (student.email == input.email && student.activestatus == "actived")
-                    //    {
-                    //        banned = false;
-                    //        break;
-                    //    }
-                    //    else if(student.email == input.email && student.activestatus == "disabled")
-                    //    {
-                    //        break;
-                    //    }
-                    //}
-
-                    //if (banned) 
-                    //{ 
-                    //    modelstate.addmodelerror(string.empty, "sorry, your account has been locked. please contact the administrator for permission.");
-                    //    return page();
-                    //} 
+                    // check the user is banned or not
+                    var registeredstudent = await _userManager.Users.ToListAsync();
+                    foreach (var student in registeredstudent)
+                    {
+                        if (student.Email.ToLower() == Input.Email.ToLower() && student.ActiveStatus == "Actived")
+                        {
+                            banned = false;
+                            break;
+                        }
+                        else if (student.Email.ToLower() == Input.Email.ToLower() && student.ActiveStatus == "Disabled")
+                        {
+                            break;
+                        }   
+                    }
+                    if (banned)
+                    {
+                        ModelState.AddModelError(string.Empty, "sorry, your account has been locked. please contact the administrator for permission.");
+                        return Page();
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
