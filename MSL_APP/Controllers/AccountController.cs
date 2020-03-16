@@ -31,6 +31,53 @@ namespace MSL_APP.Controllers
             return View(await _userManager.Users.ToListAsync());
         }
 
+        // GET: Account/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Account/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,AdminID,FirstName,LastName,AdminEmail,Password")] Account account)
+        {
+            if (ModelState.IsValid)
+            {
+                //ApplicationUser user = new ApplicationUser { 
+                //    UserName = account.AdminEmail, 
+                //    Email = account.AdminEmail, 
+                //    FirstName = account.FirstName, 
+                //    LastName = account.LastName, 
+                //    StudentId = account.AdminID, 
+                //    ActiveStatus = "Actived" 
+                //};
+                ApplicationUser user = new ApplicationUser
+                {
+                    UserName = "test@email.com",
+                    Email = "test@email.com",
+                    FirstName = "Test",
+                    LastName = "Test",
+                    StudentId = 000101010,
+                    ActiveStatus = "Actived"
+                };
+
+                IdentityResult result = await _userManager.CreateAsync(user, "123456");
+                if (result.Succeeded)
+                {
+                    //Assign the new user to the admin role
+                    var addRole = await _userManager.AddToRoleAsync(user, "Admin");
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(account);
+        }
+
         // GET: Account/Ban/5
         public async Task<IActionResult> Ban(string id)
         {
