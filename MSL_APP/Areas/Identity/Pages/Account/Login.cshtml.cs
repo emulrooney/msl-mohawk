@@ -72,7 +72,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            bool banned = false;
+            bool banned = true;
 
             if (ModelState.IsValid)
             {
@@ -82,24 +82,25 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     // Check the user is banned or not
-                    var registeredStudent = await _userManager.Users.ToListAsync();
-                    foreach (var student in registeredStudent)
-                    {
-                        if (student.ActiveStatus == "Disabled")
-                        {
-                            banned = true;
-                            break;
-                        } else if (student.ActiveStatus == "Actived") {
-                            break;
-                        }
+                    //var registeredstudent = await _usermanager.users.tolistasync();
+                    //foreach (var student in registeredstudent)
+                    //{
+                    //    if (student.email == input.email && student.activestatus == "actived")
+                    //    {
+                    //        banned = false;
+                    //        break;
+                    //    }
+                    //    else if(student.email == input.email && student.activestatus == "disabled")
+                    //    {
+                    //        break;
+                    //    }
+                    //}
 
-                    }
-
-                    if (banned) 
-                    { 
-                        ModelState.AddModelError(string.Empty, "Sorry, your account has been locked. Please contact the administrator for permission.");
-                        return Page();
-                    } 
+                    //if (banned) 
+                    //{ 
+                    //    modelstate.addmodelerror(string.empty, "sorry, your account has been locked. please contact the administrator for permission.");
+                    //    return page();
+                    //} 
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
