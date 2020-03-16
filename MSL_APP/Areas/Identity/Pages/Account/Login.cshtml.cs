@@ -97,6 +97,8 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     }
                     if (banned)
                     {
+                        await _signInManager.SignOutAsync();
+                        _logger.LogInformation("User logged out.");
                         ModelState.AddModelError(string.Empty, "sorry, your account has been locked. please contact the administrator for permission.");
                         return Page();
                     }
