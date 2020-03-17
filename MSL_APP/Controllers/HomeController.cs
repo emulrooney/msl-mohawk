@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +26,8 @@ namespace MSL_APP.Controllers
             _roleManager = RoleManager;
             _context = context;
         }
-        public async Task<IActionResult> Index()
+
+        public IActionResult Index()
         {
             return View();
         }
@@ -32,12 +35,75 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Student()
         {
-            return View(await _context.ProductKey.ToListAsync());
+            // get current logged in user id
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // Join to tables together
+            var query = (from pk in _context.ProductKey
+                         join pn in _context.ProductName on pk.NameId equals pn.Id
+                         join ac in _userManager.Users on pk.OwnerId equals ac.StudentId
+                         where ac.Id == userId
+                         select new StudentKey
+                         {
+                             Product = pn.Name,
+                             Key = pk.Key,
+                             DownloadLink = pn.DownloadLink
+                         });
+
+            return View(await query.ToListAsync());
         }
 
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> Admin()
+        public async Task<IActionResult> Admin(string sortBy, string search)
         {
+            var products = _context.ProductName.AsQueryable();
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            ViewBag.SortByProduct = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewBag.SortByTotalKeys = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
+            ViewBag.SortByAvailableKeys = sortBy == "AvailableKey" ? "AvailableKeyDESC" : "AvailableKey";
+            ViewBag.SortByUsedKeys = sortBy == "UsedKey" ? "UsedKeyDESC" : "UsedKey";
+
+            // Sort the product by name
+            switch (sortBy) 
+            {
+                case "NameDESC":
+                    products = products.OrderByDescending(p => p.Name);
+                    break;
+                case "TotalKeyDESC":
+                    products = products.OrderByDescending(p => p.KeyCount);
+                    break;
+                case "TotalKey":
+                    products = products.OrderBy(p => p.KeyCount);
+                    break;
+                case "AvailableKeyDESC":
+                    products = products.OrderByDescending(p => p.RemainingKeyCount);
+                    break;
+                case "AvailableKey":
+                    products = products.OrderBy(p => p.RemainingKeyCount);
+                    break;
+                case "UsedKeyDESC":
+                    products = products.OrderByDescending(p => p.UsedKeyCount);
+                    break;
+                case "UsedKey":
+                    products = products.OrderBy(p => p.UsedKeyCount);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Name);
+                    break;
+            }
+            
+            return View(await products.ToListAsync());
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminSearchProduct()
+        {
+
             return View(await _context.ProductName.ToListAsync());
         }
 

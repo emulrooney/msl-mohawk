@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MSL_APP.Models.ProductKey>
+﻿@using MSL_APP.Models
+@model IEnumerable<StudentKey>
 
 @{
     ViewData["Title"] = "Student Home Page";
@@ -25,13 +26,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProductName.Name)
+                    @Html.DisplayFor(modelItem => item.Product)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Key)
                 </td>
                 <td>
-                    
+                    @Html.DisplayFor(modelItem => item.DownloadLink)
                 </td>
             </tr>
         }

@@ -5,21 +5,29 @@
 }
 
 <h1>Admin Panel</h1>
-
+<form asp-action="Admin">
+    <div class="input-group mb-3 col-md-5">
+        <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search Product" aria-describedby="button-addon2">
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-outline-primary" id="searchProductButton">Search</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Product", "Admin", new { sortBy = ViewBag.SortByProduct })
+                @*@Html.DisplayNameFor(model => model.Name)*@
             </th>
             <th>
-                Total Keys
+                @Html.ActionLink("Total Key", "Admin", new { sortBy = ViewBag.SortByTotalKeys })
             </th>
             <th>
-                Available Keys
+                @Html.ActionLink("Available Key", "Admin", new { sortBy = ViewBag.SortByAvailableKeys })
             </th>
             <th>
-                Used Keys
+                @Html.ActionLink("Used Key", "Admin", new { sortBy = ViewBag.SortByUsedKeys })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.QuantityLimit)

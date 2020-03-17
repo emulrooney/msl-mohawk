@@ -1,14 +1,22 @@
 ﻿@model IEnumerable<MSL_APP.Models.ProductName>
 @* The page view for all guests *@
+@{
+    ViewData["Title"] = "Admin Home Page";
+}
+
 @if (!User.Identity.IsAuthenticated)
 {
 
-    ViewData["Title"] = "Home Page";
-
     <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
+        <h1 class="display-4">Microsoft Student Licensing</h1>
         <h3 style="color:dodgerblue">Please use your Mohawk College email to register a new account!</h3>
         <h3><a class="btn btn-outline-primary" asp-action="SeedUserData">Generate Accounts</a></h3>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Microsoft Student Licensing</h1>
     </div>
 }
 
