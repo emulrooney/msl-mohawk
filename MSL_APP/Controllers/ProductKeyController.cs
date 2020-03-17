@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -166,6 +167,13 @@ namespace MSL_APP.Controllers
         private bool ProductKeyExists(int id)
         {
             return _context.ProductKey.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            return View("Error", new ErrorViewModel { RequestId = "Not yet implemented!" });
         }
     }
 }

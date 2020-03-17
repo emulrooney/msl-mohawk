@@ -5,6 +5,47 @@
 }
 
 <h1>Admin Panel</h1>
+
+<div class="row mb-3">
+    <form asp-controller="ProductName" asp-action="UploadFile" method="post" asp-uploadType="productName"
+          enctype="multipart/form-data" class="col-4">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Upload Product Names
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+                <button class="btn btn-success btm-sm" type="submit">Upload File</button>
+            </div>
+        </div>
+    </form>
+    <form asp-controller="ProductKey" asp-action="UploadFile" method="post"
+          enctype="multipart/form-data" class="col-4">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Upload Product Keys
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+                <button class="btn btn-success btm-sm" type="submit">Upload File</button>
+            </div>
+        </div>
+    </form>
+    <form asp-controller="EligibleStudent" asp-action="UploadFile" method="post" asp-uploadType="productName"
+          enctype="multipart/form-data" class="col-4">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Upload Eligible Students
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+                <button class="btn btn-success btm-sm" type="submit">Upload File</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <form asp-action="Admin">
     <div class="input-group mb-3 col-md-5">
         <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search Product" aria-describedby="button-addon2">
