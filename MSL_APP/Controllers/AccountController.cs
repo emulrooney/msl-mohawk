@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
@@ -42,40 +44,49 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AdminID,FirstName,LastName,AdminEmail,Password")] Account account)
+        public async Task<IActionResult> Create([Bind("AdminID,FirstName,LastName,AdminEmail,Password")] Account account)
         {
-            if (ModelState.IsValid)
-            {
-                //ApplicationUser user = new ApplicationUser { 
-                //    UserName = account.AdminEmail, 
-                //    Email = account.AdminEmail, 
-                //    FirstName = account.FirstName, 
-                //    LastName = account.LastName, 
-                //    StudentId = account.AdminID, 
-                //    ActiveStatus = "Actived" 
-                //};
+            if (ModelState.IsValid) {
                 ApplicationUser user = new ApplicationUser
                 {
-                    UserName = "test@email.com",
-                    Email = "test@email.com",
-                    FirstName = "Test",
-                    LastName = "Test",
-                    StudentId = 000101010,
+                    UserName = account.AdminEmail,
+                    Email = account.AdminEmail,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    StudentId = account.AdminID,
                     ActiveStatus = "Actived"
                 };
 
-                IdentityResult result = await _userManager.CreateAsync(user, "123456");
+                IdentityResult result = await _userManager.CreateAsync(user, "Mohawk1!");
+
                 if (result.Succeeded)
                 {
                     //Assign the new user to the admin role
                     var addRole = await _userManager.AddToRoleAsync(user, "Admin");
 
+                    //return RedirectToAction(nameof(Index));
                     return RedirectToAction(nameof(Index));
                 }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
 
-                return RedirectToAction(nameof(Index));
+                return View(account);
             }
-            return View(account);
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            foreach (var modelState in allErrors)
+            {
+                ModelState.AddModelError(string.Empty, modelState.ErrorMessage);
+            }
+            return View("Create");
+            
+        }
+
+        private IActionResult Page()
+        {
+            throw new NotImplementedException();
         }
 
         // GET: Account/Ban/5

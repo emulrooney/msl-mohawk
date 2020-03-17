@@ -26,9 +26,20 @@ namespace MSL_APP.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductName.ToListAsync());
+            return View();
         }
 
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Student()
+        {
+            return View(await _context.ProductKey.ToListAsync());
+        }
+
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> Admin()
+        {
+            return View(await _context.ProductName.ToListAsync());
+        }
 
         public IActionResult Privacy()
         {

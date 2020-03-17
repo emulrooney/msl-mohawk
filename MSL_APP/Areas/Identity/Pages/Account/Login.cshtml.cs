@@ -72,7 +72,6 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            bool banned = true;
 
             if (ModelState.IsValid)
             {
@@ -82,28 +81,42 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     // check the user is banned or not
-                    var registeredstudent = await _userManager.Users.ToListAsync();
-                    foreach (var student in registeredstudent)
+                    var accountList = await _userManager.Users.ToListAsync();
+                    foreach (var user in accountList)
                     {
-                        if (student.Email.ToLower() == Input.Email.ToLower() && student.ActiveStatus == "Actived")
+                        if (user.Email.ToLower() == Input.Email.ToLower())
                         {
-                            banned = false;
-                            break;
+                            if (user.ActiveStatus == "Disabled")
+                            {
+                                await _signInManager.SignOutAsync();
+                                _logger.LogInformation("User logged out.");
+                                ModelState.AddModelError(string.Empty, "sorry, your account has been locked. please contact the administrator for permission.");
+                                return Page();
+                            }
+
+                            else if (user.ActiveStatus == "Actived") {
+                                _logger.LogInformation("User logged in.");
+
+                                var roles = await _userManager.GetRolesAsync(user);
+                                foreach (var role in roles)
+                                {
+                                    if (role == "Admin")
+                                    {
+                                        returnUrl = Url.Content("~/Home/Admin");
+                                        break;
+                                    }
+                                    else if (role == "Student")
+                                    {
+                                        returnUrl = Url.Content("~/Home/Student");
+                                        break;
+                                    }
+                                }
+                                return LocalRedirect(returnUrl);
+                            }
                         }
-                        else if (student.Email.ToLower() == Input.Email.ToLower() && student.ActiveStatus == "Disabled")
-                        {
-                            break;
-                        }   
                     }
-                    if (banned)
-                    {
-                        await _signInManager.SignOutAsync();
-                        _logger.LogInformation("User logged out.");
-                        ModelState.AddModelError(string.Empty, "sorry, your account has been locked. please contact the administrator for permission.");
-                        return Page();
-                    }
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return Page();
+
                 }
                 if (result.RequiresTwoFactor)
                 {
