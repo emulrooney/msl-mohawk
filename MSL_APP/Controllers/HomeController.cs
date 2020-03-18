@@ -97,7 +97,7 @@ namespace MSL_APP.Controllers
                 default:
                     query = query.OrderBy(p => p.Product);
                     break;
-            }   
+            }
 
             var model = await PaginatedList<StudentKey>.CreateAsync(query.AsNoTracking(), pageNumber ?? 1, pageSize);
 
