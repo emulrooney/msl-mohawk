@@ -24,15 +24,16 @@ namespace MSL_APP.Controllers
         }
 
         // GET: EligibleStudent
-        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            int pageSize = 10;
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
             ViewData["CurrentSort"] = sortBy;
             ViewData["StudentId"] = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
             ViewData["StudentEmail"] = sortBy == "Email" ? "EmailDESC" : "Email";
             ViewData["StudentFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
             ViewData["StudentLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
-
+            
             if (search != null)
             {
                 pageNumber = 1;
@@ -80,6 +81,12 @@ namespace MSL_APP.Controllers
                 default:
                     students = students.OrderBy(p => p.StudentID);
                     break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = students.Count();
+                ViewData["totalRow"] = pageSize;
             }
 
             var model = await PaginatedList<EligibleStudent>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize);

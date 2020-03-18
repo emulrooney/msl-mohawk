@@ -37,9 +37,10 @@ namespace MSL_APP.Controllers
 
         // GET: ProductName
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            int pageSize = 10;
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
             ViewData["CurrentSort"] = sortBy;
             ViewData["Product"] = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
             ViewData["TotalKeys"] = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
@@ -98,6 +99,12 @@ namespace MSL_APP.Controllers
                 default:
                     products = products.OrderBy(p => p.Name);
                     break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = products.Count();
+                ViewData["totalRow"] = pageSize;
             }
 
             var model = await PaginatedList<ProductName>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);

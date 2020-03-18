@@ -28,9 +28,10 @@ namespace MSL_APP.Controllers
         }
 
         // GET: ProductKey
-        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            int pageSize = 10;
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
             ViewData["CurrentSort"] = sortBy;
             ViewData["KeyName"] = string.IsNullOrEmpty(sortBy) ? "KeyNameDESC" : "";
             ViewData["KeyCode"] = sortBy == "KeyCode" ? "KeyCodeDESC" : "KeyCode";
@@ -82,6 +83,12 @@ namespace MSL_APP.Controllers
                 default:
                     productKeys = productKeys.OrderBy(p => p.ProductName.Name);
                     break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = productKeys.Count();
+                ViewData["totalRow"] = pageSize;
             }
 
             var model = await PaginatedList<ProductKey>.CreateAsync(productKeys.AsNoTracking(), pageNumber ?? 1, pageSize);

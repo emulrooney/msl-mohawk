@@ -29,9 +29,10 @@ namespace MSL_APP.Controllers
         }
 
         // GET: Account
-        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            int pageSize = 10;
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
             ViewData["CurrentSort"] = sortBy;
             ViewData["AccId"] = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
             ViewData["AccEmail"] = sortBy == "Email" ? "EmailDESC" : "Email";
@@ -93,6 +94,12 @@ namespace MSL_APP.Controllers
                 default:
                     users = users.OrderBy(p => p.StudentId);
                     break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = users.Count();
+                ViewData["totalRow"] = pageSize;
             }
 
             var model = await PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize);
