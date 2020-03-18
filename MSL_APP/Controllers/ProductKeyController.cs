@@ -174,7 +174,39 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            return View("Error", new ErrorViewModel { RequestId = "Not yet implemented!" });
+            if (file == null || file.Length == 0)
+                return RedirectToAction("Index");
+
+            var parser = new CsvParser(file, ';');
+            var results = parser.ParseKeys();
+
+            foreach (Tuple<string, string> pk in results.ValidList)
+            {
+                ProductKey existingRow = _context.ProductKey
+                    .Include(p => p.ProductName)
+                    .FirstOrDefault(p => p.ProductName.Name == pk.Item1
+                                      && p.Key == pk.Item2);
+
+                if (existingRow == null)
+                {
+                    var productName = _context.ProductName.FirstOrDefault(pn => pn.Name == pk.Item1);
+                    var nameId = productName.Id;
+
+                    ProductKey newKey = new ProductKey()
+                    {
+                        NameId = nameId,
+                        //ProductName = productName,
+                        Key = pk.Item2,
+                        Status = "New"
+                    };
+
+                    _context.ProductKey.Add(newKey);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }
