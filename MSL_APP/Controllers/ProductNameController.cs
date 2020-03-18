@@ -196,24 +196,14 @@ namespace MSL_APP.Controllers
             var parser = new CsvParser(file, ';');
             var results = parser.ParseProducts();
 
-            foreach (string p in results.ValidList)
+            foreach (ProductName pn in results.ValidList)
             {
-                try
-                {
-                    await Create(new ProductName
-                    {
-                        Name = p,
-                        QuantityLimit = 1,
-                        ActiveStatus = "Actived"
-                    });
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
+                ProductName existingRow = _context.ProductName.FirstOrDefault(p => p.Name == pn.Name);
+                if (existingRow == null)
+                    _context.ProductName.Add(pn);
             }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

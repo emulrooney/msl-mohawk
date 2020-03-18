@@ -153,11 +153,30 @@ namespace MSL_APP.Controllers
             return _context.EligibleStudent.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Parses students from file, then creates entry for each.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            return View("Error", new ErrorViewModel { RequestId = "Not yet implemented!" });
+            if (file == null || file.Length == 0)
+                return RedirectToAction("Index");
+
+            var parser = new CsvParser(file, ';');
+            var results = parser.ParseStudents();
+
+            //TODO: This is probably not performant; better to get a stored procedure to dump the table
+            _context.EligibleStudent.RemoveRange(_context.EligibleStudent.ToList());
+
+            foreach (EligibleStudent es in results.ValidList)
+                _context.EligibleStudent.Add(es);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }

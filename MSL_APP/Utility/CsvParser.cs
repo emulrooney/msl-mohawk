@@ -27,107 +27,118 @@ namespace MSL_APP
         /// <summary>
         /// Parse incoming students from CSV file.
         /// </summary>
-        public void ParseStudents()
+        public ParsedCsvData<EligibleStudent> ParseStudents()
         {
             using (var reader = new StreamReader(FileData))
             {
                 //SETUP     
-                List<InvalidCsvEntry> invalidEntries = new List<InvalidCsvEntry>(); 
-                List<string> students = new List<string>();
+                ParsedCsvData<EligibleStudent> parsedStudents = new ParsedCsvData<EligibleStudent>();
+
                 int currentLineNumber = 0;
 
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-
-                    //Split line on delimiter' 
-                    //Accommodate multiple entries on one line just in case
                     var values = line.Split(Delimiter);
 
-                    foreach (String value in values)
+                    try
                     {
-                        
-                        //Validate student has proper Mohawk email
-                        var student = value.ToLower();
-                        var pattern = "[a-z]*.[a-z0-9]*\\@mohawkcollege.ca";
-                        var match = Regex.Match(student, pattern);
+                        //Validate student number by attempting parse
+                        var studentNumber = Int32.Parse(values[0]);
 
-                        //Put valid entries in one list and invalid entries in another
-                        if (match.Success)
-                            students.Add(student);
-                        else
-                            invalidEntries.Add(new InvalidCsvEntry(currentLineNumber, student));
+                        //Validate student has proper Mohawk email
+                        var studentEmail = values[3].ToLower();
+                        var emailPattern = "[a-z]*.[a-z0-9]*\\@mohawkcollege.ca";
+                        var emailValidated = Regex.Match(studentEmail, emailPattern);
+
+                        //First&Last name are not validated; some students may have different names the one in their email
+
+                        //Student number should be < 9 digits, email must pass regex
+                        if (studentNumber < 1000000000 && emailValidated.Success)
+                        {
+                            var eligible = new EligibleStudent()
+                            {
+                                StudentID = studentNumber,
+                                FirstName = values[1],
+                                LastName = values[2],
+                                StudentEmail = values[3]
+                            };
+
+                            parsedStudents.ValidList.Add(eligible);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        parsedStudents.InvalidList.Add(new InvalidCsvEntry(currentLineNumber, line));
                     }
 
                     currentLineNumber++;
                 }
 
-                //TODO
-                //Wipe old 'eligible' table
-                //Replace eligible table with contents of valid list
-                //Display invalid entries on front-end so user knows where errors are
-
-                Console.WriteLine($"Got {students.Count} valid students");
-                Console.WriteLine($"Got {invalidEntries.Count} invalid students");
+                return parsedStudents;
             }
         }
 
         /// <summary>
         /// Parse incoming keys from CSV file.
         /// </summary>
-        public void ParseKeys()
+        public ParsedCsvData<Tuple<string, string>> ParseKeys()
         {
+            var parsedKeys = new ParsedCsvData<Tuple<string, string>>();
+            int currentLineNumber = 0;
+
             using (var reader = new StreamReader(FileData))
             {
-                //SETUP 
-                List<ProductKey> keys = new List<ProductKey>();
 
-                while (!reader.EndOfStream) { 
-
+                while (!reader.EndOfStream)
+                {
                     var line = reader.ReadLine();
                     var values = line.Split(Delimiter);
 
-                    foreach (String item in values)
+                    try
                     {
-                        var validKey = new ProductKey
-                        {
-                            Key = values[1]
-                        };
-
-                        keys.Add(validKey);
+                        var key = Tuple.Create(values[0], values[1]);
+                        parsedKeys.ValidList.Add(key);
+                    }
+                    catch (Exception e)
+                    {
+                        parsedKeys.InvalidList.Add(new InvalidCsvEntry(currentLineNumber, line));
                     }
 
-                    //TODO: Add handling of multiple entries on single line
-                    //TODO: Add check for how many values in line
+                    currentLineNumber++;
                 }
-
-                //TODO Check DB for any keys already being 
-
-                Console.WriteLine($"Got {keys.Count} valid product keys");
             }
+
+            return parsedKeys;
         }
 
         /// <summary>
         /// Parse product names from file
         /// </summary>
-        public ParsedCsvData ParseProducts()
+        public ParsedCsvData<ProductName> ParseProducts()
         {
+            var parsedProducts = new ParsedCsvData<ProductName>();
+            int currentLineNumber = 0;
+
             using (var reader = new StreamReader(FileData))
             {
-                var data = new ParsedCsvData();
 
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var productLine = line.Split(Delimiter);
-
-                    foreach (String product in line.Split(Delimiter))
+                    var productName = new ProductName()
                     {
-                        data.ValidList.Add(product);
-                    }
+                        QuantityLimit = 1,
+                        Name = line
+                    };
+
+                    parsedProducts.ValidList.Add(productName);
+                    currentLineNumber++;
+                
+                    //TODO: How should we check for validation?
                 }
 
-                return data;
+                return parsedProducts;
             }
         }
 
