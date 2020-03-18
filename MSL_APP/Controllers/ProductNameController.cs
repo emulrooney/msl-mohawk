@@ -123,10 +123,14 @@ namespace MSL_APP.Controllers
             // Count the key number for each product and store the number into database
             foreach (ProductName product in products) {
                 int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
-
-                // Change the active status of the account to disabled
+                int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
+                // Save the calculated key count number into database
                 product.KeyCount = keyCount;
                 _context.Entry(product).Property("KeyCount").IsModified = true;
+
+                product.UsedKeyCount = usedKeyCount;
+                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+
             }
             _context.SaveChanges();
 
