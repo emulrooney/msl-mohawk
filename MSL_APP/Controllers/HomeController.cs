@@ -33,11 +33,30 @@ namespace MSL_APP.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin, Student")]
-        public async Task<IActionResult> Student()
+        [Authorize(Roles = "Student,Admin")]
+        public async Task<IActionResult> Student(string sortBy, string search, string currentFilter, int? pageNumber)
         {
+
             // get current logged in user id
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            int pageSize = 10;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["Product"] = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewData["Key"] = sortBy == "Key" ? "KeyDESC" : "Key";
+            ViewData["DownloadLink"] = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
+
             // Join to tables together
             var query = (from pk in _context.ProductKey
                          join pn in _context.ProductName on pk.NameId equals pn.Id
@@ -50,8 +69,41 @@ namespace MSL_APP.Controllers
                              DownloadLink = pn.DownloadLink
                          });
 
-            return View(await query.ToListAsync());
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.Product.ToLower().Contains(search.ToLower()));
+            }
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "NameDESC":
+                    query = query.OrderByDescending(p => p.Product);
+                    break;
+                case "KeyDESC":
+                    query = query.OrderByDescending(p => p.Key);
+                    break;
+                case "Key":
+                    query = query.OrderBy(p => p.Key);
+                    break;
+                case "DownloadLinkDESC":
+                    query = query.OrderByDescending(p => p.DownloadLink);
+                    break;
+                case "DownloadLink":
+                    query = query.OrderBy(p => p.DownloadLink);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Product);
+                    break;
+            }
+
+            var model = await PaginatedList<StudentKey>.CreateAsync(query.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
+
 
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Admin(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
