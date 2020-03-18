@@ -129,7 +129,8 @@ namespace MSL_APP
                     var productName = new ProductName()
                     {
                         QuantityLimit = 1,
-                        Name = line
+                        Name = line,
+                        ActiveStatus = "Actived"
                     };
 
                     parsedProducts.ValidList.Add(productName);

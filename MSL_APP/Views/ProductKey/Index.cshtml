@@ -6,23 +6,52 @@
 
 <h1>Product Key</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-md">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a type="button" class="btn btn-outline-primary" asp-action="Create">Create</a>
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Upload Product Keys
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form asp-controller="ProductKey" asp-action="UploadFile" method="post"
+                          enctype="multipart/form-data">
+                        <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+                        <button class="btn btn-success btm-sm" type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md">
+        <form asp-action="Index">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search User">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductName)
+                @*@Html.DisplayNameFor(model => model.ProductName)*@
+                @Html.ActionLink("Product", "Index", new { sortBy = ViewBag.SortByKeyName })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Key)
+                @Html.ActionLink("Key", "Index", new { sortBy = ViewBag.SortByKeyCode })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.ActionLink("Status", "Index", new { sortBy = ViewBag.SortByKeyStatus })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OwnerId)
+                @Html.ActionLink("Owner ID", "Index", new { sortBy = ViewBag.SortByOnwer })
             </th>
             <th></th>
         </tr>

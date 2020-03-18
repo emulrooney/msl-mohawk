@@ -29,7 +29,47 @@ namespace MSL_APP.Controllers
         // GET: ProductKey
         public async Task<IActionResult> Index(string sortBy, string search)
         {
-            var productKeys = _context.ProductKey.Include(p => p.ProductName);
+            var productKeys = _context.ProductKey.Include(p => p.ProductName).AsQueryable();
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                productKeys = productKeys.Where(p => p.ProductName.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            ViewBag.SortByKeyName = string.IsNullOrEmpty(sortBy) ? "KeyNameDESC" : "";
+            ViewBag.SortByKeyCode = sortBy == "KeyCode" ? "KeyCodeDESC" : "KeyCode";
+            ViewBag.SortByKeyStatus = sortBy == "KeyStatus" ? "KeyStatusDESC" : "KeyStatus";
+            ViewBag.SortByOnwer = sortBy == "Onwer" ? "OnwerDESC" : "Onwer";
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "KeyNameDESC":
+                    productKeys = productKeys.OrderByDescending(p => p.ProductName.Name);
+                    break;
+                case "KeyCodeDESC":
+                    productKeys = productKeys.OrderByDescending(p => p.Key);
+                    break;
+                case "KeyCode":
+                    productKeys = productKeys.OrderBy(p => p.Key);
+                    break;
+                case "KeyStatusDESC":
+                    productKeys = productKeys.OrderByDescending(p => p.Status);
+                    break;
+                case "KeyStatus":
+                    productKeys = productKeys.OrderBy(p => p.Status);
+                    break;
+                case "OnwerDESC":
+                    productKeys = productKeys.OrderByDescending(p => p.OwnerId);
+                    break;
+                case "Onwer":
+                    productKeys = productKeys.OrderBy(p => p.OwnerId);
+                    break;
+                default:
+                    productKeys = productKeys.OrderBy(p => p.ProductName.Name);
+                    break;
+            }
 
             return View(await productKeys.ToListAsync());
         }

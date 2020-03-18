@@ -12,7 +12,7 @@
             <a type="button" class="btn btn-outline-primary" asp-action="Create">Create</a>
             <div class="btn-group" role="group">
                 <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Upload Eligible Student
+                    Upload Eligible Students
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <form asp-controller="EligibleStudent" asp-action="UploadFile" method="post"
@@ -28,7 +28,7 @@
     <div class="col-md">
         <form asp-action="Index">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search User">
+                <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
                 </div>
@@ -45,13 +45,13 @@
                 @Html.ActionLink("ID", "Index", new { sortBy = ViewBag.SortByStudentId })
             </th>
             <th>
-                @Html.ActionLink("First Name", "Index", new { sortBy = ViewBag.SortByStudentEmail })
+                @Html.ActionLink("First Name", "Index", new { sortBy = ViewBag.SortByStudentFirstName})
             </th>
             <th>
-                @Html.ActionLink("Last Name", "Index", new { sortBy = ViewBag.SortByStudentFirstName })
+                @Html.ActionLink("Last Name", "Index", new { sortBy = ViewBag.SortByStudentLastName })
             </th>
             <th>
-                @Html.ActionLink("Email", "Index", new { sortBy = ViewBag.SortByStudentLastName })
+                @Html.ActionLink("Email", "Index", new { sortBy = ViewBag.SortByStudentEmail})
             </th>
             <th></th>
         </tr>
