@@ -129,6 +129,17 @@
     }
 }
 <div class="row ">
+    <div class="dropdown mx-1">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Page Size
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
+            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
+            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
+            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
+        </div>
+    </div>
     <a asp-action="Index"
        asp-route-sortBy="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex - 1)"
@@ -156,17 +167,6 @@
        class="mx-1 btn btn-primary @nextDisabled">
         Next
     </a>
-    <div class="dropdown mx-1">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Page Size
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
-        </div>
-    </div>
 </div>
 
 
