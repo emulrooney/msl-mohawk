@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 
 namespace MSL_APP.Controllers
 {
@@ -23,8 +24,25 @@ namespace MSL_APP.Controllers
         }
 
         // GET: EligibleStudent
-        public async Task<IActionResult> Index(string sortBy, string search)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
         {
+            int pageSize = 10;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["StudentId"] = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
+            ViewData["StudentEmail"] = sortBy == "Email" ? "EmailDESC" : "Email";
+            ViewData["StudentFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
+            ViewData["StudentLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
             var students = _context.EligibleStudent.AsQueryable();
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
@@ -35,10 +53,7 @@ namespace MSL_APP.Controllers
                 || p.LastName.ToLower().Contains(search.ToLower()));
             }
 
-            ViewBag.SortByStudentId = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
-            ViewBag.SortByStudentEmail = sortBy == "Email" ? "EmailDESC" : "Email";
-            ViewBag.SortByStudentFirstName = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
-            ViewBag.SortByStudentLastName = sortBy == "LastName" ? "LastNameDESC" : "LastName";
+
 
             // Sort the product by name
             switch (sortBy)
@@ -69,7 +84,9 @@ namespace MSL_APP.Controllers
                     break;
             }
 
-            return View(await students.ToListAsync());
+            var model = await PaginatedList<EligibleStudent>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
 
         // GET: EligibleStudent/Details/5

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 
 namespace MSL_APP.Controllers
 {
@@ -28,8 +29,26 @@ namespace MSL_APP.Controllers
         }
 
         // GET: Account
-        public async Task<IActionResult> Index(string sortBy, string search)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
         {
+            int pageSize = 10;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["AccId"] = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
+            ViewData["AccEmail"] = sortBy == "Email" ? "EmailDESC" : "Email";
+            ViewData["AccFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
+            ViewData["AccLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
+            ViewData["AccStatus"] = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
             var users = _userManager.Users.AsQueryable();
 
             // Search product by the input
@@ -40,12 +59,6 @@ namespace MSL_APP.Controllers
                 || p.FirstName.ToLower().Contains(search.ToLower())
                 || p.LastName.ToLower().Contains(search.ToLower()));
             }
-
-            ViewBag.SortByAccId = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
-            ViewBag.SortByAccEmail = sortBy == "Email" ? "EmailDESC" : "Email";
-            ViewBag.SortByAccFirstName = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
-            ViewBag.SortByAccLastName = sortBy == "LastName" ? "LastNameDESC" : "LastName";
-            ViewBag.SortByAccStatus = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
 
             // Sort the product by name
             switch (sortBy)
@@ -82,7 +95,9 @@ namespace MSL_APP.Controllers
                     break;
             }
 
-            return View(await users.ToListAsync());
+            var model = await PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
 
         // GET: Account/Create

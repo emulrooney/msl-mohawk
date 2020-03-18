@@ -1,5 +1,6 @@
-﻿@model IEnumerable<MSL_APP.Models.EligibleStudent>
-
+﻿@*@model IEnumerable<MSL_APP.Models.EligibleStudent>*@
+@using MSL_APP.Utility
+@model PaginatedList<MSL_APP.Models.EligibleStudent>
 @{
     ViewData["Title"] = "Eligible Student";
 }
@@ -42,41 +43,61 @@
         <tr>
             <th>
                 @*@Html.DisplayNameFor(model => model.StudentID)*@
-                @Html.ActionLink("ID", "Index", new { sortBy = ViewBag.SortByStudentId })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["StudentId"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ID</a>
             </th>
             <th>
-                @Html.ActionLink("First Name", "Index", new { sortBy = ViewBag.SortByStudentFirstName})
+                <a asp-action="Index" asp-route-sortBy="@ViewData["StudentFirstName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">First Name</a>
             </th>
             <th>
-                @Html.ActionLink("Last Name", "Index", new { sortBy = ViewBag.SortByStudentLastName })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["StudentLastName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Last Name</a>
             </th>
             <th>
-                @Html.ActionLink("Email", "Index", new { sortBy = ViewBag.SortByStudentEmail})
+                <a asp-action="Index" asp-route-sortBy="@ViewData["StudentEmail"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Email</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentEmail)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentEmail)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "d-none" : "";
+    var nextDisabled = !Model.HasNextPage ? "d-none" : "";
+}
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 
 namespace MSL_APP.Controllers
 {
@@ -36,8 +37,26 @@ namespace MSL_APP.Controllers
 
         // GET: ProductName
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string sortBy, string search)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
         {
+            int pageSize = 10;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["Product"] = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewData["TotalKeys"] = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
+            ViewData["Limit"] = sortBy == "QuantityLimit" ? "QuantityLimitDESC" : "QuantityLimit";
+            ViewData["Status"] = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
+            ViewData["Link"] = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
             var products = _context.ProductName.AsQueryable();
 
             // Search product by the input
@@ -45,12 +64,6 @@ namespace MSL_APP.Controllers
             {
                 products = products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
             }
-
-            ViewBag.SortByProduct = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
-            ViewBag.SortByTotalKeys = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
-            ViewBag.SortByLimit = sortBy == "QuantityLimit" ? "QuantityLimitDESC" : "QuantityLimit";
-            ViewBag.SortByStatus = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
-            ViewBag.SortByLink = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
 
             // Sort the product by name
             switch (sortBy)
@@ -87,7 +100,9 @@ namespace MSL_APP.Controllers
                     break;
             }
 
-            return View(await products.ToListAsync());
+            var model = await PaginatedList<ProductName>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
 
         // GET: ProductName/Details/5
