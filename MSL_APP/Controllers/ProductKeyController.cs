@@ -230,17 +230,21 @@ namespace MSL_APP.Controllers
                 if (existingRow == null)
                 {
                     var productName = _context.ProductName.FirstOrDefault(pn => pn.Name == pk.Item1);
-                    var nameId = productName.Id;
 
-                    ProductKey newKey = new ProductKey()
+                    if (productName != null)
                     {
-                        NameId = nameId,
-                        //ProductName = productName,
-                        Key = pk.Item2,
-                        Status = "New"
-                    };
+                        var nameId = productName.Id;
+                        ProductKey newKey = new ProductKey()
+                        {
+                            NameId = nameId,
+                            //ProductName = productName,
+                            Key = pk.Item2,
+                            Status = "New"
+                        };
+                        _context.ProductKey.Add(newKey);
+                    }
 
-                    _context.ProductKey.Add(newKey);
+                    //TODO: Handle key when productName not found
                 }
             }
 
