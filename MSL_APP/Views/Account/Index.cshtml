@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MSL_APP.Data
-@model IEnumerable<ApplicationUser>
+@using MSL_APP.Utility
+
+@model PaginatedList<MSL_APP.Data.ApplicationUser>
 
 @{
     ViewData["Title"] = "Registered Accounts";
@@ -29,19 +31,19 @@
         <tr>
             <th>
                 @*@Html.DisplayNameFor(model => model.StudentId)*@
-                @Html.ActionLink("ID", "Index", new { sortBy = ViewBag.SortByAccId })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["AccId"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ID</a>
             </th>
             <th>
-                @Html.ActionLink("First Name", "Index", new { sortBy = ViewBag.SortByAccFirstName })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["AccFirstName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">First Name</a>
             </th>
             <th>
-                @Html.ActionLink("Last Name", "Index", new { sortBy = ViewBag.SortByAccLastName })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["AccLastName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Last Name</a>
             </th>
             <th>
-                @Html.ActionLink("Email", "Index", new { sortBy = ViewBag.SortByAccEmail })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["AccEmail"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Email</a>
             </th>
             <th>
-                @Html.ActionLink("Status", "Index", new { sortBy = ViewBag.SortByAccStatus })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["AccStatus"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Status</a>
             </th>
             <th></th>
         </tr>
@@ -82,3 +84,22 @@
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "d-none" : "";
+    var nextDisabled = !Model.HasNextPage ? "d-none" : "";
+}
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

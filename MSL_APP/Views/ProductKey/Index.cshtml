@@ -1,5 +1,6 @@
-﻿@model IEnumerable<MSL_APP.Models.ProductKey>
-
+﻿@*@model IEnumerable<MSL_APP.Models.ProductKey>*@
+@using MSL_APP.Utility
+@model PaginatedList<MSL_APP.Models.ProductKey>
 @{
     ViewData["Title"] = "Product Key";
 }
@@ -42,42 +43,62 @@
         <tr>
             <th>
                 @*@Html.DisplayNameFor(model => model.ProductName)*@
-                @Html.ActionLink("Product", "Index", new { sortBy = ViewBag.SortByKeyName })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["KeyName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Product</a>
             </th>
             <th>
-                @Html.ActionLink("Key", "Index", new { sortBy = ViewBag.SortByKeyCode })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["KeyCode"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Key</a>
             </th>
             <th>
-                @Html.ActionLink("Status", "Index", new { sortBy = ViewBag.SortByKeyStatus })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["KeyStatus"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Status</a>
             </th>
             <th>
-                @Html.ActionLink("Owner ID", "Index", new { sortBy = ViewBag.SortByOnwer })
+                <a asp-action="Index" asp-route-sortBy="@ViewData["Onwer"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Owner ID</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Key)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OwnerId)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Key)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerId)
+                </td>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "d-none" : "";
+    var nextDisabled = !Model.HasNextPage ? "d-none" : "";
+}
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortBy="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

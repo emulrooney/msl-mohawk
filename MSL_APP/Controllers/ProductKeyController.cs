@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 
 namespace MSL_APP.Controllers
 {
@@ -27,8 +28,25 @@ namespace MSL_APP.Controllers
         }
 
         // GET: ProductKey
-        public async Task<IActionResult> Index(string sortBy, string search)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber)
         {
+            int pageSize = 10;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["KeyName"] = string.IsNullOrEmpty(sortBy) ? "KeyNameDESC" : "";
+            ViewData["KeyCode"] = sortBy == "KeyCode" ? "KeyCodeDESC" : "KeyCode";
+            ViewData["KeyStatus"] = sortBy == "KeyStatus" ? "KeyStatusDESC" : "KeyStatus";
+            ViewData["Onwer"] = sortBy == "Onwer" ? "OnwerDESC" : "Onwer";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
             var productKeys = _context.ProductKey.Include(p => p.ProductName).AsQueryable();
 
             // Search product by the input
@@ -36,11 +54,6 @@ namespace MSL_APP.Controllers
             {
                 productKeys = productKeys.Where(p => p.ProductName.Name.ToLower().Contains(search.ToLower()));
             }
-
-            ViewBag.SortByKeyName = string.IsNullOrEmpty(sortBy) ? "KeyNameDESC" : "";
-            ViewBag.SortByKeyCode = sortBy == "KeyCode" ? "KeyCodeDESC" : "KeyCode";
-            ViewBag.SortByKeyStatus = sortBy == "KeyStatus" ? "KeyStatusDESC" : "KeyStatus";
-            ViewBag.SortByOnwer = sortBy == "Onwer" ? "OnwerDESC" : "Onwer";
 
             // Sort the product by name
             switch (sortBy)
@@ -71,7 +84,9 @@ namespace MSL_APP.Controllers
                     break;
             }
 
-            return View(await productKeys.ToListAsync());
+            var model = await PaginatedList<ProductKey>.CreateAsync(productKeys.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
 
         // GET: ProductKey/Details/5
