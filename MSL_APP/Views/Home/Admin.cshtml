@@ -108,8 +108,23 @@
 </table>
 
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "d-none" : "";
-    var nextDisabled = !Model.HasNextPage ? "d-none" : "";
+    var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
+    var nextDisabled = !Model.HasNextPage ? "invisible" : "";
+    var indexDisableed = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var totalPages = Model.TotalPages;
+    var centerIndex = Model.PageIndex;
+    if (centerIndex <= 5)
+    {
+        centerIndex = 1;
+    }
+    else if (centerIndex > 5 && centerIndex <= totalPages - 5)
+    {
+        centerIndex = centerIndex - 5;
+    }
+    else
+    {
+        centerIndex = totalPages - 10;
+    }
 }
 <a asp-action="Index"
    asp-route-sortBy="@ViewData["CurrentSort"]"
@@ -118,6 +133,16 @@
    class="btn btn-primary @prevDisabled">
     Previous
 </a>
+@for (int i = centerIndex; i <= centerIndex + 10; i++)
+{
+    <a asp-action="Index"
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber=@i
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-outline-primary @indexDisableed">
+        @i
+    </a>
+}
 <a asp-action="Index"
    asp-route-sortBy="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
@@ -125,7 +150,6 @@
    class="btn btn-primary @nextDisabled">
     Next
 </a>
-
 
 
 

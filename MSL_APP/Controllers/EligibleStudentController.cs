@@ -53,8 +53,6 @@ namespace MSL_APP.Controllers
                 || p.LastName.ToLower().Contains(search.ToLower()));
             }
 
-
-
             // Sort the product by name
             switch (sortBy)
             {
