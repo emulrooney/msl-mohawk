@@ -19,8 +19,8 @@ namespace MSL_APP.Controllers
         private readonly ApplicationDbContext _context;
         List<SelectListItem> activeStatus = new List<SelectListItem> 
         {
-            new SelectListItem { Text = "Active", Value = "Actived" },
-            new SelectListItem { Text = "Disable",  Value = "Disabled" },
+            new SelectListItem { Text = "Active", Value = "Active" },
+            new SelectListItem { Text = "Disable",  Value = "Disable" },
         };
         public ProductNameController(ApplicationDbContext context)
         {

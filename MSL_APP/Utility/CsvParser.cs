@@ -130,7 +130,7 @@ namespace MSL_APP
                     {
                         QuantityLimit = 1,
                         Name = line,
-                        ActiveStatus = "Actived"
+                        ActiveStatus = "Active"
                     };
 
                     parsedProducts.ValidList.Add(productName);
