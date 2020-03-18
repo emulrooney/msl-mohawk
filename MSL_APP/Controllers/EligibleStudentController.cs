@@ -23,9 +23,53 @@ namespace MSL_APP.Controllers
         }
 
         // GET: EligibleStudent
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortBy, string search)
         {
-            return View(await _context.EligibleStudent.ToListAsync());
+            var students = _context.EligibleStudent.AsQueryable();
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                students = students.Where(p => p.StudentEmail.ToLower().Contains(search.ToLower())
+                || p.StudentID.ToString().Contains(search)
+                || p.FirstName.ToLower().Contains(search.ToLower())
+                || p.LastName.ToLower().Contains(search.ToLower()));
+            }
+
+            ViewBag.SortByStudentId = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
+            ViewBag.SortByStudentEmail = sortBy == "Email" ? "EmailDESC" : "Email";
+            ViewBag.SortByStudentFirstName = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
+            ViewBag.SortByStudentLastName = sortBy == "LastName" ? "LastNameDESC" : "LastName";
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "IdDESC":
+                    students = students.OrderByDescending(p => p.StudentID);
+                    break;
+                case "EmailDESC":
+                    students = students.OrderByDescending(p => p.StudentEmail);
+                    break;
+                case "Email":
+                    students = students.OrderBy(p => p.StudentEmail);
+                    break;
+                case "FirstNameDESC":
+                    students = students.OrderByDescending(p => p.FirstName);
+                    break;
+                case "FirstName":
+                    students = students.OrderBy(p => p.FirstName);
+                    break;
+                case "LastNameDESC":
+                    students = students.OrderByDescending(p => p.LastName);
+                    break;
+                case "LastName":
+                    students = students.OrderBy(p => p.LastName);
+                    break;
+                default:
+                    students = students.OrderBy(p => p.StudentID);
+                    break;
+            }
+
+            return View(await students.ToListAsync());
         }
 
         // GET: EligibleStudent/Details/5

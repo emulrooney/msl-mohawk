@@ -28,9 +28,61 @@ namespace MSL_APP.Controllers
         }
 
         // GET: Account
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortBy, string search)
         {
-            return View(await _userManager.Users.ToListAsync());
+            var users = _userManager.Users.AsQueryable();
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(p => p.Email.ToLower().Contains(search.ToLower()) 
+                || p.StudentId.ToString().Contains(search)
+                || p.FirstName.ToLower().Contains(search.ToLower())
+                || p.LastName.ToLower().Contains(search.ToLower()));
+            }
+
+            ViewBag.SortByAccId = string.IsNullOrEmpty(sortBy) ? "IdDESC" : "";
+            ViewBag.SortByAccEmail = sortBy == "Email" ? "EmailDESC" : "Email";
+            ViewBag.SortByAccFirstName = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
+            ViewBag.SortByAccLastName = sortBy == "LastName" ? "LastNameDESC" : "LastName";
+            ViewBag.SortByAccStatus = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "IdDESC":
+                    users = users.OrderByDescending(p => p.StudentId);
+                    break;
+                case "EmailDESC":
+                    users = users.OrderByDescending(p => p.Email);
+                    break;
+                case "Email":
+                    users = users.OrderBy(p => p.Email);
+                    break;
+                case "FirstNameDESC":
+                    users = users.OrderByDescending(p => p.FirstName);
+                    break;
+                case "FirstName":
+                    users = users.OrderBy(p => p.FirstName);
+                    break;
+                case "LastNameDESC":
+                    users = users.OrderByDescending(p => p.LastName);
+                    break;
+                case "LastName":
+                    users = users.OrderBy(p => p.LastName);
+                    break;
+                case "ActiveStatusDESC":
+                    users = users.OrderByDescending(p => p.ActiveStatus);
+                    break;
+                case "ActiveStatus":
+                    users = users.OrderBy(p => p.ActiveStatus);
+                    break;
+                default:
+                    users = users.OrderBy(p => p.StudentId);
+                    break;
+            }
+
+            return View(await users.ToListAsync());
         }
 
         // GET: Account/Create

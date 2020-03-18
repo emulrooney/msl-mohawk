@@ -32,7 +32,7 @@ namespace MSL_APP.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Admin, Student")]
         public async Task<IActionResult> Student()
         {
             // get current logged in user id
@@ -67,6 +67,7 @@ namespace MSL_APP.Controllers
             ViewBag.SortByTotalKeys = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
             ViewBag.SortByAvailableKeys = sortBy == "AvailableKey" ? "AvailableKeyDESC" : "AvailableKey";
             ViewBag.SortByUsedKeys = sortBy == "UsedKey" ? "UsedKeyDESC" : "UsedKey";
+            ViewBag.SortByLimit = sortBy == "QuantityLimit" ? "QuantityLimitDESC" : "QuantityLimit";
 
             // Sort the product by name
             switch (sortBy) 
@@ -91,6 +92,12 @@ namespace MSL_APP.Controllers
                     break;
                 case "UsedKey":
                     products = products.OrderBy(p => p.UsedKeyCount);
+                    break;
+                case "QuantityLimitDESC":
+                    products = products.OrderByDescending(p => p.QuantityLimit);
+                    break;
+                case "QuantityLimit":
+                    products = products.OrderBy(p => p.QuantityLimit);
                     break;
                 default:
                     products = products.OrderBy(p => p.Name);

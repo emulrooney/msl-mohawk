@@ -28,17 +28,66 @@ namespace MSL_APP.Controllers
 
 
         // GET: ProductName
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> IndexStudent()
+        [Authorize(Roles = "Admin, Student")]
+        public async Task<IActionResult> Student()
         {
             return View(await _context.ProductName.ToListAsync());
         }
 
         // GET: ProductName
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortBy, string search)
         {
-            return View(await _context.ProductName.ToListAsync());
+            var products = _context.ProductName.AsQueryable();
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            ViewBag.SortByProduct = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewBag.SortByTotalKeys = sortBy == "TotalKey" ? "TotalKeyDESC" : "TotalKey";
+            ViewBag.SortByLimit = sortBy == "QuantityLimit" ? "QuantityLimitDESC" : "QuantityLimit";
+            ViewBag.SortByStatus = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
+            ViewBag.SortByLink = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "NameDESC":
+                    products = products.OrderByDescending(p => p.Name);
+                    break;
+                case "TotalKeyDESC":
+                    products = products.OrderByDescending(p => p.KeyCount);
+                    break;
+                case "TotalKey":
+                    products = products.OrderBy(p => p.KeyCount);
+                    break;
+                case "QuantityLimitDESC":
+                    products = products.OrderByDescending(p => p.QuantityLimit);
+                    break;
+                case "QuantityLimit":
+                    products = products.OrderBy(p => p.QuantityLimit);
+                    break;
+                case "ActiveStatusDESC":
+                    products = products.OrderByDescending(p => p.ActiveStatus);
+                    break;
+                case "ActiveStatus":
+                    products = products.OrderBy(p => p.ActiveStatus);
+                    break;
+                case "DownloadLinkDESC":
+                    products = products.OrderByDescending(p => p.DownloadLink);
+                    break;
+                case "DownloadLink":
+                    products = products.OrderBy(p => p.DownloadLink);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Name);
+                    break;
+            }
+
+            return View(await products.ToListAsync());
         }
 
         // GET: ProductName/Details/5

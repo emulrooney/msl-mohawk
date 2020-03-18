@@ -27,10 +27,11 @@ namespace MSL_APP.Controllers
         }
 
         // GET: ProductKey
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortBy, string search)
         {
-            var applicationDbContext = _context.ProductKey.Include(p => p.ProductName);
-            return View(await applicationDbContext.ToListAsync());
+            var productKeys = _context.ProductKey.Include(p => p.ProductName);
+
+            return View(await productKeys.ToListAsync());
         }
 
         // GET: ProductKey/Details/5

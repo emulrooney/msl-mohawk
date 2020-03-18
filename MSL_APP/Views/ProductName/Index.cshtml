@@ -3,73 +3,98 @@
 @{
     ViewData["Title"] = "Product";
 }
+
+@if (User.IsInRole("Student"))
+{
+    Context.Response.Redirect("/ProductName/Student");
+}
+
 <style>
-    .dropdown-menu {padding:2px;}
+    .dropdown-menu {
+        padding: 2px;
+    }
 </style>
 
 <h1>Product</h1>
 
-<p>
-    <a class="btn btn-outline-primary" asp-action="Create">Create New</a>
-</p>
-<form asp-controller="ProductName" asp-action="UploadFile" method="post"
-      enctype="multipart/form-data">
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Upload Product Name CSV
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
-            <button class="btn btn-success btm-sm" type="submit">Upload File</button>
+<div class="row">
+    <div class="col-md">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a type="button" class="btn btn-outline-primary" asp-action="Create">Create</a>
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Upload Product Name
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form asp-controller="ProductName" asp-action="UploadFile" method="post"
+                          enctype="multipart/form-data">
+                        <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
+                        <button class="btn btn-success btm-sm" type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
         </div>
+        
     </div>
-</form>
+    <div class="col-md">
+        <form asp-action="Index">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search User">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @*@Html.DisplayNameFor(model => model.Name)*@
+                @Html.ActionLink("Product", "Index", new { sortBy = ViewBag.SortByProduct })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.KeyCount)
+                @Html.ActionLink("Key Count", "Index", new { sortBy = ViewBag.SortByTotalKeys })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.QuantityLimit)
+                @Html.ActionLink("Quantity Limit", "Index", new { sortBy = ViewBag.SortByLimit })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ActiveStatus)
+                @Html.ActionLink("Status", "Index", new { sortBy = ViewBag.SortByStatus })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DownloadLink)
+                @Html.ActionLink("Download Link", "Index", new { sortBy = ViewBag.SortByLink })
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KeyCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityLimit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActiveStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DownloadLink)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KeyCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityLimit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActiveStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DownloadLink)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

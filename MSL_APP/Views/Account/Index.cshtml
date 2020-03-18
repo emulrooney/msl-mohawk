@@ -8,26 +8,40 @@
 
 <h1>Registered Account</h1>
 
-<a class="btn btn-outline-primary" asp-action="Create">Create Admin Account</a>
-
+<div class="row">
+    <div class="col-md">
+        <a class="btn btn-outline-primary" asp-action="Create">Create Admin Account</a>
+    </div>
+    <div class="col-md">
+        <form asp-action="Index">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <div asp-validation-summary="All" class="text-danger"></div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StudentId)
+                @*@Html.DisplayNameFor(model => model.StudentId)*@
+                @Html.ActionLink("ID", "Index", new { sortBy = ViewBag.SortByAccId })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.ActionLink("First Name", "Index", new { sortBy = ViewBag.SortByAccFirstName })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.ActionLink("Last Name", "Index", new { sortBy = ViewBag.SortByAccLastName })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.ActionLink("Email", "Index", new { sortBy = ViewBag.SortByAccEmail })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ActiveStatus)
+                @Html.ActionLink("Status", "Index", new { sortBy = ViewBag.SortByAccStatus })
             </th>
             <th></th>
         </tr>
