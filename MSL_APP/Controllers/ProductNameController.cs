@@ -30,10 +30,69 @@ namespace MSL_APP.Controllers
 
         // GET: ProductName
         [Authorize(Roles = "Admin, Student")]
-        public async Task<IActionResult> Student()
+        public async Task<IActionResult> Student(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            return View(await _context.ProductName.ToListAsync());
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["StudentProduct"] = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewData["StudentLink"] = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
+            // Display only actived products
+            var studentProducts = _context.ProductName.Where(p => p.ActiveStatus == "Active");
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                studentProducts = studentProducts.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "NameDESC":
+                    studentProducts = studentProducts.OrderByDescending(p => p.Name);
+                    break;
+                case "DownloadLinkDESC":
+                    studentProducts = studentProducts.OrderByDescending(p => p.DownloadLink);
+                    break;
+                case "DownloadLink":
+                    studentProducts = studentProducts.OrderBy(p => p.DownloadLink);
+                    break;
+                default:
+                    studentProducts = studentProducts.OrderBy(p => p.Name);
+                    break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = studentProducts.Count();
+                ViewData["totalRow"] = pageSize;
+            }
+
+            var model = await PaginatedList<ProductName>.CreateAsync(studentProducts.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
+
+        // GET: ProductName/Create
+        [Authorize(Roles = "Admin, Student")]
+        public IActionResult GetKey()
+        {
+            
+            return View();
+        }
+
 
         // GET: ProductName
         [Authorize(Roles = "Admin")]
@@ -59,6 +118,17 @@ namespace MSL_APP.Controllers
             ViewData["CurrentFilter"] = search;
 
             var products = _context.ProductName.AsQueryable();
+            var productkeys = _context.ProductKey.AsQueryable();
+
+            // Count the key number for each product and store the number into database
+            foreach (ProductName product in products) {
+                int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
+
+                // Change the active status of the account to disabled
+                product.KeyCount = keyCount;
+                _context.Entry(product).Property("KeyCount").IsModified = true;
+            }
+            _context.SaveChanges();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))

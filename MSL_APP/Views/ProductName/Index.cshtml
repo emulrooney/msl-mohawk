@@ -5,11 +5,6 @@
     ViewData["Title"] = "Product";
 }
 
-@if (User.IsInRole("Student"))
-{
-    Context.Response.Redirect("/ProductName/Student");
-}
-
 <style>
     .dropdown-menu {
         padding: 2px;

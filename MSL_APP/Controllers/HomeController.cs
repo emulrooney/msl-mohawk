@@ -127,7 +127,7 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var products = _context.ProductName.AsQueryable();
+            var products = _context.ProductName.Where(p => p.ActiveStatus == "Active").AsQueryable();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
@@ -226,6 +226,7 @@ namespace MSL_APP.Controllers
             //Sample student user
             StudentList.Add(new ApplicationUser
             {
+                StudentId = 000777777,
                 Email = "student1@email.com",
                 UserName = "student1@email.com",
                 FirstName = "Student",
@@ -252,6 +253,7 @@ namespace MSL_APP.Controllers
             //Sample admin user
             AdminsList.Add(new ApplicationUser
             {
+                StudentId = 000101010,
                 Email = "Admin@email.com",
                 UserName = "Admin@email.com",
                 FirstName = "Admin",

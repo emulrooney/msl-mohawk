@@ -1,19 +1,30 @@
-﻿@model IEnumerable<MSL_APP.Models.ProductName>
-
+﻿@*@model IEnumerable<MSL_APP.Models.ProductName>*@
+@using MSL_APP.Utility
+@model PaginatedList<MSL_APP.Models.ProductName>
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Product</h1>
 
+<div class="col-md-5">
+    <form asp-action="Student">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search User">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Student" asp-route-sortBy="@ViewData["StudentProduct"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageRow="@ViewData["totalRow"]">Product</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DownloadLink)
+                <a asp-action="Student" asp-route-sortBy="@ViewData["StudentLink"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageRow="@ViewData["totalRow"]">Download Link</a>
             </th>
             <th></th>
         </tr>
@@ -35,3 +46,64 @@
         }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
+    var nextDisabled = !Model.HasNextPage ? "invisible" : "";
+    var indexDisableed = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var totalPages = Model.TotalPages;
+    var centerIndex = Model.PageIndex;
+    var maxPages = 10;
+    if (totalPages < maxPages) { maxPages = totalPages; }
+    if (centerIndex <= 5)
+    {
+        centerIndex = 1;
+    }
+    else if (centerIndex > 5 && centerIndex <= totalPages - 5)
+    {
+        centerIndex = centerIndex - 5;
+    }
+    else
+    {
+        centerIndex = totalPages - 9;
+    }
+}
+<div class="row ">
+    <div class="dropdown mx-1">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Page Size
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
+        </div>
+    </div>
+    <a asp-action="Student"
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    @for (int i = centerIndex; i < centerIndex + maxPages; i++)
+    {
+        <a asp-action="Student"
+           asp-route-sortBy="@ViewData["CurrentSort"]"
+           asp-route-pageNumber=@i
+           asp-route-pageRow="@ViewData["totalRow"]"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="mx-1 btn btn-outline-primary @indexDisableed">
+            @i
+        </a>
+    }
+    <a asp-action="Student"
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @nextDisabled">
+        Next
+    </a>
+</div>
