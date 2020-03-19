@@ -79,9 +79,10 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 var username = Input.Email.ToLower();
                 var emailIdPattern = "[0-9]+\\@mohawkcollege.ca";
                 var emailIdValidated = Regex.Match(username, emailIdPattern);
-
                 var idPattern = "[0-9]+";
                 var idValidated = Regex.Match(username, idPattern);
+                var namePattern = "[a-z]*.[a-z0-9]*";
+                var nameValidated = Regex.Match(username, namePattern);
 
                 var accounts = await _userManager.Users.ToListAsync();
 
@@ -96,6 +97,10 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     int ID = int.Parse(username);
                     var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
                     if (account != null) { username = account.Email; }
+                }
+                else if (nameValidated.Success)
+                {
+                    username += "@mohawkcollege.ca";
                 }
 
                 // This doesn't count login failures towards account lockout
