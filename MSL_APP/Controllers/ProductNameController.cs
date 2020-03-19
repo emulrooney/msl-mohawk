@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,23 +19,148 @@ namespace MSL_APP.Controllers
     public class ProductNameController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
         List<SelectListItem> activeStatus = new List<SelectListItem> 
         {
-            new SelectListItem { Text = "Active", Value = "Actived" },
-            new SelectListItem { Text = "Disable",  Value = "Disabled" },
+            new SelectListItem { Text = "Active", Value = "Active" },
+            new SelectListItem { Text = "Disable",  Value = "Disable" },
         };
-        public ProductNameController(ApplicationDbContext context)
+        public ProductNameController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
 
         // GET: ProductName
         [Authorize(Roles = "Admin, Student")]
-        public async Task<IActionResult> Student()
+        public async Task<IActionResult> Student(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            return View(await _context.ProductName.ToListAsync());
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
+            ViewData["CurrentSort"] = sortBy;
+            ViewData["StudentProduct"] = string.IsNullOrEmpty(sortBy) ? "NameDESC" : "";
+            ViewData["StudentLink"] = sortBy == "DownloadLink" ? "DownloadLinkDESC" : "DownloadLink";
+
+            if (search != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
+            // Display only actived products
+            var studentProducts = _context.ProductName.Where(p => p.ActiveStatus == "Active");
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                studentProducts = studentProducts.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            // Sort the product by name
+            switch (sortBy)
+            {
+                case "NameDESC":
+                    studentProducts = studentProducts.OrderByDescending(p => p.Name);
+                    break;
+                case "DownloadLinkDESC":
+                    studentProducts = studentProducts.OrderByDescending(p => p.DownloadLink);
+                    break;
+                case "DownloadLink":
+                    studentProducts = studentProducts.OrderBy(p => p.DownloadLink);
+                    break;
+                default:
+                    studentProducts = studentProducts.OrderBy(p => p.Name);
+                    break;
+            }
+
+            if (pageRow == -1)
+            {
+                pageSize = studentProducts.Count();
+                ViewData["totalRow"] = pageSize;
+            }
+
+            var model = await PaginatedList<ProductName>.CreateAsync(studentProducts.AsNoTracking(), pageNumber ?? 1, pageSize);
+
+            return View(model);
         }
+
+        // GET: ProductName/Create
+        [Authorize(Roles = "Admin, Student")]
+        public IActionResult GetKey(int id)
+        {
+            string productKey = "";
+
+            // get current logged in user's student id
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userStudentId = 0;
+            foreach (var user in _userManager.Users) {
+                if (user.Id == userId) {
+                    userStudentId = user.StudentId;
+                    break;
+                }
+            }
+
+            var products = _context.ProductName.AsQueryable();
+            // Get the selected product info
+            var productList = _context.ProductName.Where(p => p.Id == id).AsQueryable();
+            var product = productList.FirstOrDefault();
+            // Get the product name
+            string productName = product.Name;
+            // Get the quantity allowed for this product
+            int quantityLimit = product.QuantityLimit;
+            // Get all the keys for the selected product
+            var productkeys = _context.ProductKey.Where(k => k.NameId == product.Id).OrderByDescending(k => k.Status).AsQueryable();
+
+            // Check the student has exceed the acquirable quantity limit or not
+            int ownedKeyCount = productkeys.Where(k => k.OwnerId == userStudentId).Count();
+            bool foundKey = false;
+            if (ownedKeyCount < quantityLimit) {
+                // Find an available key for student
+                foreach (ProductKey key in productkeys)
+                {
+                    if (key.Status == "New")
+                    {
+                        productKey = key.Key;
+                        key.Status = "Used";
+                        key.OwnerId = userStudentId;
+                        foundKey = true;
+                        break;
+                    }
+                }
+
+                if (foundKey)
+                {
+                    // update the used key count
+                    product.UsedKeyCount = product.UsedKeyCount + 1;
+                    _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                    _context.SaveChanges();
+
+                    ViewData["StudentProductName"] = productName;
+                    ViewData["StudentProductKey"] = productKey;
+                    ViewData["StudentGetKeySucceed"] = true;
+                    return View();
+                }
+                else 
+                {
+                    ViewData["StudentProductName"] = productName;
+                    ViewData["StudentGetKeySucceed"] = false;
+                    ViewData["StudentGetKeyMessage"] = "The key is out of stock. Please contact adminitrator for futher infomation.";
+                    return View();
+                }
+                
+            }
+            ViewData["StudentProductName"] = productName;
+            ViewData["StudentGetKeySucceed"] = false;
+            ViewData["StudentGetKeyMessage"] = "You have exceed the aquirable quantity limit.";
+            return View();
+        }
+
 
         // GET: ProductName
         [Authorize(Roles = "Admin")]
@@ -59,6 +186,21 @@ namespace MSL_APP.Controllers
             ViewData["CurrentFilter"] = search;
 
             var products = _context.ProductName.AsQueryable();
+            var productkeys = _context.ProductKey.AsQueryable();
+
+            // Count the key number for each product and store the number into database
+            foreach (ProductName product in products) {
+                int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
+                int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
+                // Save the calculated key count number into database
+                product.KeyCount = keyCount;
+                _context.Entry(product).Property("KeyCount").IsModified = true;
+
+                product.UsedKeyCount = usedKeyCount;
+                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+
+            }
+            _context.SaveChanges();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))

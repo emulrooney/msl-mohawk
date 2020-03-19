@@ -127,7 +127,23 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var products = _context.ProductName.AsQueryable();
+            var products = _context.ProductName.Where(p => p.ActiveStatus == "Active").AsQueryable();
+            var productkeys = _context.ProductKey.AsQueryable();
+
+            // Count the key number for each product and store the number into database
+            foreach (ProductName product in products)
+            {
+                int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
+                int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
+                // Save the calculated key count number into database
+                product.KeyCount = keyCount;
+                _context.Entry(product).Property("KeyCount").IsModified = true;
+
+                product.UsedKeyCount = usedKeyCount;
+                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+
+            }
+            _context.SaveChanges();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
@@ -233,6 +249,7 @@ namespace MSL_APP.Controllers
             //Sample student user
             StudentList.Add(new ApplicationUser
             {
+                StudentId = 000777777,
                 Email = "student1@email.com",
                 UserName = "student1@email.com",
                 FirstName = "Student",
@@ -259,6 +276,7 @@ namespace MSL_APP.Controllers
             //Sample admin user
             AdminsList.Add(new ApplicationUser
             {
+                StudentId = 000101010,
                 Email = "Admin@email.com",
                 UserName = "Admin@email.com",
                 FirstName = "Admin",

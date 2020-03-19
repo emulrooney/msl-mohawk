@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "GetKeyDetails";
+}
+
+<div class="text-center">
+    @if ((bool)ViewData["StudentGetKeySucceed"])
+    {
+        <h1>Your New Key</h1>
+
+        <h3 style="color:dodgerblue">@ViewData["StudentProductName"]</h3>
+        <h6>@ViewData["StudentProductKey"]</h6>
+    }
+    else
+    {
+        <h1>Get New Key Failed</h1>
+
+        <h3 style="color:dodgerblue">Sorry, you cannot get the new key from @ViewData["StudentProductName"] right now</h3>
+        <h3 style="color:red">@ViewData["StudentGetKeyMessage"]</h3>
+    }
+</div>

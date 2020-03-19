@@ -31,7 +31,7 @@ namespace MSL_APP.Models
         [Display(Name = "Remaining Key")]
         public int RemainingKeyCount => KeyCount - UsedKeyCount;
 
-        // Actived or disabled product. Using integer 1 as actived, 0 as disabled. 0 by default
+        // Actived or disabled product. Using string Active or Disable. Active by default
         [Display(Name = "Active Status")]
         public string ActiveStatus { get; set; }
 
