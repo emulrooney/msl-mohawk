@@ -197,20 +197,6 @@ namespace MSL_APP.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> StudentSearchProduct()
-        {
-
-            return View(await _context.ProductName.ToListAsync());
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AdminSearchProduct()
-        {
-
-            return View(await _context.ProductName.ToListAsync());
-        }
-
         public IActionResult Privacy()
         {
             return View();

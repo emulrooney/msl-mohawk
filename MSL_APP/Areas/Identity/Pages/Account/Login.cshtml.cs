@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MSL_APP.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace MSL_APP.Areas.Identity.Pages.Account
 {
@@ -41,7 +42,6 @@ namespace MSL_APP.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
             public string Email { get; set; }
 
             [Required]
@@ -75,16 +75,39 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                // Check user's input is either email, ID, or ID + email suffix
+                var username = Input.Email.ToLower();
+                var emailIdPattern = "[0-9]+\\@mohawkcollege.ca";
+                var emailIdValidated = Regex.Match(username, emailIdPattern);
+
+                var idPattern = "[0-9]+";
+                var idValidated = Regex.Match(username, idPattern);
+
+                var accounts = await _userManager.Users.ToListAsync();
+
+                if (emailIdValidated.Success)
+                {
+                    int ID = int.Parse(username.Trim().Replace("@mohawkcollege.ca", ""));
+                    var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
+                    if (account != null) { username = account.Email; }
+                }
+                else if (idValidated.Success) 
+                {
+                    int ID = int.Parse(username);
+                    var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
+                    if (account != null) { username = account.Email; }
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     // check the user is banned or not
                     var accountList = await _userManager.Users.ToListAsync();
                     foreach (var user in accountList)
                     {
-                        if (user.Email.ToLower() == Input.Email.ToLower())
+                        if (user.Email.ToLower() == username.ToLower())
                         {
                             if (user.ActiveStatus == "Disabled")
                             {
