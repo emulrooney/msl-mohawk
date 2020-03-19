@@ -75,20 +75,20 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // Check user's input is either email, ID, or ID + email suffix
-                var username = Input.Email.ToLower();
-                var emailIdPattern = "[0-9]+\\@mohawkcollege.ca";
+                // Check user's input is either email, name, ID, or ID + email suffix
+                var username = Input.Email.Trim().ToLower();
+                var emailIdPattern = "^[0-9]+\\@mohawkcollege.ca$";
                 var emailIdValidated = Regex.Match(username, emailIdPattern);
-                var idPattern = "[0-9]+";
+                var idPattern = "^[0-9]+$";
                 var idValidated = Regex.Match(username, idPattern);
-                var namePattern = "[a-z]*.[a-z0-9]*";
+                var namePattern = "^[a-z]+.[a-z0-9]+$";
                 var nameValidated = Regex.Match(username, namePattern);
 
                 var accounts = await _userManager.Users.ToListAsync();
 
                 if (emailIdValidated.Success)
                 {
-                    int ID = int.Parse(username.Trim().Replace("@mohawkcollege.ca", ""));
+                    int ID = int.Parse(username.Replace("@mohawkcollege.ca", ""));
                     var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
                     if (account != null) { username = account.Email; }
                 }
