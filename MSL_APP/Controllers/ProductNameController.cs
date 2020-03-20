@@ -98,18 +98,16 @@ namespace MSL_APP.Controllers
 
             // get current logged in user's student id
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int userStudentId = 0;
-            foreach (var user in _userManager.Users) {
-                if (user.Id == userId) {
-                    userStudentId = user.StudentId;
-                    break;
-                }
+            int userStudentId = -1;
+            var users = _userManager.Users.AsQueryable();
+            var findUser = users.Where(u => u.Id == userId).FirstOrDefault();
+            if (findUser != null) {
+                userStudentId = findUser.StudentId;
             }
 
             var products = _context.ProductName.AsQueryable();
             // Get the selected product info
-            var productList = _context.ProductName.Where(p => p.Id == id).AsQueryable();
-            var product = productList.FirstOrDefault();
+            var product = products.Where(p => p.Id == id).FirstOrDefault();
             // Get the product name
             string productName = product.Name;
             // Get the quantity allowed for this product
@@ -137,7 +135,7 @@ namespace MSL_APP.Controllers
                 if (foundKey)
                 {
                     // update the used key count
-                    product.UsedKeyCount = product.UsedKeyCount + 1;
+                    product.UsedKeyCount += 1;
                     _context.Entry(product).Property("UsedKeyCount").IsModified = true;
                     _context.SaveChanges();
 

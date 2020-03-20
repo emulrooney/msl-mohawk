@@ -134,13 +134,13 @@
             Page Size
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
-            <a asp-action="Index" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
+            <a asp-action="Admin" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
+            <a asp-action="Admin" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
+            <a asp-action="Admin" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
+            <a asp-action="Admin" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
         </div>
     </div>
-    <a asp-action="Index"
+    <a asp-action="Admin"
        asp-route-sortBy="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex - 1)"
        asp-route-pageRow="@ViewData["totalRow"]"
@@ -150,16 +150,30 @@
     </a>
     @for (int i = centerIndex; i < centerIndex + maxPages; i++)
     {
-        <a asp-action="Index"
-           asp-route-sortBy="@ViewData["CurrentSort"]"
-           asp-route-pageNumber=@i
-           asp-route-pageRow="@ViewData["totalRow"]"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="mx-1 btn btn-outline-primary @indexDisableed">
-            @i
-        </a>
+        if (i == Model.PageIndex)
+        {
+            <a asp-action="Admin"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-primary @indexDisableed">
+                @i
+            </a>
+        }
+        else
+        {
+            <a asp-action="Admin"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-outline-primary @indexDisableed">
+                @i
+            </a>
+        }
     }
-    <a asp-action="Index"
+    <a asp-action="Admin"
        asp-route-sortBy="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.PageIndex + 1)"
        asp-route-pageRow="@ViewData["totalRow"]"

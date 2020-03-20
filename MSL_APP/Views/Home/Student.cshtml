@@ -9,37 +9,6 @@
 
 <h1>My Product Keys</h1>
 
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Product
-                </th>
-                <th>
-                    Key
-                </th>
-                <th>
-                    Download Link
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Key)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DownloadLink)
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
 <form asp-action="Student">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="search" placeholder="Product Name" aria-label="Search Product" aria-describedby="button-addon2">
@@ -84,20 +53,77 @@
 </table>
 
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "d-none" : "";
-    var nextDisabled = !Model.HasNextPage ? "d-none" : "";
+    var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
+    var nextDisabled = !Model.HasNextPage ? "invisible" : "";
+    var indexDisableed = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var totalPages = Model.TotalPages;
+    var centerIndex = Model.PageIndex;
+    var maxPages = 10;
+    if (totalPages < maxPages) { maxPages = totalPages; }
+    if (centerIndex <= 5)
+    {
+        centerIndex = 1;
+    }
+    else if (centerIndex > 5 && centerIndex <= totalPages - 5)
+    {
+        centerIndex = centerIndex - 5;
+    }
+    else
+    {
+        centerIndex = totalPages - 9;
+    }
 }
-                    <a asp-action="Index"
-                       asp-route-sortBy="@ViewData["CurrentSort"]"
-                       asp-route-pageNumber="@(Model.PageIndex - 1)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="btn btn-primary @prevDisabled">
-                        Previous
-                    </a>
-<a asp-action="Index"
-   asp-route-sortBy="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-primary @nextDisabled">
-    Next
-</a>
+<div class="row ">
+    <div class="dropdown mx-1">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Page Size
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">10 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=20 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">20 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=50 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">50 Rows</a>
+            <a asp-action="Student" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=-1 asp-route-currentFilter="@ViewData["CurrentFilter"]" class="dropdown-item">All</a>
+        </div>
+    </div>
+    <a asp-action="Student"
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    @for (int i = centerIndex; i < centerIndex + maxPages; i++)
+    {
+        if (i == Model.PageIndex)
+        {
+            <a asp-action="Student"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-primary @indexDisableed">
+                @i
+            </a>
+        }
+        else
+        {
+            <a asp-action="Student"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-outline-primary @indexDisableed">
+                @i
+            </a>
+        }
+    }
+    <a asp-action="Student"
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @nextDisabled">
+        Next
+    </a>
+</div>

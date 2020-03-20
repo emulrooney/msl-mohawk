@@ -127,14 +127,28 @@
     </a>
     @for (int i = centerIndex; i < centerIndex + maxPages; i++)
     {
-        <a asp-action="Index"
-           asp-route-sortBy="@ViewData["CurrentSort"]"
-           asp-route-pageNumber=@i
-           asp-route-pageRow="@ViewData["totalRow"]"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="mx-1 btn btn-outline-primary @indexDisableed">
-            @i
-        </a>
+        if (i == Model.PageIndex)
+        {
+            <a asp-action="Index"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-primary @indexDisableed">
+                @i
+            </a>
+        }
+        else
+        {
+            <a asp-action="Index"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-outline-primary @indexDisableed">
+                @i
+            </a>
+        }
     }
     <a asp-action="Index"
        asp-route-sortBy="@ViewData["CurrentSort"]"

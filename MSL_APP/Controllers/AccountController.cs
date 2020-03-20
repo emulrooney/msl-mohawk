@@ -29,7 +29,7 @@ namespace MSL_APP.Controllers
         }
 
         // GET: Account
-        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
+        public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow, string roleType)
         {
             int pageSize = pageRow ?? 10;
             ViewData["totalRow"] = pageRow;
@@ -39,6 +39,7 @@ namespace MSL_APP.Controllers
             ViewData["AccFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
             ViewData["AccLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
             ViewData["AccStatus"] = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
+            ViewData["AccRole"] = roleType == "Student" ? "Admin" : "Student";
 
             if (search != null)
             {
@@ -102,6 +103,37 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
+
+            //List<ApplicationUser> AdminList = new List<ApplicationUser>();
+            //List<ApplicationUser> StudentList = new List<ApplicationUser>();
+            //foreach (var user in users) 
+            //{
+            //    var roles = await _userManager.GetRolesAsync(user);
+            //    foreach (var role in roles) {
+            //        if (role.ToLower() == "admin") {
+            //            AdminList.Add(user);
+            //            break;
+            //        } else if (role.ToLower() == "student")
+            //        {
+            //            StudentList.Add(user);
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //switch (roleType)
+            //{
+            //    case "Admin":
+            //        users = await Task.FromResult(AdminList.AsQueryable());
+            //        break;
+            //    case "Student":
+            //        users = await Task.FromResult(StudentList.AsQueryable());
+            //        break;
+            //    default:
+            //        users = await Task.FromResult(StudentList.AsQueryable());
+            //        break;
+            //}
+
             var model = await PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize);
 
             return View(model);
@@ -114,7 +146,7 @@ namespace MSL_APP.Controllers
         }
 
         // POST: Account/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

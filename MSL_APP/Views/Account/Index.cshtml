@@ -8,23 +8,47 @@
     ViewData["Title"] = "Registered Accounts";
 }
 
-<h1>Registered Account</h1>
-
-<div class="row">
-    <div class="col-md">
-        <a class="btn btn-outline-primary" asp-action="Create">Create Admin Account</a>
-    </div>
-    <div class="col-md">
-        <form asp-action="Index">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+@if ((string)@ViewData["AccRole"] == "Student")
+{
+    <h1>Student Account</h1>
+    <div class="row">
+        <div class="col-md">
+            <a class="btn btn-outline-primary" asp-action="Index" asp-route-roleType="@ViewData["AccRole"]">Display Admin Account</a>
+        </div>
+        <div class="col-md">
+            <form asp-action="Index">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
+}
+else if ((string)@ViewData["AccRole"] == "Admin")
+{
+    <h1>Admin Account</h1>
+    <div class="row">
+        <div class="col-md">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <a class="btn btn-outline-primary" asp-action="Index" asp-route-roleType="@ViewData["AccRole"]">Display Student Account</a>
+                <a class="btn btn-outline-primary" asp-action="Create">Create</a>
+            </div>
+        </div>
+        <div class="col-md">
+            <form asp-action="Index">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
 <div asp-validation-summary="All" class="text-danger"></div>
 <table class="table">
     <thead>
@@ -128,14 +152,28 @@
     </a>
     @for (int i = centerIndex; i < centerIndex + maxPages; i++)
     {
-        <a asp-action="Index"
-           asp-route-sortBy="@ViewData["CurrentSort"]"
-           asp-route-pageNumber=@i
-           asp-route-pageRow="@ViewData["totalRow"]"
-           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-           class="mx-1 btn btn-outline-primary @indexDisableed">
-            @i
-        </a>
+        if (i == Model.PageIndex)
+        {
+            <a asp-action="Index"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-primary @indexDisableed">
+                @i
+            </a>
+        }
+        else
+        {
+            <a asp-action="Index"
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-outline-primary @indexDisableed">
+                @i
+            </a>
+        }
     }
     <a asp-action="Index"
        asp-route-sortBy="@ViewData["CurrentSort"]"
