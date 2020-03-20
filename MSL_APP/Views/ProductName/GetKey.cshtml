@@ -8,17 +8,17 @@
     {
         <h1>Your New Key</h1>
 
-        <h3 style="color:dodgerblue">@ViewData["StudentProductName"]</h3>
-        <h6>@ViewData["StudentProductKey"]</h6>
+        <h4 style="color:dodgerblue">@ViewData["StudentProductName"]</h4>
+        <h6 style="color:darkgrey">@ViewData["StudentProductKey"]</h6>
     }
     else
     {
         <h1>Get New Key Failed</h1>
 
-        <h3 style="color:red">Sorry, you cannot get the new key from @ViewData["StudentProductName"].</h3>
-        <h3 style="color:red">@ViewData["StudentGetKeyMessage"]</h3>
+        <h4 style="color:red">Sorry, you cannot get the new key from @ViewData["StudentProductName"].</h4>
+        <h4 style="color:red">@ViewData["StudentGetKeyMessage"]</h4>
     }
-
+    <br />
     <a asp-action="Student">Back to Product List</a>
 
 </div>

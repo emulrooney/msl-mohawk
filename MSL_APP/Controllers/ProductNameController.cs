@@ -319,7 +319,7 @@ namespace MSL_APP.Controllers
             //Check if given name is a duplicate
             if (_context.ProductName.Any(p => p.Name == productName.Name))
             {
-                throw new Exception($"Product '{productName.Name}' already exists.");
+                ModelState.AddModelError("Name", "Product name already exists");
             }
 
             if (ModelState.IsValid)
@@ -360,6 +360,12 @@ namespace MSL_APP.Controllers
             if (id != productName.Id)
             {
                 return NotFound();
+            }
+
+            //Check if given name is a duplicate
+            if (_context.ProductName.Any(p => p.Name == productName.Name))
+            {
+                ModelState.AddModelError("Name", "Product name already exists");
             }
 
             if (ModelState.IsValid)

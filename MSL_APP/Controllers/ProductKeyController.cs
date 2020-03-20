@@ -130,6 +130,12 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NameId,Key,Status,OwnerId")] ProductKey productKey)
         {
+            //Check if given key is a duplicate
+            if (_context.ProductKey.Any(e => e.Key == productKey.Key))
+            {
+                ModelState.AddModelError("Key", "Key already exists");
+            }
+
             if (ModelState.IsValid)
             {
                 // Increse current product key count by one
@@ -171,6 +177,12 @@ namespace MSL_APP.Controllers
             if (id != productKey.Id)
             {
                 return NotFound();
+            }
+
+            //Check if given key is a duplicate
+            if (_context.ProductKey.Any(p => p.Key == productKey.Key && p.Id != id))
+            {
+                ModelState.AddModelError("Key", "Key already exists");
             }
 
             if (ModelState.IsValid)

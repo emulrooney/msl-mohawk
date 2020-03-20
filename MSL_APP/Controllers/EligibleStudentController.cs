@@ -58,28 +58,28 @@ namespace MSL_APP.Controllers
             switch (sortBy)
             {
                 case "IdDESC":
-                    students = students.OrderByDescending(p => p.StudentID);
+                    students = students.OrderByDescending(s => s.StudentID);
                     break;
                 case "EmailDESC":
-                    students = students.OrderByDescending(p => p.StudentEmail);
+                    students = students.OrderByDescending(s => s.StudentEmail);
                     break;
                 case "Email":
-                    students = students.OrderBy(p => p.StudentEmail);
+                    students = students.OrderBy(s => s.StudentEmail);
                     break;
                 case "FirstNameDESC":
-                    students = students.OrderByDescending(p => p.FirstName);
+                    students = students.OrderByDescending(s => s.FirstName);
                     break;
                 case "FirstName":
-                    students = students.OrderBy(p => p.FirstName);
+                    students = students.OrderBy(s => s.FirstName);
                     break;
                 case "LastNameDESC":
-                    students = students.OrderByDescending(p => p.LastName);
+                    students = students.OrderByDescending(s => s.LastName);
                     break;
                 case "LastName":
-                    students = students.OrderBy(p => p.LastName);
+                    students = students.OrderBy(s => s.LastName);
                     break;
                 default:
-                    students = students.OrderBy(p => p.StudentID);
+                    students = students.OrderBy(s => s.StudentID);
                     break;
             }
 
@@ -125,6 +125,19 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,StudentID,FirstName,LastName,StudentEmail")] EligibleStudent eligibleStudent)
         {
+            //Check if given Id is a duplicate
+            if (_context.EligibleStudent.Any(e => e.StudentID == eligibleStudent.StudentID))
+            {
+                ModelState.AddModelError("StudentID", "Student ID already exists");
+            }
+
+            //Check if given email is a duplicate
+            if (_context.EligibleStudent.Any(e => e.StudentEmail == eligibleStudent.StudentEmail))
+            {
+                ModelState.AddModelError("StudentEmail", "Student email already exists");
+            }
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(eligibleStudent);
@@ -160,6 +173,18 @@ namespace MSL_APP.Controllers
             if (id != eligibleStudent.Id)
             {
                 return NotFound();
+            }
+
+            //Check if given Id is a duplicate
+            if (_context.EligibleStudent.Any(e => e.StudentID == eligibleStudent.StudentID && e.Id != id))
+            {
+                ModelState.AddModelError("StudentID", "Student ID already exists");
+            }
+
+            //Check if given email is a duplicate
+            if (_context.EligibleStudent.Any(e => e.StudentEmail == eligibleStudent.StudentEmail && e.Id != id))
+            {
+                ModelState.AddModelError("StudentEmail", "Student email already exists");
             }
 
             if (ModelState.IsValid)

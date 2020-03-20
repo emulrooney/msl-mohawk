@@ -60,44 +60,44 @@ namespace MSL_APP.Controllers
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
             {
-                users = users.Where(p => p.Email.ToLower().Contains(search.ToLower()) 
-                || p.StudentId.ToString().Contains(search)
-                || p.FirstName.ToLower().Contains(search.ToLower())
-                || p.LastName.ToLower().Contains(search.ToLower()));
+                users = users.Where(u => u.Email.ToLower().Contains(search.ToLower()) 
+                || u.StudentId.ToString().Contains(search)
+                || u.FirstName.ToLower().Contains(search.ToLower())
+                || u.LastName.ToLower().Contains(search.ToLower()));
             }
 
             // Sort the product by name
             switch (sortBy)
             {
                 case "IdDESC":
-                    users = users.OrderByDescending(p => p.StudentId);
+                    users = users.OrderByDescending(u => u.StudentId);
                     break;
                 case "EmailDESC":
-                    users = users.OrderByDescending(p => p.Email);
+                    users = users.OrderByDescending(u => u.Email);
                     break;
                 case "Email":
-                    users = users.OrderBy(p => p.Email);
+                    users = users.OrderBy(u => u.Email);
                     break;
                 case "FirstNameDESC":
-                    users = users.OrderByDescending(p => p.FirstName);
+                    users = users.OrderByDescending(u => u.FirstName);
                     break;
                 case "FirstName":
-                    users = users.OrderBy(p => p.FirstName);
+                    users = users.OrderBy(u => u.FirstName);
                     break;
                 case "LastNameDESC":
-                    users = users.OrderByDescending(p => p.LastName);
+                    users = users.OrderByDescending(u => u.LastName);
                     break;
                 case "LastName":
-                    users = users.OrderBy(p => p.LastName);
+                    users = users.OrderBy(u => u.LastName);
                     break;
                 case "ActiveStatusDESC":
-                    users = users.OrderByDescending(p => p.ActiveStatus);
+                    users = users.OrderByDescending(u => u.ActiveStatus);
                     break;
                 case "ActiveStatus":
-                    users = users.OrderBy(p => p.ActiveStatus);
+                    users = users.OrderBy(u => u.ActiveStatus);
                     break;
                 default:
-                    users = users.OrderBy(p => p.StudentId);
+                    users = users.OrderBy(u => u.StudentId);
                     break;
             }
 
@@ -139,6 +139,12 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AdminID,FirstName,LastName,AdminEmail,Password")] Account account)
         {
+            //Check if given Id is a duplicate
+            if (_userManager.Users.Any(e => e.StudentId == account.AdminID))
+            {
+                ModelState.AddModelError("AdminID", "Account ID already exists");
+            }
+
             if (ModelState.IsValid) {
                 ApplicationUser user = new ApplicationUser
                 {
