@@ -118,11 +118,12 @@ namespace MSL_APP.Controllers
             // Need to check the student is eligible in order to get the key
             var eligibleStudents = _context.EligibleStudent.AsQueryable();
             bool isEligible = eligibleStudents.Any(e => e.StudentID == userStudentId);
-
+            // Student is eligible to get new key
             if (isEligible) {
                 // Check the student has exceed the acquirable quantity limit or not
                 int ownedKeyCount = productkeys.Where(k => k.OwnerId == userStudentId).Count();
                 bool foundKey = false;
+                // Student has not exceed the aquirable quantity limit
                 if (ownedKeyCount < quantityLimit)
                 {
                     // Find an available key for student
@@ -137,7 +138,7 @@ namespace MSL_APP.Controllers
                             break;
                         }
                     }
-
+                    // Found a new key in the database
                     if (foundKey)
                     {
                         // update the used key count
@@ -150,6 +151,7 @@ namespace MSL_APP.Controllers
                         ViewData["StudentGetKeySucceed"] = true;
                         return View();
                     }
+                    // The key of selected product is out of stock
                     else
                     {
                         ViewData["StudentProductName"] = productName;
@@ -157,13 +159,14 @@ namespace MSL_APP.Controllers
                         ViewData["StudentGetKeyMessage"] = "The key is out of stock. Please contact the administrator for more information.";
                         return View();
                     }
-
                 }
+                // Student has exceed the aquirable quantity limit
                 ViewData["StudentProductName"] = productName;
                 ViewData["StudentGetKeySucceed"] = false;
                 ViewData["StudentGetKeyMessage"] = "You have exceed the aquirable quantity limit.";
                 return View();
             }
+            // Student is not eligible to get new key
             ViewData["StudentProductName"] = productName;
             ViewData["StudentGetKeySucceed"] = false;
             ViewData["StudentGetKeyMessage"] = "You authorization has expired (Not Eligible). Please contact the administrator for more information.";
