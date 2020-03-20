@@ -99,10 +99,12 @@ namespace MSL_APP.Controllers
             // get current logged in user's student id
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             int userStudentId = -1;
+            string userStudentEmail = "";
             var users = _userManager.Users.AsQueryable();
             var findUser = users.Where(u => u.Id == userId).FirstOrDefault();
             if (findUser != null) {
                 userStudentId = findUser.StudentId;
+                userStudentEmail = findUser.Email;
             }
 
             var products = _context.ProductName.AsQueryable();
@@ -144,6 +146,18 @@ namespace MSL_APP.Controllers
                         // update the used key count
                         product.UsedKeyCount += 1;
                         _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                        _context.SaveChanges();
+
+                        // Write log for get key action
+                        ProductKeyLog newLog = new ProductKeyLog()
+                        {
+                            StudentId = userStudentId,
+                            StudentEmail = userStudentEmail,
+                            Action = "GetKey",
+                            ProductName = productName,
+                            ProductKey = productKey,
+                        };
+                        _context.Add(newLog);
                         _context.SaveChanges();
 
                         ViewData["StudentProductName"] = productName;

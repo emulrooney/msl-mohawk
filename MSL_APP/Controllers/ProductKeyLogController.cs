@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
+using MSL_APP.Utility;
 
 namespace MSL_APP.Controllers
 {
@@ -22,100 +23,44 @@ namespace MSL_APP.Controllers
         }
 
         // GET: ProductKeyLog
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search, string currentFilter, int? pageNumber, int? pageRow)
         {
-            return View(await _context.ProductKeyLog.ToListAsync());
-        }
 
-        // GET: ProductKeyLog/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+
+            int pageSize = pageRow ?? 10;
+            ViewData["totalRow"] = pageRow;
+
+            if (search != null)
             {
-                return NotFound();
+                pageNumber = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+            ViewData["CurrentFilter"] = search;
+
+            var log = _context.ProductKeyLog.OrderByDescending(l => l.TimeStamp).AsQueryable();
+
+            // Search product by the input
+            if (!string.IsNullOrEmpty(search))
+            {
+                log = log.Where(l => l.StudentEmail.ToLower().Contains(search.ToLower())
+                || l.StudentId.ToString().Contains(search)
+                || l.ProductName.Contains(search)
+                || l.ProductKey.Contains(search)
+                || l.Action.Contains(search));
             }
 
-            var productKeyLog = await _context.ProductKeyLog
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (productKeyLog == null)
+            if (pageRow == -1)
             {
-                return NotFound();
+                pageSize = log.Count();
+                ViewData["totalRow"] = pageSize;
             }
 
-            return View(productKeyLog);
-        }
+            var model = await PaginatedList<ProductKeyLog>.CreateAsync(log.AsNoTracking(), pageNumber ?? 1, pageSize);
 
-        // GET: ProductKeyLog/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ProductKeyLog/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StudentId,StudentEmail,Action,ProductName,ProductKey,TimeStamp")] ProductKeyLog productKeyLog)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(productKeyLog);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(productKeyLog);
-        }
-
-        // GET: ProductKeyLog/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productKeyLog = await _context.ProductKeyLog.FindAsync(id);
-            if (productKeyLog == null)
-            {
-                return NotFound();
-            }
-            return View(productKeyLog);
-        }
-
-        // POST: ProductKeyLog/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StudentId,StudentEmail,Action,ProductName,ProductKey,TimeStamp")] ProductKeyLog productKeyLog)
-        {
-            if (id != productKeyLog.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(productKeyLog);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductKeyLogExists(productKeyLog.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(productKeyLog);
+            return View(model);
         }
 
         // GET: ProductKeyLog/Delete/5
