@@ -239,38 +239,44 @@ namespace MSL_APP.Controllers
             if (file == null || file.Length == 0)
                 return RedirectToAction("Index");
 
-            var parser = new CsvParser(file, ';');
-            var results = parser.ParseKeys();
-
-            foreach (Tuple<string, string> pk in results.ValidList)
+            try
             {
-                ProductKey existingRow = _context.ProductKey
-                    .Include(p => p.ProductName)
-                    .FirstOrDefault(p => p.ProductName.Name == pk.Item1
-                                      && p.Key == pk.Item2);
+                var parser = new CsvParser(file, ';');
+                var results = parser.ParseKeys();
 
-                if (existingRow == null)
+                foreach (Tuple<string, string> pk in results.ValidList)
                 {
-                    var productName = _context.ProductName.FirstOrDefault(pn => pn.Name == pk.Item1);
+                    ProductKey existingRow = _context.ProductKey
+                        .Include(p => p.ProductName)
+                        .FirstOrDefault(p => p.ProductName.Name == pk.Item1
+                                          && p.Key == pk.Item2);
 
-                    if (productName != null)
+                    if (existingRow == null)
                     {
-                        var nameId = productName.Id;
-                        ProductKey newKey = new ProductKey()
+                        var productName = _context.ProductName.FirstOrDefault(pn => pn.Name == pk.Item1);
+
+                        if (productName != null)
                         {
-                            NameId = nameId,
-                            //ProductName = productName,
-                            Key = pk.Item2,
-                            Status = "New"
-                        };
-                        _context.ProductKey.Add(newKey);
+                            var nameId = productName.Id;
+                            ProductKey newKey = new ProductKey()
+                            {
+                                NameId = nameId,
+                                Key = pk.Item2,
+                                Status = "New"
+                            };
+                            _context.ProductKey.Add(newKey);
+                        }
+
+                        //TODO: Handle key when productName not found
                     }
-
-                    //TODO: Handle key when productName not found
                 }
-            }
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e}");
+            }
 
             return RedirectToAction("Index");
         }

@@ -13,6 +13,11 @@ namespace MSL_APP
         public char Delimiter { get; set; }
         public Stream FileData { get; set; }
 
+        private static readonly List<string> fileWhitelist = new List<string>() 
+        {
+            "text/plain"
+        };
+
         /// <summary>
         /// Receives the intended file, then parses based on given delimiter
         /// </summary>
@@ -20,8 +25,15 @@ namespace MSL_APP
         /// <param name="delimiter">Char to break up csv entries</param>
         public CsvParser(IFormFile file, char delimiter)
         {
-            Delimiter = delimiter;
-            FileData = file.OpenReadStream();
+            if (fileWhitelist.Contains(file.ContentType))
+            {
+                Delimiter = delimiter;
+                FileData = file.OpenReadStream();
+            }
+            else
+            {
+                throw new InvalidDataException("Uploaded file must be a plain text document.");
+            }
         }
 
         /// <summary>

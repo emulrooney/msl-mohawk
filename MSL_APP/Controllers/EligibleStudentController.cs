@@ -231,6 +231,9 @@ namespace MSL_APP.Controllers
             if (file == null || file.Length == 0)
                 return RedirectToAction("Index");
 
+            try
+            {
+
             var parser = new CsvParser(file, ';');
             var results = parser.ParseStudents();
 
@@ -240,7 +243,12 @@ namespace MSL_APP.Controllers
             foreach (EligibleStudent es in results.ValidList)
                 _context.EligibleStudent.Add(es);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e}");
+            }
 
             return RedirectToAction("Index");
         }

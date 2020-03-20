@@ -433,14 +433,21 @@ namespace MSL_APP.Controllers
             if (file == null || file.Length == 0)
                 return RedirectToAction("Index");
 
-            var parser = new CsvParser(file, ';');
-            var results = parser.ParseProducts();
+            try
+            { 
+                var parser = new CsvParser(file, ';');
+                var results = parser.ParseProducts();
 
-            foreach (ProductName pn in results.ValidList)
+                foreach (ProductName pn in results.ValidList)
+                {
+                    ProductName existingRow = _context.ProductName.FirstOrDefault(p => p.Name == pn.Name);
+                    if (existingRow == null)
+                        _context.ProductName.Add(pn);
+                }
+            }
+            catch (Exception e)
             {
-                ProductName existingRow = _context.ProductName.FirstOrDefault(p => p.Name == pn.Name);
-                if (existingRow == null)
-                    _context.ProductName.Add(pn);
+                Console.WriteLine($"Exception: { e}"); //TODO flesh out exception handling to provide userfriendly feedback
             }
 
             await _context.SaveChangesAsync();
