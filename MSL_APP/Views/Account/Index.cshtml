@@ -66,9 +66,12 @@ else if ((string)@ViewData["AccRole"] == "Admin")
             <th>
                 <a asp-action="Index" asp-route-sortBy="@ViewData["AccEmail"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]">Email</a>
             </th>
+            @if ((string)@ViewData["AccRole"] == "Student")
+            {
             <th>
                 <a asp-action="Index" asp-route-sortBy="@ViewData["AccStatus"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]">Status</a>
             </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -88,9 +91,12 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                 <td>
                     @Html.DisplayFor(modelItem => user.Email)
                 </td>
+                @if ((string)@ViewData["AccRole"] == "Student")
+                {
                 <td>
                     @Html.DisplayFor(modelItem => user.ActiveStatus)
                 </td>
+                }
                 <td>
                     @if ((string)@ViewData["AccRole"] == "Student")
                     {
