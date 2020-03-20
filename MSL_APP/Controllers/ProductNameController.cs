@@ -105,9 +105,6 @@ namespace MSL_APP.Controllers
                 userStudentId = findUser.StudentId;
             }
 
-            // Need to check the student is eligible in order to get the key
-            // ..
-
             var products = _context.ProductName.AsQueryable();
             // Get the selected product info
             var product = products.Where(p => p.Id == id).FirstOrDefault();
@@ -118,48 +115,60 @@ namespace MSL_APP.Controllers
             // Get all the keys for the selected product
             var productkeys = _context.ProductKey.Where(k => k.NameId == product.Id).OrderByDescending(k => k.Status).AsQueryable();
 
-            // Check the student has exceed the acquirable quantity limit or not
-            int ownedKeyCount = productkeys.Where(k => k.OwnerId == userStudentId).Count();
-            bool foundKey = false;
-            if (ownedKeyCount < quantityLimit) {
-                // Find an available key for student
-                foreach (ProductKey key in productkeys)
+            // Need to check the student is eligible in order to get the key
+            var eligibleStudents = _context.EligibleStudent.AsQueryable();
+            bool isEligible = eligibleStudents.Any(e => e.StudentID == userStudentId);
+
+            if (isEligible) {
+                // Check the student has exceed the acquirable quantity limit or not
+                int ownedKeyCount = productkeys.Where(k => k.OwnerId == userStudentId).Count();
+                bool foundKey = false;
+                if (ownedKeyCount < quantityLimit)
                 {
-                    if (key.Status == "New")
+                    // Find an available key for student
+                    foreach (ProductKey key in productkeys)
                     {
-                        productKey = key.Key;
-                        key.Status = "Used";
-                        key.OwnerId = userStudentId;
-                        foundKey = true;
-                        break;
+                        if (key.Status == "New")
+                        {
+                            productKey = key.Key;
+                            key.Status = "Used";
+                            key.OwnerId = userStudentId;
+                            foundKey = true;
+                            break;
+                        }
                     }
-                }
 
-                if (foundKey)
-                {
-                    // update the used key count
-                    product.UsedKeyCount += 1;
-                    _context.Entry(product).Property("UsedKeyCount").IsModified = true;
-                    _context.SaveChanges();
+                    if (foundKey)
+                    {
+                        // update the used key count
+                        product.UsedKeyCount += 1;
+                        _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                        _context.SaveChanges();
 
-                    ViewData["StudentProductName"] = productName;
-                    ViewData["StudentProductKey"] = productKey;
-                    ViewData["StudentGetKeySucceed"] = true;
-                    return View();
+                        ViewData["StudentProductName"] = productName;
+                        ViewData["StudentProductKey"] = productKey;
+                        ViewData["StudentGetKeySucceed"] = true;
+                        return View();
+                    }
+                    else
+                    {
+                        ViewData["StudentProductName"] = productName;
+                        ViewData["StudentGetKeySucceed"] = false;
+                        ViewData["StudentGetKeyMessage"] = "The key is out of stock. Please contact the administrator for more information.";
+                        return View();
+                    }
+
                 }
-                else 
-                {
-                    ViewData["StudentProductName"] = productName;
-                    ViewData["StudentGetKeySucceed"] = false;
-                    ViewData["StudentGetKeyMessage"] = "The key is out of stock. Please contact adminitrator for futher infomation.";
-                    return View();
-                }
-                
+                ViewData["StudentProductName"] = productName;
+                ViewData["StudentGetKeySucceed"] = false;
+                ViewData["StudentGetKeyMessage"] = "You have exceed the aquirable quantity limit.";
+                return View();
             }
             ViewData["StudentProductName"] = productName;
             ViewData["StudentGetKeySucceed"] = false;
-            ViewData["StudentGetKeyMessage"] = "You have exceed the aquirable quantity limit.";
+            ViewData["StudentGetKeyMessage"] = "You authorization has expired (Not Eligible). Please contact the administrator for more information.";
             return View();
+
         }
 
 
