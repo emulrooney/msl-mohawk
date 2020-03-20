@@ -39,7 +39,11 @@ namespace MSL_APP.Controllers
             ViewData["AccFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
             ViewData["AccLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
             ViewData["AccStatus"] = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
-            ViewData["AccRole"] = roleType == "Student" ? "Admin" : "Student";
+
+            if (string.IsNullOrEmpty(roleType)) { ViewData["AccRole"] = "Student"; }
+            else if (roleType == "Admin") { ViewData["AccRole"] = "Admin"; }
+            else { ViewData["AccRole"] = "Student"; }
+
 
             if (search != null)
             {
@@ -104,7 +108,7 @@ namespace MSL_APP.Controllers
             }
 
             // Display admin or student account by user request
-            switch (sortBy)
+            switch (roleType)
             {
                 case "Student":
                     users = users.Where(u => u.Role == "Student");
