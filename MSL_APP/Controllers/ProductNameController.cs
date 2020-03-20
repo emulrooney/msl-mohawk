@@ -105,6 +105,9 @@ namespace MSL_APP.Controllers
                 userStudentId = findUser.StudentId;
             }
 
+            // Need to check the student is eligible in order to get the key
+            // ..
+
             var products = _context.ProductName.AsQueryable();
             // Get the selected product info
             var product = products.Where(p => p.Id == id).FirstOrDefault();

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSL_APP.Data.Migrations
 {
-    public partial class controllers : Migration
+    public partial class models : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,8 +18,8 @@ namespace MSL_APP.Data.Migrations
                 table: "AspNetUsers",
                 nullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "EligibleId",
+            migrationBuilder.AddColumn<string>(
+                name: "Eligible",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -30,6 +30,11 @@ namespace MSL_APP.Data.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "LastName",
+                table: "AspNetUsers",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Role",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -108,30 +113,13 @@ namespace MSL_APP.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_EligibleId",
-                table: "AspNetUsers",
-                column: "EligibleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductKey_NameId",
                 table: "ProductKey",
                 column: "NameId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_EligibleStudent_EligibleId",
-                table: "AspNetUsers",
-                column: "EligibleId",
-                principalTable: "EligibleStudent",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_EligibleStudent_EligibleId",
-                table: "AspNetUsers");
-
             migrationBuilder.DropTable(
                 name: "EligibleStudent");
 
@@ -144,16 +132,12 @@ namespace MSL_APP.Data.Migrations
             migrationBuilder.DropTable(
                 name: "ProductName");
 
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_EligibleId",
-                table: "AspNetUsers");
-
             migrationBuilder.DropColumn(
                 name: "ActiveStatus",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "EligibleId",
+                name: "Eligible",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -162,6 +146,10 @@ namespace MSL_APP.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "LastName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Role",
                 table: "AspNetUsers");
 
             migrationBuilder.RenameColumn(

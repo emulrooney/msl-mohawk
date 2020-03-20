@@ -103,36 +103,19 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
-
-            //List<ApplicationUser> AdminList = new List<ApplicationUser>();
-            //List<ApplicationUser> StudentList = new List<ApplicationUser>();
-            //foreach (var user in users) 
-            //{
-            //    var roles = await _userManager.GetRolesAsync(user);
-            //    foreach (var role in roles) {
-            //        if (role.ToLower() == "admin") {
-            //            AdminList.Add(user);
-            //            break;
-            //        } else if (role.ToLower() == "student")
-            //        {
-            //            StudentList.Add(user);
-            //            break;
-            //        }
-            //    }
-            //}
-
-            //switch (roleType)
-            //{
-            //    case "Admin":
-            //        users = await Task.FromResult(AdminList.AsQueryable());
-            //        break;
-            //    case "Student":
-            //        users = await Task.FromResult(StudentList.AsQueryable());
-            //        break;
-            //    default:
-            //        users = await Task.FromResult(StudentList.AsQueryable());
-            //        break;
-            //}
+            // Display admin or student account by user request
+            switch (sortBy)
+            {
+                case "Student":
+                    users = users.Where(u => u.Role == "Student");
+                    break;
+                case "Admin":
+                    users = users.Where(u => u.Role == "Admin");
+                    break;
+                default:
+                    users = users.Where(u => u.Role == "Student");
+                    break;
+            }
 
             var model = await PaginatedList<ApplicationUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize);
 
@@ -160,7 +143,8 @@ namespace MSL_APP.Controllers
                     FirstName = account.FirstName,
                     LastName = account.LastName,
                     StudentId = account.AdminID,
-                    ActiveStatus = "Actived"
+                    ActiveStatus = "Actived",
+                    Role = "Admin"
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(user, "Mohawk1!");

@@ -21,13 +21,13 @@ namespace MSL_APP.Data
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "Active Status")]
+        [Display(Name = "Status")]
         public string ActiveStatus { get; set; }
 
-        [ForeignKey("EligibleStudent")]
-        public int? EligibleId { get; set; }
-
         [Display(Name = "Eligible")]
-        public virtual EligibleStudent EligibleStudent { get; set; }
+        public string Eligible { get; set; }
+
+        [Display(Name = "Role")]
+        public string Role { get; set; }
     }
 }

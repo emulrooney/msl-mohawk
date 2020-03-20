@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSL_APP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200315211141_controllers")]
-    partial class controllers
+    [Migration("20200320012646_models")]
+    partial class models
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace MSL_APP.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<int?>("EligibleId");
+                    b.Property<string>("Eligible");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -60,6 +60,8 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<string>("Role");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<int>("StudentId");
@@ -70,8 +72,6 @@ namespace MSL_APP.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EligibleId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -281,13 +281,6 @@ namespace MSL_APP.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("MSL_APP.Data.ApplicationUser", b =>
-                {
-                    b.HasOne("MSL_APP.Models.EligibleStudent", "EligibleStudent")
-                        .WithMany()
-                        .HasForeignKey("EligibleId");
                 });
 
             modelBuilder.Entity("MSL_APP.Models.ProductKey", b =>

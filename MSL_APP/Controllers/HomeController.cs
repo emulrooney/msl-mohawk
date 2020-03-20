@@ -240,8 +240,19 @@ namespace MSL_APP.Controllers
                 UserName = "student1@email.com",
                 FirstName = "Student",
                 LastName = "One",
-                ActiveStatus = "Actived"
+                ActiveStatus = "Actived",
+                Eligible = "Yes",
+                Role = "Student"
             });
+
+            EligibleStudent studentAccount = new EligibleStudent()
+            {
+                StudentID = 000777777,
+                StudentEmail = "student1@email.com",
+                FirstName = "Student",
+                LastName = "One",
+            };
+            _context.EligibleStudent.Add(studentAccount);
 
             foreach (ApplicationUser student in StudentList)
             {
@@ -267,9 +278,19 @@ namespace MSL_APP.Controllers
                 UserName = "Admin@email.com",
                 FirstName = "Admin",
                 LastName = "One",
-                ActiveStatus = "Actived"
+                ActiveStatus = "Actived",
+                Eligible = "Yes",
+                Role = "Admin"
             });
 
+            EligibleStudent adminAccount = new EligibleStudent()
+            {
+                StudentID = 000101010,
+                StudentEmail = "Admin@email.com",
+                FirstName = "Admin",
+                LastName = "One",
+            };
+            _context.EligibleStudent.Add(adminAccount);
 
             foreach (ApplicationUser admin in AdminsList)
             {
