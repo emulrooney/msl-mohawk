@@ -110,6 +110,18 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
                         if (addRole.Succeeded) 
                         {
+                            // Write log for get key action
+                            ProductKeyLog newLog = new ProductKeyLog()
+                            {
+                                StudentId = studentId,
+                                StudentEmail = Input.Email,
+                                Action = "Register",
+                                ProductName = "",
+                                ProductKey = "",
+                            };
+                            _context.Add(newLog);
+                            _context.SaveChanges();
+
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                             var callbackUrl = Url.Page(
                                 "/Account/ConfirmEmail",

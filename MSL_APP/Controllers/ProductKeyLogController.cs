@@ -63,6 +63,7 @@ namespace MSL_APP.Controllers
             return View(model);
         }
 
+
         // GET: ProductKeyLog/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -71,30 +72,18 @@ namespace MSL_APP.Controllers
                 return NotFound();
             }
 
-            var productKeyLog = await _context.ProductKeyLog
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var productKeyLog = await _context.ProductKeyLog.FindAsync(id);
+
             if (productKeyLog == null)
             {
                 return NotFound();
             }
-
-            return View(productKeyLog);
-        }
-
-        // POST: ProductKeyLog/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var productKeyLog = await _context.ProductKeyLog.FindAsync(id);
-            _context.ProductKeyLog.Remove(productKeyLog);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductKeyLogExists(int id)
-        {
-            return _context.ProductKeyLog.Any(e => e.Id == id);
+            else
+            {
+                _context.ProductKeyLog.Remove(productKeyLog);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 @using MSL_APP.Utility
 @model PaginatedList<MSL_APP.Models.ProductKeyLog>
 @{
-    ViewData["Title"] = "Log";
+    ViewData["Title"] = "Logs";
 }
 
 <h1>Product Key Log</h1>
@@ -33,11 +33,16 @@
                 @if (item.Action == "GetKey")
                 {
                     <td>
-                        Account <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b>  got key <b style="color:darkgray">[@item.ProductKey]</b> from <b style="color:dodgerblue"> @item.ProductName</b> at <b style="color:dodgerblue">@item.TimeStamp</b>.
+                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> got key <b style="color:darkgray">[@item.ProductKey]</b> from <b style="color:dodgerblue"> @item.ProductName</b> at <b style="color:dodgerblue">@item.TimeStamp</b>.
+                    </td>
+                } else if (item.Action == "Register") 
+                {
+                    <td>
+                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> has registered the account at <b style="color:dodgerblue">@item.TimeStamp</b>.
                     </td>
                 }
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete the log at @item.TimeStamp?')">Delete</a>
                 </td>
             </tr>
         }
