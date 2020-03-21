@@ -88,6 +88,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 var nameValidated = Regex.Match(username, namePattern);
 
                 var accounts = await _userManager.Users.ToListAsync();
+                // Username input is full email address. ex. firstname.lastname@mohawkcollege.ca
                 if (emailValidated.Success)
                 {
                     var account = accounts.Where(a => a.Email == username).FirstOrDefault();
@@ -97,6 +98,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         return Page();
                     }
                 }
+                // Username input is ID + mohawk suffix. ex. 000101010@mohawkcollege.ca
                 else if (emailIdValidated.Success)
                 {
                     int ID = int.Parse(username.Replace("@mohawkcollege.ca", ""));
@@ -107,6 +109,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         return Page();
                     }
                 }
+                // username input is ID. ex. 000101010
                 else if (idValidated.Success)
                 {
                     int ID = int.Parse(username);
@@ -118,6 +121,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         return Page();
                     }
                 }
+                // username input is firstname.lastname
                 else if (nameValidated.Success)
                 {
                     username += "@mohawkcollege.ca";
@@ -129,11 +133,17 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         return Page();
                     }
                 }
-                //else
-                //{
-                //    ModelState.AddModelError(string.Empty, "Invalid username format. Please use Mohawk ID or Email to login.");
-                //    return Page();
-                //}
+                // for customized admin accounts that already exists in the database
+                else if (accounts.Any(a => a.Email.ToLower() == username)) 
+                {
+                    // do nothing
+                }
+                // Invalid username format
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid username format. Please use Mohawk ID or Email to login.");
+                    return Page();
+                }
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
@@ -189,7 +199,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Wrong password. Try again or click Forgot password to reset it.");
                     return Page();
                 }
             }
