@@ -62,9 +62,10 @@ namespace MSL_APP.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 users = users.Where(u => u.Email.ToLower().Contains(search.ToLower()) 
-                || u.StudentId.ToString().Contains(search)
+                || (u.StudentId.ToString()).Contains(search.TrimStart('0'))
                 || u.FirstName.ToLower().Contains(search.ToLower())
-                || u.LastName.ToLower().Contains(search.ToLower()));
+                || u.LastName.ToLower().Contains(search.ToLower())
+                || u.ActiveStatus.ToLower().Contains(search.ToLower()));
             }
 
             // Sort the product by name

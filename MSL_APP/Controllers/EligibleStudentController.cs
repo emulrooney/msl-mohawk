@@ -49,7 +49,7 @@ namespace MSL_APP.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 students = students.Where(p => p.StudentEmail.ToLower().Contains(search.ToLower())
-                || p.StudentID.ToString().Contains(search)
+                || p.StudentID.ToString().Contains(search.TrimStart('0'))
                 || p.FirstName.ToLower().Contains(search.ToLower())
                 || p.LastName.ToLower().Contains(search.ToLower()));
             }
