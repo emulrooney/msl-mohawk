@@ -31,6 +31,7 @@ namespace MSL_APP.Controllers
         // GET: Account
         public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow, string roleType)
         {
+            ViewBag.userid = _userManager.GetUserId(HttpContext.User);
             int pageSize = pageRow ?? 10;
             ViewData["totalRow"] = pageRow;
             ViewData["CurrentSort"] = sortBy;

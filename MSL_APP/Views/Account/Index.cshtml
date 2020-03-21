@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "Account";
+    var userid = ViewBag.userid;
 }
 
 @if ((string)@ViewData["AccRole"] == "Student")
@@ -111,7 +112,15 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                         }
                     }
 
-                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["sortBy"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@ViewData["PageIndex"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
+                    @if (user.Id == userid)
+                    {
+                        <a class="btn btn-outline-danger btn-sm disabled" asp-action="Delete" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["sortBy"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@ViewData["PageIndex"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
+                    }
+                    else 
+                    { 
+                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["sortBy"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@ViewData["PageIndex"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
+                    }
+                    
 
                 </td>
             </tr>
