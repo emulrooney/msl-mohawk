@@ -78,6 +78,8 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             {
                 // Check user's input is either email, name, ID, or ID + email suffix
                 var username = Input.Email.Trim().ToLower();
+                var emailPattern = "^[a-z]+.[a-z0-9]+\\@mohawkcollege.ca$";
+                var emailValidated = Regex.Match(username, emailPattern);
                 var emailIdPattern = "^[0-9]+\\@mohawkcollege.ca$";
                 var emailIdValidated = Regex.Match(username, emailIdPattern);
                 var idPattern = "^[0-9]+$";
@@ -86,23 +88,52 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 var nameValidated = Regex.Match(username, namePattern);
 
                 var accounts = await _userManager.Users.ToListAsync();
-
-                if (emailIdValidated.Success)
+                if (emailValidated.Success)
+                {
+                    var account = accounts.Where(a => a.Email == username).FirstOrDefault();
+                    if (account == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        return Page();
+                    }
+                }
+                else if (emailIdValidated.Success)
                 {
                     int ID = int.Parse(username.Replace("@mohawkcollege.ca", ""));
                     var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
                     if (account != null) { username = account.Email; }
+                    else {
+                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        return Page();
+                    }
                 }
-                else if (idValidated.Success) 
+                else if (idValidated.Success)
                 {
                     int ID = int.Parse(username);
                     var account = accounts.Where(a => a.StudentId == ID).FirstOrDefault();
                     if (account != null) { username = account.Email; }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        return Page();
+                    }
                 }
                 else if (nameValidated.Success)
                 {
                     username += "@mohawkcollege.ca";
+                    var account = accounts.Where(a => a.Email == username).FirstOrDefault();
+                    if (account != null) { username = account.Email; }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        return Page();
+                    }
                 }
+                //else
+                //{
+                //    ModelState.AddModelError(string.Empty, "Invalid username format. Please use Mohawk ID or Email to login.");
+                //    return Page();
+                //}
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
@@ -145,8 +176,8 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         }
                     }
                     return Page();
-
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });

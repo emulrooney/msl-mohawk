@@ -208,7 +208,7 @@ namespace MSL_APP.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //Seed the database with users, roles and assign users to roles. To call this method, use https://localhost:44350/Account/SeedUserData
+        //Seed the database with users, roles and assign users to roles. To call this method, use https://localhost:44350/Account/SeedUserData. This method need to be removed before publish
         public async Task<IActionResult> SeedUserData()
         {
             //Variable to hold the status of our identity operations
