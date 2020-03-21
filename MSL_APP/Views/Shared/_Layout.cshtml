@@ -74,7 +74,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Student">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductName" asp-action="Student">Product</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Student">Product</a>
                             </li>
                         }
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
@@ -83,7 +83,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Admin">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductName" asp-action="Index">Product</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ProductKey" asp-action="Index">Key</a>
@@ -95,7 +95,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductKeyLog" asp-action="Index">Log</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Logs" asp-action="Index">Log</a>
                             </li>
                         }
                         <li class="nav-item">

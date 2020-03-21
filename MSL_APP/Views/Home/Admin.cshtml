@@ -1,6 +1,6 @@
-﻿@*@model IEnumerable<MSL_APP.Models.ProductName>*@
+﻿@*@model IEnumerable<MSL_APP.Models.Product>*@
 @using MSL_APP.Utility
-@model PaginatedList<MSL_APP.Models.ProductName>
+@model PaginatedList<MSL_APP.Models.Product>
 @{
     ViewData["Title"] = "Admin Home Page";
 }
@@ -15,7 +15,7 @@
                 Upload Product Names
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <form asp-controller="ProductName" asp-action="UploadFile" method="post" asp-uploadType="productName"
+                <form asp-controller="Product" asp-action="UploadFile" method="post" asp-uploadType="product"
                       enctype="multipart/form-data" class="col-3">
                     <input class="btn btn-outline-secondary btm-sm" type="file" name="file" />
                     <button class="btn btn-success btm-sm" type="submit">Upload</button>

@@ -12,7 +12,7 @@ namespace MSL_APP.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("ProductName")]
+        [ForeignKey("Product")]
         public int NameId { get; set; }
 
         public string Key { get; set; }
@@ -26,6 +26,6 @@ namespace MSL_APP.Models
         public int? OwnerId { get; set; }
 
         [Display(Name = "Product Name")]
-        public virtual ProductName ProductName { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

@@ -42,7 +42,7 @@
     <thead>
         <tr>
             <th>
-                @*@Html.DisplayNameFor(model => model.ProductName)*@
+                @*@Html.DisplayNameFor(model => model.Product)*@
                 <a asp-action="Index" asp-route-sortBy="@ViewData["KeyName"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageRow="@ViewData["totalRow"]">Product</a>
             </th>
             <th>
@@ -62,7 +62,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProductName.Name)
+                    @Html.DisplayFor(modelItem => item.Product.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Key)

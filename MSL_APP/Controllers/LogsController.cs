@@ -13,16 +13,16 @@ using MSL_APP.Utility;
 namespace MSL_APP.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class ProductKeyLogController : Controller
+    public class LogsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductKeyLogController(ApplicationDbContext context)
+        public LogsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: ProductKeyLog
+        // GET: Logs
         public async Task<IActionResult> Index(string search, string currentFilter, int? pageNumber, int? pageRow)
         {
 
@@ -40,14 +40,14 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var log = _context.ProductKeyLog.OrderByDescending(l => l.TimeStamp).AsQueryable();
+            var log = _context.Logs.OrderByDescending(l => l.TimeStamp).AsQueryable();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
             {
                 log = log.Where(l => l.StudentEmail.ToLower().Contains(search.ToLower())
                 || l.StudentId.ToString().Contains(search)
-                || l.ProductName.Contains(search)
+                || l.Product.Contains(search)
                 || l.ProductKey.Contains(search)
                 || l.Action.Contains(search)
                 || l.TimeStamp.ToString().Contains(search));
@@ -59,13 +59,13 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
-            var model = await PaginatedList<ProductKeyLog>.CreateAsync(log.AsNoTracking(), pageNumber ?? 1, pageSize);
+            var model = await PaginatedList<Logs>.CreateAsync(log.AsNoTracking(), pageNumber ?? 1, pageSize);
 
             return View(model);
         }
 
 
-        // GET: ProductKeyLog/Delete/5
+        // GET: Logs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -73,15 +73,15 @@ namespace MSL_APP.Controllers
                 return NotFound();
             }
 
-            var productKeyLog = await _context.ProductKeyLog.FindAsync(id);
+            var log = await _context.Logs.FindAsync(id);
 
-            if (productKeyLog == null)
+            if (log == null)
             {
                 return NotFound();
             }
             else
             {
-                _context.ProductKeyLog.Remove(productKeyLog);
+                _context.Logs.Remove(log);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

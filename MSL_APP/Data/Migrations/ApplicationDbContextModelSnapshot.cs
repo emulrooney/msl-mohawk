@@ -124,7 +124,7 @@ namespace MSL_APP.Data.Migrations
                     b.ToTable("ProductKey");
                 });
 
-            modelBuilder.Entity("MSL_APP.Models.ProductKeyLog", b =>
+            modelBuilder.Entity("MSL_APP.Models.Logs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +134,7 @@ namespace MSL_APP.Data.Migrations
 
                     b.Property<string>("ProductKey");
 
-                    b.Property<string>("ProductName");
+                    b.Property<string>("Product");
 
                     b.Property<string>("StudentEmail");
 
@@ -144,10 +144,10 @@ namespace MSL_APP.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductKeyLog");
+                    b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("MSL_APP.Models.ProductName", b =>
+            modelBuilder.Entity("MSL_APP.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace MSL_APP.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductName");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -283,7 +283,7 @@ namespace MSL_APP.Data.Migrations
 
             modelBuilder.Entity("MSL_APP.Models.ProductKey", b =>
                 {
-                    b.HasOne("MSL_APP.Models.ProductName", "ProductName")
+                    b.HasOne("MSL_APP.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("NameId")
                         .OnDelete(DeleteBehavior.Cascade);

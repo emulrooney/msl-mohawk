@@ -48,19 +48,19 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var productKeys = _context.ProductKey.Include(p => p.ProductName).AsQueryable();
+            var productKeys = _context.ProductKey.Include(p => p.Product).AsQueryable();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
             {
-                productKeys = productKeys.Where(p => p.ProductName.Name.ToLower().Contains(search.ToLower()));
+                productKeys = productKeys.Where(p => p.Product.Name.ToLower().Contains(search.ToLower()));
             }
 
             // Sort the product by name
             switch (sortBy)
             {
                 case "KeyNameDESC":
-                    productKeys = productKeys.OrderByDescending(p => p.ProductName.Name);
+                    productKeys = productKeys.OrderByDescending(p => p.Product.Name);
                     break;
                 case "KeyCodeDESC":
                     productKeys = productKeys.OrderByDescending(p => p.Key);
@@ -81,7 +81,7 @@ namespace MSL_APP.Controllers
                     productKeys = productKeys.OrderBy(p => p.OwnerId);
                     break;
                 default:
-                    productKeys = productKeys.OrderBy(p => p.ProductName.Name);
+                    productKeys = productKeys.OrderBy(p => p.Product.Name);
                     break;
             }
 
@@ -105,7 +105,7 @@ namespace MSL_APP.Controllers
             }
 
             var productKey = await _context.ProductKey
-                .Include(p => p.ProductName)
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productKey == null)
             {
@@ -119,7 +119,7 @@ namespace MSL_APP.Controllers
         public IActionResult Create()
         {
             ViewBag.keystatus = status;
-            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name");
+            ViewData["NameId"] = new SelectList(_context.Product, "Id", "Name");
             return View();
         }
 
@@ -144,7 +144,7 @@ namespace MSL_APP.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
+            ViewData["NameId"] = new SelectList(_context.Product, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -163,7 +163,7 @@ namespace MSL_APP.Controllers
             {
                 return NotFound();
             }
-            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
+            ViewData["NameId"] = new SelectList(_context.Product, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -205,7 +205,7 @@ namespace MSL_APP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["NameId"] = new SelectList(_context.ProductName, "Id", "Name", productKey.NameId);
+            ViewData["NameId"] = new SelectList(_context.Product, "Id", "Name", productKey.NameId);
             return View(productKey);
         }
 
@@ -218,7 +218,7 @@ namespace MSL_APP.Controllers
             }
 
             var productKey = await _context.ProductKey
-                .Include(p => p.ProductName)
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productKey == null)
             {
@@ -259,17 +259,17 @@ namespace MSL_APP.Controllers
                 foreach (Tuple<string, string> pk in results.ValidList)
                 {
                     ProductKey existingRow = _context.ProductKey
-                        .Include(p => p.ProductName)
-                        .FirstOrDefault(p => p.ProductName.Name == pk.Item1
+                        .Include(p => p.Product)
+                        .FirstOrDefault(p => p.Product.Name == pk.Item1
                                           && p.Key == pk.Item2);
 
                     if (existingRow == null)
                     {
-                        var productName = _context.ProductName.FirstOrDefault(pn => pn.Name == pk.Item1);
+                        var product = _context.Product.FirstOrDefault(pn => pn.Name == pk.Item1);
 
-                        if (productName != null)
+                        if (product != null)
                         {
-                            var nameId = productName.Id;
+                            var nameId = product.Id;
                             ProductKey newKey = new ProductKey()
                             {
                                 NameId = nameId,
@@ -279,7 +279,7 @@ namespace MSL_APP.Controllers
                             _context.ProductKey.Add(newKey);
                         }
 
-                        //TODO: Handle key when productName not found
+                        //TODO: Handle key when product not found
                     }
                 }
 

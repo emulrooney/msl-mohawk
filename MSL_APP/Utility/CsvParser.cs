@@ -127,9 +127,9 @@ namespace MSL_APP
         /// <summary>
         /// Parse product names from file
         /// </summary>
-        public ParsedCsvData<ProductName> ParseProducts()
+        public ParsedCsvData<Product> ParseProducts()
         {
-            var parsedProducts = new ParsedCsvData<ProductName>();
+            var parsedProducts = new ParsedCsvData<Product>();
             int currentLineNumber = 0;
 
             using (var reader = new StreamReader(FileData))
@@ -138,14 +138,14 @@ namespace MSL_APP
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var productName = new ProductName()
+                    var product = new Product()
                     {
                         QuantityLimit = 1,
                         Name = line,
                         ActiveStatus = "Active"
                     };
 
-                    parsedProducts.ValidList.Add(productName);
+                    parsedProducts.ValidList.Add(product);
                     currentLineNumber++;
                 
                     //TODO: How should we check for validation?

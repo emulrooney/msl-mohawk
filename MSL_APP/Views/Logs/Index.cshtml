@@ -1,6 +1,6 @@
-﻿@*@model IEnumerable<MSL_APP.Models.ProductKeyLog>*@
+﻿@*@model IEnumerable<MSL_APP.Models.Logs>*@
 @using MSL_APP.Utility
-@model PaginatedList<MSL_APP.Models.ProductKeyLog>
+@model PaginatedList<MSL_APP.Models.Logs>
 @{
     ViewData["Title"] = "Logs";
 }
@@ -36,7 +36,7 @@
                         <span style="color:dodgerblue">@item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")</span>
                     </td>
                     <td>
-                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> got key <span style="color:darkgray">[@item.ProductKey]</span> from <span style="color:dodgerblue"> @item.ProductName</span>.
+                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> got key <span style="color:darkgray">[@item.ProductKey]</span> from <span style="color:dodgerblue"> @item.Product</span>.
                     </td>
                 } else if (item.Action == "Register") 
                 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSL_APP.Models
 {
-    public class ProductKeyLog
+    public class Logs
     {
         [Key]
         public int Id { get; set; }
@@ -19,7 +19,7 @@ namespace MSL_APP.Models
 
         public string Action { get; set; }
 
-        public string ProductName { get; set; }
+        public string Product { get; set; }
 
         public string ProductKey { get; set; }
 

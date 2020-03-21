@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSL_APP.Models
 {
-    public class ProductName
+    public class Product
     {
         [Key]
         public int Id { get; set; }

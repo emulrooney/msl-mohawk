@@ -55,7 +55,7 @@ namespace MSL_APP.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductKeyLog",
+                name: "Logs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -63,7 +63,7 @@ namespace MSL_APP.Data.Migrations
                     StudentId = table.Column<int>(nullable: false),
                     StudentEmail = table.Column<string>(nullable: true),
                     Action = table.Column<string>(nullable: true),
-                    ProductName = table.Column<string>(nullable: true),
+                    Product = table.Column<string>(nullable: true),
                     ProductKey = table.Column<string>(nullable: true),
                     TimeStamp = table.Column<DateTime>(nullable: false)
                 },
@@ -73,7 +73,7 @@ namespace MSL_APP.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductName",
+                name: "Product",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -107,7 +107,7 @@ namespace MSL_APP.Data.Migrations
                     table.ForeignKey(
                         name: "FK_ProductKey_ProductName_NameId",
                         column: x => x.NameId,
-                        principalTable: "ProductName",
+                        principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -127,10 +127,10 @@ namespace MSL_APP.Data.Migrations
                 name: "ProductKey");
 
             migrationBuilder.DropTable(
-                name: "ProductKeyLog");
+                name: "Logs");
 
             migrationBuilder.DropTable(
-                name: "ProductName");
+                name: "Product");
 
             migrationBuilder.DropColumn(
                 name: "ActiveStatus",

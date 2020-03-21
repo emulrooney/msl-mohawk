@@ -59,7 +59,7 @@ namespace MSL_APP.Controllers
 
             // Join to tables together
             var query = (from pk in _context.ProductKey
-                         join pn in _context.ProductName on pk.NameId equals pn.Id
+                         join pn in _context.Product on pk.NameId equals pn.Id
                          join ac in _userManager.Users on pk.OwnerId equals ac.StudentId
                          where ac.Id == userId
                          select new StudentKey
@@ -127,11 +127,11 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var products = _context.ProductName.Where(p => p.ActiveStatus == "Active").AsQueryable();
+            var products = _context.Product.Where(p => p.ActiveStatus == "Active").AsQueryable();
             var productkeys = _context.ProductKey.AsQueryable();
 
             // Count the key number for each product and store the number into database
-            foreach (ProductName product in products)
+            foreach (Product product in products)
             {
                 int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
                 int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
@@ -192,7 +192,7 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
-            var model = await PaginatedList<ProductName>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);
+            var model = await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);
 
             return View(model);
         }

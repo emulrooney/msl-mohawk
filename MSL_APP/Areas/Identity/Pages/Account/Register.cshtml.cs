@@ -111,12 +111,12 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         if (addRole.Succeeded) 
                         {
                             // Write log for get key action
-                            ProductKeyLog newLog = new ProductKeyLog()
+                            Logs newLog = new Logs()
                             {
                                 StudentId = studentId,
                                 StudentEmail = Input.Email,
                                 Action = "Register",
-                                ProductName = "",
+                                Product = "",
                                 ProductKey = "",
                             };
                             _context.Add(newLog);

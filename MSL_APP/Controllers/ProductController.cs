@@ -16,7 +16,7 @@ using MSL_APP.Utility;
 namespace MSL_APP.Controllers
 {
     [Authorize]
-    public class ProductNameController : Controller
+    public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -26,14 +26,14 @@ namespace MSL_APP.Controllers
             new SelectListItem { Text = "Active", Value = "Active" },
             new SelectListItem { Text = "Disable",  Value = "Disable" },
         };
-        public ProductNameController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public ProductController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;
         }
 
 
-        // GET: ProductName
+        // GET: Product
         [Authorize(Roles = "Admin, Student")]
         public async Task<IActionResult> Student(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
@@ -54,7 +54,7 @@ namespace MSL_APP.Controllers
             ViewData["CurrentFilter"] = search;
 
             // Display only actived products
-            var studentProducts = _context.ProductName.Where(p => p.ActiveStatus == "Active");
+            var studentProducts = _context.Product.Where(p => p.ActiveStatus == "Active");
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
@@ -85,12 +85,12 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
-            var model = await PaginatedList<ProductName>.CreateAsync(studentProducts.AsNoTracking(), pageNumber ?? 1, pageSize);
+            var model = await PaginatedList<Product>.CreateAsync(studentProducts.AsNoTracking(), pageNumber ?? 1, pageSize);
 
             return View(model);
         }
 
-        // GET: ProductName/Create
+        // GET: Product/Create
         [Authorize(Roles = "Admin, Student")]
         public IActionResult GetKey(int id)
         {
@@ -107,7 +107,7 @@ namespace MSL_APP.Controllers
                 userStudentEmail = findUser.Email;
             }
 
-            var products = _context.ProductName.AsQueryable();
+            var products = _context.Product.AsQueryable();
             // Get the selected product info
             var product = products.Where(p => p.Id == id).FirstOrDefault();
             // Get the product name
@@ -149,12 +149,12 @@ namespace MSL_APP.Controllers
                         _context.SaveChanges();
 
                         // Write log for get key action
-                        ProductKeyLog newLog = new ProductKeyLog()
+                        Logs newLog = new Logs()
                         {
                             StudentId = userStudentId,
                             StudentEmail = userStudentEmail,
                             Action = "GetKey",
-                            ProductName = productName,
+                            Product = productName,
                             ProductKey = productKey,
                         };
                         _context.Add(newLog);
@@ -189,7 +189,7 @@ namespace MSL_APP.Controllers
         }
 
 
-        // GET: ProductName
+        // GET: Product
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string sortBy, string search, string currentFilter, int? pageNumber, int? pageRow)
         {
@@ -212,11 +212,11 @@ namespace MSL_APP.Controllers
             }
             ViewData["CurrentFilter"] = search;
 
-            var products = _context.ProductName.AsQueryable();
+            var products = _context.Product.AsQueryable();
             var productkeys = _context.ProductKey.AsQueryable();
 
             // Count the key number for each product and store the number into database
-            foreach (ProductName product in products) {
+            foreach (Product product in products) {
                 int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
                 int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
                 // Save the calculated key count number into database
@@ -276,12 +276,12 @@ namespace MSL_APP.Controllers
                 ViewData["totalRow"] = pageSize;
             }
 
-            var model = await PaginatedList<ProductName>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);
+            var model = await PaginatedList<Product>.CreateAsync(products.AsNoTracking(), pageNumber ?? 1, pageSize);
 
             return View(model);
         }
 
-        // GET: ProductName/Details/5
+        // GET: Product/Details/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -290,17 +290,17 @@ namespace MSL_APP.Controllers
                 return NotFound();
             }
 
-            var productName = await _context.ProductName
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (productName == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(productName);
+            return View(product);
         }
 
-        // GET: ProductName/Create
+        // GET: Product/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -308,30 +308,30 @@ namespace MSL_APP.Controllers
             return View();
         }
 
-        // POST: ProductName/Create
+        // POST: Product/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
+        public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] Product product)
         {
             //Check if given name is a duplicate
-            if (_context.ProductName.Any(p => p.Name == productName.Name))
+            if (_context.Product.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "Product name already exists");
             }
 
             if (ModelState.IsValid)
             {
-                _context.Add(productName);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productName);
+            return View(product);
         }
 
-        // GET: ProductName/Edit/5
+        // GET: Product/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -342,28 +342,28 @@ namespace MSL_APP.Controllers
                 return NotFound();
             }
 
-            var productName = await _context.ProductName.FindAsync(id);
-            if (productName == null)
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(productName);
+            return View(product);
         }
 
-        // POST: ProductName/Edit/5
+        // POST: Product/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] ProductName productName)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] Product product)
         {
-            if (id != productName.Id)
+            if (id != product.Id)
             {
                 return NotFound();
             }
 
             //Check if given name is a duplicate
-            if (_context.ProductName.Any(p => p.Name == productName.Name))
+            if (_context.Product.Any(p => p.Name == product.Name && p.Id != id))
             {
                 ModelState.AddModelError("Name", "Product name already exists");
             }
@@ -372,12 +372,12 @@ namespace MSL_APP.Controllers
             {
                 try
                 {
-                    _context.Update(productName);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductNameExists(productName.Id))
+                    if (!ProductNameExists(product.Id))
                     {
                         return NotFound();
                     }
@@ -388,10 +388,10 @@ namespace MSL_APP.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(productName);
+            return View(product);
         }
 
-        // GET: ProductName/Delete/5
+        // GET: Product/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -400,30 +400,30 @@ namespace MSL_APP.Controllers
                 return NotFound();
             }
 
-            var productName = await _context.ProductName
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (productName == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(productName);
+            return View(product);
         }
 
-        // POST: ProductName/Delete/5
+        // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productName = await _context.ProductName.FindAsync(id);
-            _context.ProductName.Remove(productName);
+            var product = await _context.Product.FindAsync(id);
+            _context.Product.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductNameExists(int id)
         {
-            return _context.ProductName.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.Id == id);
         }
 
         /// <summary>
@@ -444,11 +444,11 @@ namespace MSL_APP.Controllers
                 var parser = new CsvParser(file, ';');
                 var results = parser.ParseProducts();
 
-                foreach (ProductName pn in results.ValidList)
+                foreach (Product pn in results.ValidList)
                 {
-                    ProductName existingRow = _context.ProductName.FirstOrDefault(p => p.Name == pn.Name);
+                    Product existingRow = _context.Product.FirstOrDefault(p => p.Name == pn.Name);
                     if (existingRow == null)
-                        _context.ProductName.Add(pn);
+                        _context.Product.Add(pn);
                 }
             }
             catch (Exception e)
