@@ -16,7 +16,7 @@
             <a class="btn btn-outline-primary" asp-action="Index" asp-route-roleType="Admin">Display Admin Account</a>
         </div>
         <div class="col-md">
-            <form asp-action="Index">
+            <form asp-action="Index" asp-route-roleType="Student">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
                     <div class="input-group-append">
@@ -38,7 +38,7 @@ else if ((string)@ViewData["AccRole"] == "Admin")
             </div>
         </div>
         <div class="col-md">
-            <form asp-action="Index">
+            <form asp-action="Index" asp-route-roleType="Admin">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="search" placeholder="All Columns" aria-label="Search User">
                     <div class="input-group-append">
@@ -102,16 +102,16 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                     {
                         if (user.ActiveStatus == "Actived")
                         {
-                            <a class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id">Ban</a>
+                            <a class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-roleType="@ViewData["AccRole"]">Ban</a>
                         }
 
                         if (user.ActiveStatus == "Disabled")
                         {
-                            <a class="btn btn-outline-success btn-sm" asp-action="Ban" asp-route-id="@user.Id">Unban</a>
+                            <a class="btn btn-outline-success btn-sm" asp-action="Ban" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-roleType="@ViewData["AccRole"]">Unban</a>
                         }
                     }
 
-                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
+                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-roleType="@ViewData["AccRole"]" onclick="return confirm('Are you sure you want to delete user: @user.Email')">Delete</a>
 
                 </td>
             </tr>

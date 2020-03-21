@@ -137,12 +137,18 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AdminID,FirstName,LastName,AdminEmail,Password")] Account account)
+        public async Task<IActionResult> Create([Bind("AdminID,FirstName,LastName,AdminEmail,Password,ConfirmPassword")] Account account)
         {
             //Check if given Id is a duplicate
             if (_userManager.Users.Any(e => e.StudentId == account.AdminID))
             {
                 ModelState.AddModelError("AdminID", "Account ID already exists");
+            }
+
+            //Check if given email is a duplicate
+            if (_userManager.Users.Any(e => e.Email == account.AdminEmail))
+            {
+                ModelState.AddModelError("AdminEmail", "Email already exists");
             }
 
             if (ModelState.IsValid) {
@@ -153,7 +159,7 @@ namespace MSL_APP.Controllers
                     FirstName = account.FirstName,
                     LastName = account.LastName,
                     StudentId = account.AdminID,
-                    ActiveStatus = "Actived",
+                    ActiveStatus = "Active",
                     Role = "Admin"
                 };
 
@@ -165,7 +171,7 @@ namespace MSL_APP.Controllers
                     var addRole = await _userManager.AddToRoleAsync(user, "Admin");
 
                     //return RedirectToAction(nameof(Index));
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { roleType = "Admin" });
                 }
                 foreach (var error in result.Errors)
                 {
@@ -190,7 +196,7 @@ namespace MSL_APP.Controllers
         }
 
         // GET: Account/Ban/5
-        public async Task<IActionResult> Ban(string id)
+        public async Task<IActionResult> Ban(string id, string sortBy, string currentFilter, int? pageNumber, int? pageRow, string roleType)
         {
             if (id == null)
             {
@@ -209,7 +215,7 @@ namespace MSL_APP.Controllers
                 account.ActiveStatus = "Disabled";
                 _context.Entry(account).Property("ActiveStatus").IsModified = true;
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { sortBy, currentFilter, pageNumber, pageRow, roleType });
             }
             else if (account.ActiveStatus == "Disabled")
             {
@@ -217,13 +223,13 @@ namespace MSL_APP.Controllers
                 account.ActiveStatus = "Actived";
                 _context.Entry(account).Property("ActiveStatus").IsModified = true;
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { sortBy, currentFilter, pageNumber, pageRow, roleType });
             }
             return View("Index");
         }
 
         // GET: Account/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id, string sortBy, string currentFilter, int? pageNumber, int? pageRow, string roleType)
         {
             if (id == null)
             {
@@ -242,7 +248,7 @@ namespace MSL_APP.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { sortBy, currentFilter, pageNumber, pageRow, roleType });
                 }
                 foreach (var error in result.Errors)
                 {

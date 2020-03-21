@@ -66,7 +66,7 @@ namespace MSL_APP.Controllers
 
 
         // GET: Logs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, string currentFilter, int? pageNumber, int? pageRow)
         {
             if (id == null)
             {
@@ -83,7 +83,7 @@ namespace MSL_APP.Controllers
             {
                 _context.Logs.Remove(log);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { currentFilter, pageNumber, pageRow });
             }
         }
     }

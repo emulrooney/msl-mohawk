@@ -48,7 +48,7 @@
                     </td>
                 }
                 <td>
-                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete the log at @item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")?')">Delete</a>
+                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" asp-route-sortBy="@ViewData["CurrentSort"]" asp-route-pageNumber=1 asp-route-pageRow=10 asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-roleType="@ViewData["AccRole"]" onclick="return confirm('Are you sure you want to delete the log at @item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")?')">Delete</a>
                 </td>
             </tr>
         }
