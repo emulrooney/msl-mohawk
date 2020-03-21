@@ -39,7 +39,7 @@ namespace MSL_APP.Controllers
                 search = currentFilter;
             }
             ViewData["CurrentFilter"] = search;
-
+            ViewData["PageIndex"] = pageNumber;
             var log = _context.Logs.OrderByDescending(l => l.TimeStamp).AsQueryable();
 
             // Search product by the input

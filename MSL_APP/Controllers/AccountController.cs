@@ -39,7 +39,7 @@ namespace MSL_APP.Controllers
             ViewData["AccFirstName"] = sortBy == "FirstName" ? "FirstNameDESC" : "FirstName";
             ViewData["AccLastName"] = sortBy == "LastName" ? "LastNameDESC" : "LastName";
             ViewData["AccStatus"] = sortBy == "ActiveStatus" ? "ActiveStatusDESC" : "ActiveStatus";
-
+            ViewData["sortBy"] = sortBy;
             if (string.IsNullOrEmpty(roleType)) { ViewData["AccRole"] = "Student"; }
             else if (roleType == "Admin") { ViewData["AccRole"] = "Admin"; }
             else { ViewData["AccRole"] = "Student"; }
@@ -54,6 +54,7 @@ namespace MSL_APP.Controllers
                 search = currentFilter;
             }
             ViewData["CurrentFilter"] = search;
+            ViewData["PageIndex"] = pageNumber;
 
             var users = _userManager.Users.AsQueryable();
 
