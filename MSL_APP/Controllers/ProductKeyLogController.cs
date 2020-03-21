@@ -49,7 +49,8 @@ namespace MSL_APP.Controllers
                 || l.StudentId.ToString().Contains(search)
                 || l.ProductName.Contains(search)
                 || l.ProductKey.Contains(search)
-                || l.Action.Contains(search));
+                || l.Action.Contains(search)
+                || l.TimeStamp.ToString().Contains(search));
             }
 
             if (pageRow == -1)

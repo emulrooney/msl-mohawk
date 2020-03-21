@@ -23,7 +23,7 @@ namespace MSL_APP.Models
 
         public string ProductKey { get; set; }
 
-        public DateTime? TimeStamp { get; set; } = DateTime.Now;
+        public DateTime TimeStamp { get; set; } = DateTime.Now;
 
     }
 }

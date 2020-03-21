@@ -122,7 +122,8 @@ else if ((string)@ViewData["AccRole"] == "Admin")
 @{
     var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
     var nextDisabled = !Model.HasNextPage ? "invisible" : "";
-    var indexDisableed = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var indexDisabled = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var sizeDisabled = Model.TotalRows <= 10 ? "invisible" : "";
     var totalPages = Model.TotalPages;
     var centerIndex = Model.PageIndex;
     var maxPages = 10;
@@ -141,7 +142,7 @@ else if ((string)@ViewData["AccRole"] == "Admin")
     }
 }
 <div class="row ">
-    <div class="dropdown mx-1">
+    <div class="dropdown mx-1 @sizeDisabled">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Page Size
         </button>
@@ -171,7 +172,7 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                asp-route-pageRow="@ViewData["totalRow"]"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
                asp-route-roleType="@ViewData["AccRole"]"
-               class="mx-1 btn btn-primary @indexDisableed">
+               class="mx-1 btn btn-primary @indexDisabled">
                 @i
             </a>
         }
@@ -183,7 +184,7 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                asp-route-pageRow="@ViewData["totalRow"]"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
                asp-route-roleType="@ViewData["AccRole"]"
-               class="mx-1 btn btn-outline-primary @indexDisableed">
+               class="mx-1 btn btn-outline-primary @indexDisabled">
                 @i
             </a>
         }

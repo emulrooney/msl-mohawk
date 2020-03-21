@@ -5,16 +5,16 @@
     ViewData["Title"] = "Logs";
 }
 
-<h1>Product Key Log</h1>
+<h1>Logs</h1>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th colspan="2">
                 <div class="col-md-5">
                     <form asp-action="Index">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="search" placeholder="Email, ID, Product, Key" aria-label="Search Log">
+                            <input type="text" class="form-control" name="search" placeholder="Date / Email / ID / Product / Key" aria-label="Search Log">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-primary" id="searchUserButton">Search</button>
                             </div>
@@ -33,16 +33,22 @@
                 @if (item.Action == "GetKey")
                 {
                     <td>
-                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> got key <b style="color:darkgray">[@item.ProductKey]</b> from <b style="color:dodgerblue"> @item.ProductName</b> at <b style="color:dodgerblue">@item.TimeStamp</b>.
+                        <span style="color:dodgerblue">@item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")</span>
+                    </td>
+                    <td>
+                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> got key <span style="color:darkgray">[@item.ProductKey]</span> from <span style="color:dodgerblue"> @item.ProductName</span>.
                     </td>
                 } else if (item.Action == "Register") 
                 {
                     <td>
-                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> has registered the account at <b style="color:dodgerblue">@item.TimeStamp</b>.
+                        <span style="color:dodgerblue">@item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")</span>
+                    </td>
+                    <td>
+                        User <b style="color:dodgerblue">@item.StudentEmail (@item.StudentId)</b> has registered the account.
                     </td>
                 }
                 <td>
-                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete the log at @item.TimeStamp?')">Delete</a>
+                    <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete the log at @item.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt")?')">Delete</a>
                 </td>
             </tr>
         }
@@ -52,7 +58,8 @@
 @{
     var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
     var nextDisabled = !Model.HasNextPage ? "invisible" : "";
-    var indexDisableed = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var indexDisabled = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
+    var sizeDisabled = Model.TotalRows <= 10 ? "invisible" : "";
     var totalPages = Model.TotalPages;
     var centerIndex = Model.PageIndex;
     var maxPages = 10;
@@ -71,7 +78,7 @@
     }
 }
 <div class="row ">
-    <div class="dropdown mx-1">
+    <div class="dropdown mx-1 @sizeDisabled">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Page Size
         </button>
@@ -97,7 +104,7 @@
                asp-route-pageNumber=@i
                asp-route-pageRow="@ViewData["totalRow"]"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="mx-1 btn btn-primary @indexDisableed">
+               class="mx-1 btn btn-primary @indexDisabled">
                 @i
             </a>
         }
@@ -107,7 +114,7 @@
                asp-route-pageNumber=@i
                asp-route-pageRow="@ViewData["totalRow"]"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-               class="mx-1 btn btn-outline-primary @indexDisableed">
+               class="mx-1 btn btn-outline-primary @indexDisabled">
                 @i
             </a>
         }
