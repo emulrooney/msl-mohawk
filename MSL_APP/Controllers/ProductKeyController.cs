@@ -130,6 +130,7 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NameId,Key,Status,OwnerId")] ProductKey productKey)
         {
+            ViewBag.keystatus = status;
             //Check if given key is a duplicate
             if (_context.ProductKey.Any(e => e.Key == productKey.Key))
             {
@@ -142,6 +143,21 @@ namespace MSL_APP.Controllers
 
                 _context.Add(productKey);
                 await _context.SaveChangesAsync();
+
+                // Add the total key count by one
+                var products = _context.Product.AsQueryable();
+                var product = products.Where(p => p.Id == productKey.NameId).FirstOrDefault();
+                if (product != null) {
+                    product.KeyCount += 1;
+                    _context.Entry(product).Property("KeyCount").IsModified = true;
+                }
+                // Add used key count by one if the status of created key is used
+                if (productKey.Status == "Used") {
+                    product.UsedKeyCount+=1;
+                    _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                }
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["NameId"] = new SelectList(_context.Product, "Id", "Name", productKey.NameId);
@@ -174,6 +190,7 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NameId,Key,Status,OwnerId")] ProductKey productKey)
         {
+            ViewBag.keystatus = status;
             if (id != productKey.Id)
             {
                 return NotFound();
@@ -189,6 +206,27 @@ namespace MSL_APP.Controllers
             {
                 try
                 {
+                    // Edit the used key count
+                    var products = _context.Product.AsQueryable();
+                    var product = products.Where(p => p.Id == productKey.NameId).FirstOrDefault();
+
+                    // Get the key's old status
+                    var currentKey = _context.ProductKey.AsNoTracking().AsQueryable().Where(k => k.Id == id).FirstOrDefault();
+                    string oldStatus = currentKey.Status;
+
+                    // Add or minus used key count by one if the status of edited key is changed
+                    if (oldStatus == "New" && productKey.Status == "Used")
+                    {
+                        product.UsedKeyCount++;
+                        _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                    } 
+                    else if (oldStatus == "Used" && productKey.Status == "New") 
+                    {
+                        product.UsedKeyCount--;
+                        _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+                    }
+                    await _context.SaveChangesAsync();
+
                     _context.Update(productKey);
                     await _context.SaveChangesAsync();
                 }
@@ -236,6 +274,19 @@ namespace MSL_APP.Controllers
             var productKey = await _context.ProductKey.FindAsync(id);
             _context.ProductKey.Remove(productKey);
             await _context.SaveChangesAsync();
+
+            // Minus the total key count by one
+            var products = _context.Product.AsQueryable();
+            var product = products.Where(p => p.Id == productKey.NameId).FirstOrDefault();
+            product.KeyCount-=1;
+            _context.Entry(product).Property("KeyCount").IsModified = true;
+            // Add used key count by one if the status of created key is used
+            if (productKey.Status == "Used")
+            {
+                product.UsedKeyCount-=1;
+                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+            }
+            await _context.SaveChangesAsync();            
             return RedirectToAction(nameof(Index));
         }
 
@@ -289,6 +340,23 @@ namespace MSL_APP.Controllers
             {
                 Console.WriteLine($"Exception: {e}");
             }
+
+            // Count the key number for each product and store the number into database
+            var products = _context.Product.AsQueryable();
+            var productkeys = _context.ProductKey.AsQueryable();
+
+            foreach (Product product in products)
+            {
+                int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
+                int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
+                // Save the calculated key count number into database
+                product.KeyCount = keyCount;
+                _context.Entry(product).Property("KeyCount").IsModified = true;
+
+                product.UsedKeyCount = usedKeyCount;
+                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+            }
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

@@ -215,19 +215,19 @@ namespace MSL_APP.Controllers
             var products = _context.Product.AsQueryable();
             var productkeys = _context.ProductKey.AsQueryable();
 
-            // Count the key number for each product and store the number into database
-            foreach (Product product in products) {
-                int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
-                int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
-                // Save the calculated key count number into database
-                product.KeyCount = keyCount;
-                _context.Entry(product).Property("KeyCount").IsModified = true;
+            //// Count the key number for each product and store the number into database
+            //foreach (Product product in products) {
+            //    int keyCount = productkeys.Where(k => k.NameId == product.Id).Count();
+            //    int usedKeyCount = productkeys.Where(k => k.NameId == product.Id && k.Status == "Used").Count();
+            //    // Save the calculated key count number into database
+            //    product.KeyCount = keyCount;
+            //    _context.Entry(product).Property("KeyCount").IsModified = true;
 
-                product.UsedKeyCount = usedKeyCount;
-                _context.Entry(product).Property("UsedKeyCount").IsModified = true;
+            //    product.UsedKeyCount = usedKeyCount;
+            //    _context.Entry(product).Property("UsedKeyCount").IsModified = true;
 
-            }
-            _context.SaveChanges();
+            //}
+            //_context.SaveChanges();
 
             // Search product by the input
             if (!string.IsNullOrEmpty(search))
@@ -316,6 +316,8 @@ namespace MSL_APP.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] Product product)
         {
+            ViewBag.productstatus = activeStatus;
+
             //Check if given name is a duplicate
             if (_context.Product.Any(p => p.Name == product.Name))
             {
@@ -357,6 +359,8 @@ namespace MSL_APP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] Product product)
         {
+            ViewBag.productstatus = activeStatus;
+
             if (id != product.Id)
             {
                 return NotFound();
