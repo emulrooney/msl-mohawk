@@ -357,7 +357,7 @@ namespace MSL_APP.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,KeyCount,UsedKeyCount,ActiveStatus,DownloadLink")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,QuantityLimit,ActiveStatus,DownloadLink")] Product product)
         {
             ViewBag.productstatus = activeStatus;
 
@@ -376,7 +376,11 @@ namespace MSL_APP.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    // _context.Update(product);
+                    _context.Entry(product).Property("Name").IsModified = true;
+                    _context.Entry(product).Property("QuantityLimit").IsModified = true;
+                    _context.Entry(product).Property("ActiveStatus").IsModified = true;
+                    _context.Entry(product).Property("DownloadLink").IsModified = true;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
