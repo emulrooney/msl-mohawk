@@ -50,7 +50,7 @@ namespace MSL_APP.Controllers
                 || l.Product.Contains(search)
                 || l.ProductKey.Contains(search)
                 || l.Action.Contains(search)
-                || l.TimeStamp.ToString().Contains(search));
+                || l.TimeStamp.ToString("MM-dd-yyyy hh:mm:ss tt").Contains(search));
             }
 
             if (pageRow == -1)
