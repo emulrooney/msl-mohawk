@@ -20,7 +20,7 @@ namespace MSL_APP.Utility
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(emailSource, emailFrom);
-            var subject = "Reset Mohawk License System Password";
+            var subject = "Confirm your Mohawk Student License account";
             var to = new EmailAddress(user.Email, user.FirstName + " " + user.LastName); //Input.Email
             var plainTextContent = $"Please confirm your account by copy and pasting this URL into your browser: {HtmlEncoder.Default.Encode(callbackUrl)}";
             var htmlContent = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
