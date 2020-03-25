@@ -6,6 +6,38 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+
+@if (ViewData["EmailUnconfirmed"] != null)
+{
+    <form method="post" asp-controller="Home" asp-action="ResendConfirmation">
+        <input type="hidden" name="email" value="@ViewData["UserEmail"]" />
+        <div class="alert alert-primary">
+            You can't log in until you confirm your email address.
+            <button type="submit" class="btn btn-success m-1 ml-2">Resend confirmation email.</button>
+        </div>
+    </form>
+}
+else if (ViewData["ResentSuccess"] != null)
+{
+    bool resentSuccess = (bool)ViewData["ResentSuccess"];
+    if (resentSuccess)
+    {
+        <div class="alert alert-primary">
+            Success! Check your email for the new confirmation email.
+        </div>
+    }
+    else
+    {
+        <form asp-action="ResendConfirmation" asp-email="@ViewData["UserEmail"]">
+            <div class="alert alert-primary">
+                Unexpected error. Try again in a few moments.
+                <button type="submit" class="btn btn-success m-1 ml-2">Resend confirmation email.</button>
+            </div>
+        </form>
+    }
+}
+
+
 <div class="row">
     <div class="col-md-4">
         <section>
@@ -46,35 +78,35 @@
         </section>
     </div>
     @*<div class="col-md-5 col-md-offset-2">
-        <section>
-            <h4>Use another service to log in.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+            <section>
+                <h4>Use another service to log in.</h4>
+                <hr />
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
                         <div>
                             <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
+                                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                for details on setting up this ASP.NET application to support logging in via external services.
                             </p>
                         </div>
-                    </form>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
                 }
-            }
-        </section>
-    </div>*@
+            </section>
+        </div>*@
 </div>
 
 @section Scripts {

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
 using MSL_APP.Utility;
+using SendGrid;
 
 namespace MSL_APP.Controllers
 {
@@ -334,6 +335,7 @@ namespace MSL_APP.Controllers
                 LastName = "One",
                 ActiveStatus = "Actived",
                 Eligible = "Yes",
+                EmailConfirmed = true,
                 Role = "Admin"
             });
 
@@ -370,7 +372,5 @@ namespace MSL_APP.Controllers
                 "Username = student1@email.com\n" +
                 "Password = Mohawk1!\n");
         }
-
-
     }
 }

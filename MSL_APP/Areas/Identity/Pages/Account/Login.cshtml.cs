@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using MSL_APP.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using System.Security.Claims;
+using MSL_APP.Utility;
+using SendGrid;
 
 namespace MSL_APP.Areas.Identity.Pages.Account
 {
@@ -117,7 +120,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     if (account != null) { username = account.Email; }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        ModelState.AddModelError(string.Empty, "Account does not exist. Please register a new account.");
                         return Page();
                     }
                 }
@@ -129,7 +132,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     if (account != null) { username = account.Email; }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
+                        ModelState.AddModelError(string.Empty, "Account does not exist. Please register a new account.");
                         return Page();
                     }
                 }
@@ -145,6 +148,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     return Page();
                 }
 
+              
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
@@ -156,6 +160,18 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     {
                         if (user.Email.ToLower() == username.ToLower())
                         {
+                            //Check if email is confirmed. If not, don't let them in but prompt
+                            //to send a new email.
+                            if (!user.EmailConfirmed)
+                            {
+                                ViewData["UserEmail"] = user.Email;
+                                ViewData["EmailUnconfirmed"] = true;
+                                await _signInManager.SignOutAsync();
+                                return Page();
+                            }
+
+
+
                             if (user.ActiveStatus == "Disabled")
                             {
                                 await _signInManager.SignOutAsync();
@@ -207,5 +223,6 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using MSL_APP.Models;
 using MSL_APP.Utility;
+using SendGrid;
 
 namespace MSL_APP.Controllers
 {
@@ -315,5 +316,33 @@ namespace MSL_APP.Controllers
                 "Username = student1@email.com\n" +
                 "Password = Mohawk1!\n");
         }
+
+
+        public async Task<IActionResult> ResendConfirmation(string email)
+        {
+            Console.WriteLine("");
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code },
+                    protocol: Request.Scheme);
+
+                Response response = await MSLEmailHandler.SendConfirmationEmail(user, callbackUrl);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    ViewData["ResentSuccess"] = true;
+                else
+                    ViewData["ResentSuccess"] = false;
+
+            }
+
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
+
     }
 }
