@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using MSL_APP.Data;
+using MSL_APP.Utility;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -58,16 +59,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                     values: new { code },
                     protocol: Request.Scheme);
 
-                var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-                var client = new SendGridClient(apiKey);
-                var from = new EmailAddress("studentlicensesadmin@mohawkcollege.ca", "Administrator");
-                var subject = "Reset Mohawk License System Password";
-                var to = new EmailAddress(user.Email, user.FirstName + " " + user.LastName); //Input.Email
-                var plainTextContent = $"Please reset your password by copying and pasting the following into your address bar: {HtmlEncoder.Default.Encode(callbackUrl)}";
-                var htmlContent = $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-
-                var response = await client.SendEmailAsync(msg);
+                var response = await MSLEmailHandler.SendPasswordResetEmail(user, callbackUrl);
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
