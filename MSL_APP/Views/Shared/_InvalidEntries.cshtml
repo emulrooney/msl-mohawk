@@ -1,0 +1,48 @@
+﻿@{
+    var invalidEntries = (Dictionary<string, string>)TempData["InvalidList"];
+    if (invalidEntries.Count > 0)
+    {
+    <div class="alert alert-danger">
+        @if (invalidEntries.Count == 1)
+        {
+            <span>There was one invalid entry in your upload.</span>
+        }
+        else
+        {
+            <span>There were @invalidEntries.Count in your upload.</span>
+        }
+        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#errorModal">View</button>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Invalid Entries</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <th>Line #</th>
+                            <th>Content</th>
+                        </thead>
+                        <tbody>
+                            @foreach (string lineNumber in invalidEntries.Keys)
+                            {
+                                <td>#@lineNumber</td>
+                                <td>@invalidEntries[lineNumber]</td>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+}

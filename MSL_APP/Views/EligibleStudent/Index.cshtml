@@ -5,6 +5,11 @@
     ViewData["Title"] = "Eligible Student";
 }
 
+@if (TempData["InvalidList"] != null)
+{
+    <partial name="_InvalidEntries" />
+}
+
 <h1>Eligible Student</h1>
 
 <div class="row">
@@ -91,7 +96,7 @@
     var totalPages = Model.TotalPages;
     var centerIndex = Model.PageIndex;
     var maxPages = 10;
-    if (totalPages<maxPages) { maxPages = totalPages; }
+    if (totalPages < maxPages) { maxPages = totalPages; }
     if (centerIndex <= 5)
     {
         centerIndex = 1;
@@ -138,8 +143,8 @@
                 @i
             </a>
         }
-        else 
-        { 
+        else
+        {
             <a asp-action="Index"
                asp-route-sortBy="@ViewData["CurrentSort"]"
                asp-route-pageNumber=@i
@@ -149,7 +154,7 @@
                 @i
             </a>
         }
-        
+
     }
     <a asp-action="Index"
        asp-route-sortBy="@ViewData["CurrentSort"]"

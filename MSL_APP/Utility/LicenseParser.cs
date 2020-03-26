@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace MSL_APP
 {
-    class CsvParser
+    class LicenseParser
     {
-        public char Delimiter { get; set; }
+        public char Delimiter { get; set; } = ';'; //Default ';'
         public Stream FileData { get; set; }
 
         private static readonly List<string> fileWhitelist = new List<string>() 
@@ -23,7 +23,7 @@ namespace MSL_APP
         /// </summary>
         /// <param name="file">Uploaded file to parse</param>
         /// <param name="delimiter">Char to break up csv entries</param>
-        public CsvParser(IFormFile file, char delimiter)
+        public LicenseParser(IFormFile file, char delimiter)
         {
             if (fileWhitelist.Contains(file.ContentType))
             {
@@ -81,7 +81,7 @@ namespace MSL_APP
                     }
                     catch (Exception e)
                     {
-                        parsedStudents.InvalidList.Add(new InvalidCsvEntry(currentLineNumber, line));
+                        parsedStudents.InvalidList.Add(currentLineNumber.ToString(), line);
                     }
 
                     currentLineNumber++;
@@ -114,7 +114,7 @@ namespace MSL_APP
                     }
                     catch (Exception e)
                     {
-                        parsedKeys.InvalidList.Add(new InvalidCsvEntry(currentLineNumber, line));
+                        parsedKeys.InvalidList.Add(currentLineNumber.ToString(), line);
                     }
 
                     currentLineNumber++;

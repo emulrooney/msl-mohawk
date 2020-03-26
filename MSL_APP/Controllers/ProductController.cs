@@ -449,7 +449,7 @@ namespace MSL_APP.Controllers
 
             try
             { 
-                var parser = new CsvParser(file, ';');
+                var parser = new LicenseParser(file, ';');
                 var results = parser.ParseProducts();
 
                 foreach (Product pn in results.ValidList)

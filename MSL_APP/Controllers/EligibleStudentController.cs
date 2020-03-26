@@ -20,7 +20,7 @@ namespace MSL_APP.Controllers
 
         public EligibleStudentController(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context; 
         }
 
         // GET: EligibleStudent
@@ -258,17 +258,17 @@ namespace MSL_APP.Controllers
 
             try
             {
+                var parser = new LicenseParser(file, ';');
+                var results = parser.ParseStudents();
 
-            var parser = new CsvParser(file, ';');
-            var results = parser.ParseStudents();
+                //TODO: This is probably not performant; better to get a stored procedure to dump the table
+                _context.EligibleStudent.RemoveRange(_context.EligibleStudent.ToList());
 
-            //TODO: This is probably not performant; better to get a stored procedure to dump the table
-            _context.EligibleStudent.RemoveRange(_context.EligibleStudent.ToList());
-
-            foreach (EligibleStudent es in results.ValidList)
-                _context.EligibleStudent.Add(es);
-
+                foreach (EligibleStudent es in results.ValidList)
+                    _context.EligibleStudent.Add(es);
+                
                 await _context.SaveChangesAsync();
+                TempData["InvalidList"] = results.InvalidList;
             }
             catch (Exception e)
             {

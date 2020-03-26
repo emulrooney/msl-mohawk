@@ -304,7 +304,7 @@ namespace MSL_APP.Controllers
 
             try
             {
-                var parser = new CsvParser(file, ';');
+                var parser = new LicenseParser(file, ';');
                 var results = parser.ParseKeys();
 
                 foreach (Tuple<string, string> pk in results.ValidList)

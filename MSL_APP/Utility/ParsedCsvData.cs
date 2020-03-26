@@ -12,7 +12,7 @@ namespace MSL_APP.Utility
     public class ParsedCsvData<T>
     {
         public List<T> ValidList { get; set; } = new List<T>();
-        public List<InvalidCsvEntry> InvalidList { get; set; } = new List<InvalidCsvEntry>();
+        public Dictionary<string, string> InvalidList { get; set; } = new Dictionary<string, string>();
 
 
     }
