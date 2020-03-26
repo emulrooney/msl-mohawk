@@ -17,9 +17,9 @@
         </div>
     </form>
 }
-else if (ViewData["ResentSuccess"] != null)
+else if (TempData["ResentConfirmationSuccess"] != null)
 {
-    bool resentSuccess = (bool)ViewData["ResentSuccess"];
+    bool resentSuccess = (bool)TempData["ResentConfirmationSuccess"];
     if (resentSuccess)
     {
         <div class="alert alert-primary">

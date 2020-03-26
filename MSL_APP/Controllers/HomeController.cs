@@ -334,10 +334,10 @@ namespace MSL_APP.Controllers
 
                 Response response = await MSLEmailHandler.SendConfirmationEmail(user, callbackUrl);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    ViewData["ResentSuccess"] = true;
+                if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
+                    TempData["ResentConfirmationSuccess"] = true;
                 else
-                    ViewData["ResentSuccess"] = false;
+                    TempData["ResentConfirmationSuccess"] = false;
 
             }
 
