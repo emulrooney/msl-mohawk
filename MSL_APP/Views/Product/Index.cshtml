@@ -5,6 +5,11 @@
     ViewData["Title"] = "Product";
 }
 
+@if (TempData["InvalidList"] != null)
+{
+    <partial name="_InvalidEntries" />
+}
+
 <style>
     .dropdown-menu {
         padding: 2px;

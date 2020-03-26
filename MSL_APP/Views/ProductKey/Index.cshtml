@@ -5,6 +5,11 @@
     ViewData["Title"] = "Product Key";
 }
 
+@if (TempData["InvalidList"] != null)
+{
+    <partial name="_InvalidEntries" />
+}
+
 <h1>Product Key</h1>
 
 <div class="row">
