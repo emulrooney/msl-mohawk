@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MSL_APP.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.CookiePolicy;
 
 namespace MSL_APP
 {
@@ -50,13 +51,43 @@ namespace MSL_APP
             //    .AddDefaultUI(UIFramework.Bootstrap4)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("Never",
+                   new CacheProfile()
+                   {
+                       Location = ResponseCacheLocation.None,
+                       NoStore = true
+                   });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                // OWASP Alert - XSS Protection
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                // OWASP Alert - X-Frame-Options Header
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                // OWASP Alert - X-Content-Type-Options Missing
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                await next();
+            });
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                // OWASP Alert – Cookie HttpOnly Flag
+                HttpOnly = HttpOnlyPolicy.Always,
+                // OWASP Alert – Cookie Without Secure Flag
+                Secure = CookieSecurePolicy.Always,
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
