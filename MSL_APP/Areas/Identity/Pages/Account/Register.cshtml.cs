@@ -76,7 +76,8 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Home/Student");
+            returnUrl = returnUrl ?? Url.Content("~/Home/Success");
+            
             if (ModelState.IsValid)
             {
                 bool eligibleUser = false;
@@ -94,9 +95,12 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         lastName = student.LastName;
                         studentId = student.StudentID;
                         //eligibleId = student.Id;
+
+                        ViewData["UserEmail"] = student.StudentEmail; //Set this to allow for resending confirmation later
                         break;
                     }
                 }
+
 
                 if (eligibleUser)
                 {

@@ -34,6 +34,12 @@ namespace MSL_APP.Controllers
             return View();
         }
 
+        public IActionResult Success()
+        {
+            //Simple page on successful registration
+            return View();
+        }
+
         [Authorize(Roles = "Student,Admin")]
         public async Task<IActionResult> Student(string sortBy, string search, string currentFilter, int? pageNumber)
         {
@@ -322,7 +328,6 @@ namespace MSL_APP.Controllers
 
         public async Task<IActionResult> ResendConfirmation(string email)
         {
-            Console.WriteLine("");
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user != null)
