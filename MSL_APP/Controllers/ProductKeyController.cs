@@ -329,11 +329,16 @@ namespace MSL_APP.Controllers
                             };
                             _context.ProductKey.Add(newKey);
                         }
-
-                        //TODO: Handle key when product not found
+                        else
+                        {
+                            //Add not-found products to invalid list
+                            results.InvalidList.Add(pk.Item1, pk.Item2);
+                        }
+                        
                     }
                 }
 
+                TempData["InvalidList"] = results.InvalidList;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)

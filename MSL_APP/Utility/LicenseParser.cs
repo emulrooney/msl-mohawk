@@ -92,8 +92,11 @@ namespace MSL_APP
         }
 
         /// <summary>
-        /// Parse incoming keys from CSV file.
+        /// Parse keys. If a key is in the format 'productName;key' (or with a different delimiter)
+        /// it'll be added to the ValidList. If there are too many or too few values, the values
+        /// will be added to the invalid list.
         /// </summary>
+        /// <returns>ParsedCsvData with valid keys as tuples to be added to db in controller</returns>
         public ParsedCsvData<Tuple<string, string>> ParseKeys()
         {
             var parsedKeys = new ParsedCsvData<Tuple<string, string>>();
@@ -107,15 +110,13 @@ namespace MSL_APP
                     var line = reader.ReadLine();
                     var values = line.Split(Delimiter);
 
-                    try
+                    if (values.Length == 2)
                     {
                         var key = Tuple.Create(values[0], values[1]);
                         parsedKeys.ValidList.Add(key);
                     }
-                    catch (Exception e)
-                    {
+                    else
                         parsedKeys.InvalidList.Add(currentLineNumber.ToString(), line);
-                    }
 
                     currentLineNumber++;
                 }
@@ -125,8 +126,9 @@ namespace MSL_APP
         }
 
         /// <summary>
-        /// Parse product names from file
+        /// Parses products based on list.
         /// </summary>
+        /// <returns>Parsed data containing list of valid and invalid Product names </returns>
         public ParsedCsvData<Product> ParseProducts()
         {
             var parsedProducts = new ParsedCsvData<Product>();
@@ -134,7 +136,6 @@ namespace MSL_APP
 
             using (var reader = new StreamReader(FileData))
             {
-
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
