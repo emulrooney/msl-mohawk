@@ -264,7 +264,7 @@ namespace MSL_APP.Controllers
                 //TODO: This is probably not performant; better to get a stored procedure to dump the table
                 _context.EligibleStudent.RemoveRange(_context.EligibleStudent.ToList());
 
-                foreach (EligibleStudent es in results.ValidList)
+                foreach (EligibleStudent es in results.ValidList.Values)
                     _context.EligibleStudent.Add(es);
                 
                 await _context.SaveChangesAsync();

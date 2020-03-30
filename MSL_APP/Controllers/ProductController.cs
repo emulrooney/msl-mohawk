@@ -447,24 +447,27 @@ namespace MSL_APP.Controllers
             if (file == null || file.Length == 0)
                 return RedirectToAction("Index");
 
+            var parser = new LicenseParser(file, ';');
+            var results = parser.ParseProducts();
+
             try
             { 
-                var parser = new LicenseParser(file, ';');
-                var results = parser.ParseProducts();
-
-                foreach (Product pn in results.ValidList)
+                foreach (KeyValuePair<string, Product> entry in results.ValidList)
                 {
-                    Product existingRow = _context.Product.FirstOrDefault(p => p.Name == pn.Name);
+                    Product existingRow = _context.Product.FirstOrDefault(p => p.Name == entry.Value.Name);
                     if (existingRow == null)
-                        _context.Product.Add(pn);
+                        _context.Product.Add(entry.Value);
+                    else
+                        results.InvalidList.Add(entry.Key, entry.Value.Name);
                 }
+
+                await _context.SaveChangesAsync();
+                TempData["InvalidList"] = results.InvalidList;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception: { e}"); //TODO flesh out exception handling to provide userfriendly feedback
+                Console.WriteLine($"Exception: { e}");
             }
-
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

@@ -307,16 +307,16 @@ namespace MSL_APP.Controllers
                 var parser = new LicenseParser(file, ';');
                 var results = parser.ParseKeys();
 
-                foreach (Tuple<string, string> pk in results.ValidList)
+                foreach (KeyValuePair<string, Tuple<string, string>> pk in results.ValidList)
                 {
                     ProductKey existingRow = _context.ProductKey
                         .Include(p => p.Product)
-                        .FirstOrDefault(p => p.Product.Name == pk.Item1
-                                          && p.Key == pk.Item2);
+                        .FirstOrDefault(p => p.Product.Name == pk.Value.Item1
+                                          && p.Key == pk.Value.Item2);
 
                     if (existingRow == null)
                     {
-                        var product = _context.Product.FirstOrDefault(pn => pn.Name == pk.Item1);
+                        var product = _context.Product.FirstOrDefault(pn => pn.Name == pk.Value.Item1);
 
                         if (product != null)
                         {
@@ -324,7 +324,7 @@ namespace MSL_APP.Controllers
                             ProductKey newKey = new ProductKey()
                             {
                                 NameId = nameId,
-                                Key = pk.Item2,
+                                Key = pk.Value.Item2,
                                 Status = "New"
                             };
                             _context.ProductKey.Add(newKey);
@@ -332,7 +332,7 @@ namespace MSL_APP.Controllers
                         else
                         {
                             //Add not-found products to invalid list
-                            results.InvalidList.Add(pk.Item1, pk.Item2);
+                            results.InvalidList.Add(pk.Key, pk.Value.Item1 + ";" + pk.Value.Item2);
                         }
                         
                     }

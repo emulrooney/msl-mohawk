@@ -9,7 +9,7 @@
         }
         else
         {
-            <span>There were @invalidEntries.Count in your upload.</span>
+            <span>There were @invalidEntries.Count invalid entries in your upload.</span>
         }
         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#errorModal">View</button>
     </div>
@@ -32,8 +32,10 @@
                         <tbody>
                             @foreach (string lineNumber in invalidEntries.Keys)
                             {
-                                <td>#@lineNumber</td>
+                            <tr>
+                                <td>@lineNumber</td>
                                 <td>@invalidEntries[lineNumber]</td>
+                            </tr>
                             }
                         </tbody>
                     </table>

@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 namespace MSL_APP.Utility
 {
     /// <summary>
-    /// Simple class to hold parsed data. Valid entries are added to a list of strings (to be turned
-    /// into appropriate objects later) while invalid entries are stored along with their 
+    /// Simple struct to hold parsed data. Contains two dictionaries using the line number as a key* to store
+    /// either the parsed output or the string that failed to parse as the value.
+    /// 
+    /// Note that the key is NOT an integer to avoid issues with ASP failing to serialize items in TempData
     /// </summary>
     public class ParsedCsvData<T>
     {
-        public List<T> ValidList { get; set; } = new List<T>();
-        public Dictionary<string, string> InvalidList { get; set; } = new Dictionary<string, string>();
+        public ParsedCsvData()
+        {
+            ValidList = new Dictionary<string, T>();
+            InvalidList = new Dictionary<string, string>();
+        }
 
+        public Dictionary<string, T> ValidList { get; set; }
+        public Dictionary<string, string> InvalidList { get; set; }
 
     }
 }

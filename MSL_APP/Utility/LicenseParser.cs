@@ -76,7 +76,7 @@ namespace MSL_APP
                                 StudentEmail = values[3]
                             };
 
-                            parsedStudents.ValidList.Add(eligible);
+                            parsedStudents.ValidList.Add(currentLineNumber.ToString(), eligible);
                         }
                     }
                     catch (Exception e)
@@ -113,7 +113,7 @@ namespace MSL_APP
                     if (values.Length == 2)
                     {
                         var key = Tuple.Create(values[0], values[1]);
-                        parsedKeys.ValidList.Add(key);
+                        parsedKeys.ValidList.Add(currentLineNumber.ToString(), key);
                     }
                     else
                         parsedKeys.InvalidList.Add(currentLineNumber.ToString(), line);
@@ -146,7 +146,7 @@ namespace MSL_APP
                         ActiveStatus = "Active"
                     };
 
-                    parsedProducts.ValidList.Add(product);
+                    parsedProducts.ValidList.Add(currentLineNumber.ToString(), product);
                     currentLineNumber++;
                 
                     //TODO: How should we check for validation?
