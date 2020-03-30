@@ -2,7 +2,9 @@
 
 @using MSL_APP.Utility
 @model PaginatedList<MSL_APP.Models.StudentKey>
-
+@{
+    ViewData["Title"] = "Student Home Page";
+}
 <h1>My Product Keys</h1>
 
 <div class="col-md-5">
@@ -32,43 +34,42 @@
     </thead>
     @if (Model.Count() == 0)
     {
-    <tbody>
-        <tr>
-            <td>
-                <i>Empty</i>
-            </td>
-            <td>
-                <i><a asp-controller="Product" asp-action="Student" style="color:dodgerblue" >Get Some Keys</a></i>
-            </td>
-            <td>
-                
-            </td>
-        </tr>
-    </tbody>
-    } else 
-    {
-    <tbody>
-        @foreach (var item in Model)
-            {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Key)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DownloadLink)
-            </td>
-        </tr>
-            }
-    </tbody>
+        <tbody>
+            <tr>
+                <td>
+                    <i>Empty</i>
+                </td>
+                <td>
+                    <i><a asp-controller="Product" asp-action="Student" style="color:dodgerblue">Get Some Keys</a></i>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </tbody>
     }
-    
+    else
+    {
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Key)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DownloadLink)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+
 </table>
 
 @{
-    ViewData["Title"] = "Student Home Page";
     var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
     var nextDisabled = !Model.HasNextPage ? "invisible" : "";
     var indexDisabled = !Model.HasPreviousPage && !Model.HasNextPage ? "d-none" : "";
@@ -103,11 +104,11 @@
         </div>
     </div>
     <a asp-action="Student"
-        asp-route-sortBy="@ViewData["CurrentSort"]"
-        asp-route-pageNumber="@(Model.PageIndex - 1)"
-        asp-route-pageRow="@ViewData["totalRow"]"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-        class="mx-1 btn btn-primary @prevDisabled">
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @prevDisabled">
         Previous
     </a>
     @for (int i = centerIndex; i < centerIndex + maxPages; i++)
@@ -115,32 +116,32 @@
         if (i == Model.PageIndex)
         {
             <a asp-action="Student"
-                asp-route-sortBy="@ViewData["CurrentSort"]"
-                asp-route-pageNumber=@i
-                asp-route-pageRow="@ViewData["totalRow"]"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                class="mx-1 btn btn-primary @indexDisabled">
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-primary @indexDisabled">
                 @i
             </a>
         }
         else
         {
             <a asp-action="Student"
-                asp-route-sortBy="@ViewData["CurrentSort"]"
-                asp-route-pageNumber=@i
-                asp-route-pageRow="@ViewData["totalRow"]"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                class="mx-1 btn btn-outline-primary @indexDisabled">
+               asp-route-sortBy="@ViewData["CurrentSort"]"
+               asp-route-pageNumber=@i
+               asp-route-pageRow="@ViewData["totalRow"]"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="mx-1 btn btn-outline-primary @indexDisabled">
                 @i
             </a>
         }
     }
     <a asp-action="Student"
-        asp-route-sortBy="@ViewData["CurrentSort"]"
-        asp-route-pageNumber="@(Model.PageIndex + 1)"
-        asp-route-pageRow="@ViewData["totalRow"]"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-        class="mx-1 btn btn-primary @nextDisabled">
+       asp-route-sortBy="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-pageRow="@ViewData["totalRow"]"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="mx-1 btn btn-primary @nextDisabled">
         Next
     </a>
 </div>

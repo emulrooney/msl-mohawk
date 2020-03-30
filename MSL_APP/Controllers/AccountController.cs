@@ -164,7 +164,8 @@ namespace MSL_APP.Controllers
                     LastName = account.LastName,
                     StudentId = account.AdminID,
                     ActiveStatus = "Active",
-                    Role = "Admin"
+                    Role = "Admin",
+                    EmailConfirmed = true
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(user, "Mohawk1!");
