@@ -63,6 +63,18 @@
   box-shadow: 0 0 0 0.2rem rgba(220, 20, 60, 0.5);
 }
 
-a {
-  color: #990033;
+a, .nav-link {
+    color: #990033;
+}
+
+a:hover, .nav-link:hover {
+    color: #ff0033
+}
+
+.nav-link.active {
+    background-color: #ff0033 !important;
+}
+
+.nav-link.active:hover {
+    background-color: #990033 !important;
 }
