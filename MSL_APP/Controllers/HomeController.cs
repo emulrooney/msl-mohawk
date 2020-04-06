@@ -246,7 +246,7 @@ namespace MSL_APP.Controllers
                 UserName = "student1@email.com",
                 FirstName = "Student",
                 LastName = "One",
-                ActiveStatus = "Actived",
+                ActiveStatus = "Active",
                 Eligible = "Yes",
                 Role = "Student",
                 EmailConfirmed = true
@@ -285,7 +285,7 @@ namespace MSL_APP.Controllers
                 UserName = "Admin@email.com",
                 FirstName = "Admin",
                 LastName = "One",
-                ActiveStatus = "Actived",
+                ActiveStatus = "Active",
                 Eligible = "Yes",
                 Role = "Admin",
                 EmailConfirmed = true

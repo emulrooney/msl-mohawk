@@ -38,6 +38,10 @@ namespace MSL_APP.Areas.Identity.Pages.Account
             {
                 throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
             }
+            else // Update the status of user
+            {
+                user.ActiveStatus = "Active";
+            }
 
             return Page();
         }

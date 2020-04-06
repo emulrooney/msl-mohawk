@@ -104,7 +104,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
                 if (eligibleUser)
                 {
-                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId, ActiveStatus="Actived", Role="Student" };
+                    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = firstName, LastName = lastName, StudentId = studentId, ActiveStatus= "Unverified", Role="Student" };
 
                     var result = await _userManager.CreateAsync(user, Input.Password);
 

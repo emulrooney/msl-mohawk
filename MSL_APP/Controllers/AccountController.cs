@@ -214,18 +214,18 @@ namespace MSL_APP.Controllers
             {
                 return NotFound();
             }
-            else if (account.ActiveStatus == "Actived")
+            else if (account.ActiveStatus == "Active")
             {
                 // Change the active status of the account to disabled
-                account.ActiveStatus = "Disabled";
+                account.ActiveStatus = "Banned";
                 _context.Entry(account).Property("ActiveStatus").IsModified = true;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index), new { sortBy, currentFilter, pageNumber, pageRow, roleType });
             }
-            else if (account.ActiveStatus == "Disabled")
+            else if (account.ActiveStatus == "Banned")
             {
                 // Change the active status of the account to disabled
-                account.ActiveStatus = "Actived";
+                account.ActiveStatus = "Active";
                 _context.Entry(account).Property("ActiveStatus").IsModified = true;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index), new { sortBy, currentFilter, pageNumber, pageRow, roleType });

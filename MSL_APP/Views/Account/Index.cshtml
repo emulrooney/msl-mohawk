@@ -101,12 +101,12 @@ else if ((string)@ViewData["AccRole"] == "Admin")
                 <td>
                     @if ((string)@ViewData["AccRole"] == "Student")
                     {
-                        if (user.ActiveStatus == "Actived")
+                        if (user.ActiveStatus == "Active")
                         {
                             <a class="btn btn-outline-warning btn-sm" asp-action="Ban" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["sortBy"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@ViewData["PageIndex"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]">Ban</a>
                         }
 
-                        if (user.ActiveStatus == "Disabled")
+                        if (user.ActiveStatus == "Banned")
                         {
                             <a class="btn btn-outline-success btn-sm" asp-action="Ban" asp-route-id="@user.Id" asp-route-sortBy="@ViewData["sortBy"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-pageNumber="@ViewData["PageIndex"]" asp-route-pageRow="@ViewData["totalRow"]" asp-route-roleType="@ViewData["AccRole"]">Unban</a>
                         }

@@ -172,7 +172,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
 
 
-                            if (user.ActiveStatus == "Disabled")
+                            if (user.ActiveStatus == "Banned")
                             {
                                 await _signInManager.SignOutAsync();
                                 _logger.LogInformation("User logged out.");
@@ -180,7 +180,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                                 return Page();
                             }
 
-                            else if (user.ActiveStatus == "Actived") {
+                            else if (user.ActiveStatus == "Active") {
                                 _logger.LogInformation("User logged in.");
 
                                 var roles = await _userManager.GetRolesAsync(user);
