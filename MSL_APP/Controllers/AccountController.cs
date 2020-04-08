@@ -296,10 +296,11 @@ namespace MSL_APP.Controllers
                 UserName = "student1@email.com",
                 FirstName = "Student",
                 LastName = "One",
-                ActiveStatus = "Actived",
+                ActiveStatus = "Active",
                 Eligible = "Yes",
+                EmailConfirmed = true,
                 Role = "Student"
-            });
+            }) ;
 
             EligibleStudent studentAccount = new EligibleStudent()
             {
@@ -334,7 +335,7 @@ namespace MSL_APP.Controllers
                 UserName = "Admin@email.com",
                 FirstName = "Admin",
                 LastName = "One",
-                ActiveStatus = "Actived",
+                ActiveStatus = "Active",
                 Eligible = "Yes",
                 EmailConfirmed = true,
                 Role = "Admin"
