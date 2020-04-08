@@ -2,8 +2,6 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
@@ -17,7 +15,7 @@ namespace MSL_APP.Utility
 
         public async static Task<Response> SendConfirmationEmail(ApplicationUser user, string callbackUrl)
         {
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY", EnvironmentVariableTarget.Machine);
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(emailSource, emailFrom);
             var subject = "Confirm your Mohawk Student License account";
@@ -32,7 +30,7 @@ namespace MSL_APP.Utility
 
         public async static Task<Response> SendPasswordResetEmail(ApplicationUser user, string callbackUrl)
         {
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY", EnvironmentVariableTarget.Machine);
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress(emailSource, emailFrom);
             var subject = "Reset Mohawk License System Password";
