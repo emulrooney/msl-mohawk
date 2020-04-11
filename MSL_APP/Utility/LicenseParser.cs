@@ -120,7 +120,6 @@ namespace MSL_APP
 
             using (var reader = new StreamReader(FileData))
             {
-
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -157,7 +156,9 @@ namespace MSL_APP
                     var line = reader.ReadLine();
                     var validatedProductName = Regex.Match(line, patterns["productName"]);
 
-                    if (line.Length > 0 && validatedProductName.Success)
+                    bool foundDelimiter = line.IndexOf(Delimiter) > -1; //Quick check to ensure we're not uploading the wrong file...
+
+                    if (line.Length > 0 && validatedProductName.Success && !foundDelimiter)
                     {
                         var product = new Product()
                         {
