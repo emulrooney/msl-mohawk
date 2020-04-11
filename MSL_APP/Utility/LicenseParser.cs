@@ -10,13 +10,22 @@ namespace MSL_APP
 {
     class LicenseParser
     {
-        public char Delimiter { get; set; } = ';'; //Default ';'
-        public Stream FileData { get; set; }
+        public char Delimiter { get; private set; } = ';'; //Default ';'
+        public Stream FileData { get; private set; }
 
-        private static readonly List<string> fileWhitelist = new List<string>() 
+        //Add new filetypes to list if needed
+        private static readonly List<string> fileWhitelist = new List<string>()
         {
             "text/plain"
         };
+
+        private static readonly Dictionary<string, string> patterns = new Dictionary<string, string>()
+        {
+            { "email" , "[a-z]*.[a-z0-9]*\\@mohawkcollege.ca" },
+            { "name" , @"[^\d]" },
+            { "productName", @"[^\d]" }
+        };
+
 
         /// <summary>
         /// Receives the intended file, then parses based on given delimiter
@@ -39,6 +48,7 @@ namespace MSL_APP
         /// <summary>
         /// Parse incoming students from CSV file.
         /// </summary>
+        /// <returns>Parsed data with successful results in form of 'eligible student'</returns>
         public ParsedCsvData<EligibleStudent> ParseStudents()
         {
             using (var reader = new StreamReader(FileData))
@@ -60,14 +70,17 @@ namespace MSL_APP
 
                         //Validate student has proper Mohawk email
                         var studentEmail = values[3].ToLower();
-                        var emailPattern = "[a-z]*.[a-z0-9]*\\@mohawkcollege.ca";
-                        var emailValidated = Regex.Match(studentEmail, emailPattern);
+                        var emailValidated = Regex.Match(studentEmail, patterns["email"]);
 
-                        //First&Last name are not validated; some students may have different names the one in their email
+                        //First&Last name are not check vs email; some students may have different names the one in their email
+                        //However, names should not include numbers
+                        var firstNameValidated = Regex.Match(values[1], patterns["name"]);
+                        var lastNameValidated = Regex.Match(values[2], patterns["name"]);
 
-                        //Student number should be < 9 digits, email must pass regex
-                        if (studentNumber < 1000000000 && emailValidated.Success)
-                        {
+                        //Student number should be < 9 digits and > 0, other fields must match regex.
+                        if (studentNumber < 1000000000 && studentNumber > 0
+                            && emailValidated.Success && firstNameValidated.Success && lastNameValidated.Success)
+                        {   
                             var eligible = new EligibleStudent()
                             {
                                 StudentID = studentNumber,
@@ -75,8 +88,11 @@ namespace MSL_APP
                                 LastName = values[2],
                                 StudentEmail = values[3]
                             };
-
                             parsedStudents.ValidList.Add(currentLineNumber.ToString(), eligible);
+                        } 
+                        else
+                        {
+                            throw new Exception("Invalid format.");
                         }
                     }
                     catch (Exception e)
@@ -139,17 +155,26 @@ namespace MSL_APP
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var product = new Product()
-                    {
-                        QuantityLimit = 1,
-                        Name = line,
-                        ActiveStatus = "Active"
-                    };
+                    var validatedProductName = Regex.Match(line, patterns["productName"]);
 
-                    parsedProducts.ValidList.Add(currentLineNumber.ToString(), product);
+                    if (line.Length > 0 && validatedProductName.Success)
+                    {
+                        var product = new Product()
+                        {
+                            QuantityLimit = 1,
+                            Name = line,
+                            ActiveStatus = "Active"
+                        };
+
+                        parsedProducts.ValidList.Add(currentLineNumber.ToString(), product);
+                    }
+                    else
+                    {
+                        parsedProducts.InvalidList.Add(currentLineNumber.ToString(), line);
+                    }
+
                     currentLineNumber++;
                 
-                    //TODO: How should we check for validation?
                 }
 
                 return parsedProducts;
