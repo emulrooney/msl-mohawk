@@ -1,6 +1,6 @@
 ﻿@{
     var invalidEntries = (Dictionary<string, string>)TempData["InvalidList"];
-    if (invalidEntries.Count > 0)
+    if (invalidEntries != null && invalidEntries.Count > 0)
     {
     <div class="alert alert-danger">
         @if (invalidEntries.Count == 1)

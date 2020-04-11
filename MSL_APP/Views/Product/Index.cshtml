@@ -5,6 +5,11 @@
     ViewData["Title"] = "Product";
 }
 
+@if (TempData["BadFileType"] != null)
+{
+    <partial name="_InvalidFileType" />
+}
+
 @if (TempData["InvalidList"] != null)
 {
     <partial name="_InvalidEntries" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -269,6 +270,10 @@ namespace MSL_APP.Controllers
                 
                 await _context.SaveChangesAsync();
                 TempData["InvalidList"] = results.InvalidList;
+            }
+            catch (InvalidDataException e)
+            {
+                TempData["BadFileType"] = e.Message;
             }
             catch (Exception e)
             {

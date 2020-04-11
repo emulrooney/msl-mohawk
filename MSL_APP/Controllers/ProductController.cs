@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -447,11 +448,11 @@ namespace MSL_APP.Controllers
             if (file == null || file.Length == 0)
                 return RedirectToAction("Index");
 
-            var parser = new LicenseParser(file, ';');
-            var results = parser.ParseProducts();
 
             try
             { 
+                var parser = new LicenseParser(file, ';');
+                var results = parser.ParseProducts();
                 foreach (KeyValuePair<string, Product> entry in results.ValidList)
                 {
                     Product existingRow = _context.Product.FirstOrDefault(p => p.Name == entry.Value.Name);
@@ -464,9 +465,13 @@ namespace MSL_APP.Controllers
                 await _context.SaveChangesAsync();
                 TempData["InvalidList"] = results.InvalidList;
             }
+            catch (InvalidDataException e)
+            {
+                TempData["BadFileType"] = e.Message;
+            }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception: { e}");
+                Console.WriteLine($"Exception: {e}");
             }
 
             return RedirectToAction("Index");
