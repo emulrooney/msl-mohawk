@@ -89,7 +89,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 // Check user's email is in the eligible list or not
                 var eligibleStudent = await _context.EligibleStudent.ToListAsync();
                 foreach (EligibleStudent student in eligibleStudent) {
-                    if (student.StudentEmail == Input.Email) {
+                    if ((student.StudentEmail).ToUpper() == (Input.Email).ToUpper()) {
                         eligibleUser = true;
                         firstName = student.FirstName;
                         lastName = student.LastName;

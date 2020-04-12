@@ -15,10 +15,12 @@ namespace MSL_APP.Models
         [Required, Display(Name = "Student ID"), DisplayFormat(DataFormatString = "{0:D9}", ApplyFormatInEditMode = true)]
         public int StudentID { get; set; }
 
-        [Display(Name = "First Name")]
+        [Required, Display(Name = "First Name")]
+        [RegularExpression(@"^[A-Za-z ,.'-]+$", ErrorMessage = "Invalid Name Format")]
         public string FirstName { get; set; }
 
-        [Display(Name = "Last Name")]
+        [Required, Display(Name = "Last Name")]
+        [RegularExpression(@"^[A-Za-z ,.'-]+$", ErrorMessage = "Invalid Name Format")]
         public string LastName { get; set; }
 
         // Student Email, ex. student.one@moahwkcollege.ca

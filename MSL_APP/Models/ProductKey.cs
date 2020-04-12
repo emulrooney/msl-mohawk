@@ -15,6 +15,8 @@ namespace MSL_APP.Models
         [ForeignKey("Product")]
         public int NameId { get; set; }
 
+        [Required]
+        [RegularExpression(@"^[_A-z0-9]*((-|\s)*[_A-z0-9])*$", ErrorMessage = "Invalid Key Format")]
         public string Key { get; set; }
 
         // New or Used key. New by default
