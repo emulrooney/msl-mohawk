@@ -6,7 +6,7 @@
 <h1>Success!</h1>
 
 <form method="post" asp-controller="Home" asp-action="ResendConfirmation">
-    <input type="hidden" name="email" value="@ViewData["UserEmail"]" />
+    <input type="hidden" name="email" value="@TempData["UserEmail"]" />
     <div class="alert alert-success">
         Success! You've created an account. Check your mohawkcollege.ca email for a confirmation email. Until your account is confirmed, you won't be able to access the system.
         <button type="submit" class="btn btn-success m-1 ml-2">Resend confirmation email.</button>

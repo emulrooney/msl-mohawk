@@ -96,7 +96,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                         studentId = student.StudentID;
                         //eligibleId = student.Id;
 
-                        ViewData["UserEmail"] = student.StudentEmail; //Set this to allow for resending confirmation later
+                        TempData["UserEmail"] = student.StudentEmail; //Set this to allow for resending confirmation later
                         break;
                     }
                 }
@@ -138,6 +138,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
 
                             var response = await MSLEmailHandler.SendConfirmationEmail(user, callbackUrl);
 
+                            ViewData["UserEmail"] = user.Email;
                             return LocalRedirect(returnUrl);
 
                         }
