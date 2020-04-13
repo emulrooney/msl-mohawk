@@ -171,20 +171,20 @@ namespace MSL_APP.Controllers
                     {
                         ViewData["StudentProductName"] = productName;
                         ViewData["StudentGetKeySucceed"] = false;
-                        ViewData["StudentGetKeyMessage"] = "The key is out of stock. Please contact the administrator for more information.";
+                        ViewData["StudentGetKeyMessage"] = "This key is out of stock. Please contact the administrator for more information.";
                         return View();
                     }
                 }
-                // Student has exceed the aquirable quantity limit
+                // Student has exceed the acquirable quantity limit
                 ViewData["StudentProductName"] = productName;
                 ViewData["StudentGetKeySucceed"] = false;
-                ViewData["StudentGetKeyMessage"] = "You have exceed the aquirable quantity limit.";
+                ViewData["StudentGetKeyMessage"] = "You have reached the maximum number of keys for this product.";
                 return View();
             }
             // Student is not eligible to get new key
             ViewData["StudentProductName"] = productName;
             ViewData["StudentGetKeySucceed"] = false;
-            ViewData["StudentGetKeyMessage"] = "You authorization has expired (Not Eligible). Please contact the administrator for more information.";
+            ViewData["StudentGetKeyMessage"] = "You are no longer eligible to claim new keys. Please contact the administrator for more information.";
             return View();
 
         }
