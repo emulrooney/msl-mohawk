@@ -8,6 +8,28 @@ using System.Text.RegularExpressions;
 
 namespace MSL_APP
 {
+    /// <summary>
+    /// Used in all uploads to parse text files for student and product data.
+    /// 
+    /// The expected formats is delimited with semi-colons with each entry on a new line.
+    /// The formatting is as follows:
+    ///
+    /// STUDENTS:
+    /// StudentNumber;FirstName;LastName;Email
+    /// 
+    /// KEYS:
+    /// ProductName;Key
+    /// 
+    /// Product Name:
+    /// ProductName
+    /// 
+    /// Student emails are validated to fit the format firstname.lastname@mohawkcollege.ca. Some students will have
+    /// a number appended to their last name, but this is accommodated. Non-Mohawk emails can be manually added
+    /// with CRUD.
+    /// 
+    /// Product names and people's names can use any characters but can't be strictly numbers. Blank lines will be caught and
+    /// filtered out. 
+    /// </summary>
     class LicenseParser
     {
         public char Delimiter { get; private set; } = ';'; //Default ';'

@@ -9,7 +9,7 @@ namespace MSL_APP.Utility
     /// Simple struct to hold parsed data. Contains two dictionaries using the line number as a key* to store
     /// either the parsed output or the string that failed to parse as the value.
     /// 
-    /// Note that the key is NOT an integer to avoid issues with ASP failing to serialize items in TempData
+    /// Note that the key is _NOT_ an integer to avoid issues with ASP failing to serialize items in TempData
     /// </summary>
     public class ParsedCsvData<T>
     {

@@ -7,12 +7,25 @@ using System.Threading.Tasks;
 
 namespace MSL_APP.Utility
 {
+    /// <summary>
+    /// Main class to handle emails. Currently works with SendGrid. Ideally, this class will be replaced if Mohawk allows SMTP
+    /// and outgoing mail from a particular server.
+    /// 
+    /// If SendGrid is used in deployment, the admin will need to set a machine level environment variable titled 'SENDGRID_API_KEY' with
+    /// a key generated on their account. 
+    /// </summary>
     public static class MSLEmailHandler
     {
         private static readonly string emailSource = "studentlicensesadmin@mohawkcollege.ca";
         private static readonly string emailFrom = "Administrator";
 
-
+        /// <summary>
+        /// Send email to confirm account via SendGrid. Requires the intended user and a callback URL to give the user
+        /// to confirm the account.
+        /// </summary>
+        /// <param name="user">New user</param>
+        /// <param name="callbackUrl">URL to confirm</param>
+        /// <returns></returns>
         public async static Task<Response> SendConfirmationEmail(ApplicationUser user, string callbackUrl)
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY", EnvironmentVariableTarget.Machine);
@@ -28,6 +41,13 @@ namespace MSL_APP.Utility
         }
 
 
+        /// <summary>
+        /// Send email for password resets via SendGrid. Requires the intended user and a callback URL to give to the user
+        /// to actaully reset their account.
+        /// </summary>
+        /// <param name="user">User who forgot their password</param>
+        /// <param name="callbackUrl">URL for reset</param>
+        /// <returns></returns>
         public async static Task<Response> SendPasswordResetEmail(ApplicationUser user, string callbackUrl)
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY", EnvironmentVariableTarget.Machine);
