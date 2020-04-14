@@ -23,3 +23,17 @@ To run this app, you'll need to set up an environment variable at the machine le
 ```powershell
 [Environment]::SetEnvironmentVariable("SENDGRID_API_KEY", "api key here", "Machine")
 ```
+
+## Development Credits
+
+Porsche Le - [Github](https://github.com/porschele7)
+
+Aiden (Wang-Yang) Li - [Github](https://github.com/aidenliw)
+
+Evan Mulrooney - [Portfolio](https://emulrooney.github.io/) - [Github](https://github.com/emulrooney)
+
+**Special thanks**: 
+
+* _To our client, Brian Minaji, for his support and giving us the opportunity to build this system,_
+* _to our professor, Mark Yendt, for running the course and providing helpful feedback throughout,_ 
+* _and to Dawn, Reese and Julian at the MEDIC lab for getting us set up on their server space for deployment._
