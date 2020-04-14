@@ -94,7 +94,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 // Username input is full email address. ex. firstname.lastname@mohawkcollege.ca
                 if (emailValidated.Success)
                 {
-                    var account = accounts.Where(a => a.Email == username).FirstOrDefault();
+                    var account = accounts.Where(a => a.Email.ToLower() == username).FirstOrDefault();
                     if (account == null)
                     {
                         ModelState.AddModelError(string.Empty, "Account does not exists. Please register a new account.");
@@ -128,7 +128,7 @@ namespace MSL_APP.Areas.Identity.Pages.Account
                 else if (nameValidated.Success)
                 {
                     username += "@mohawkcollege.ca";
-                    var account = accounts.Where(a => a.Email == username).FirstOrDefault();
+                    var account = accounts.Where(a => a.Email.ToLower() == username).FirstOrDefault();
                     if (account != null) { username = account.Email; }
                     else
                     {
